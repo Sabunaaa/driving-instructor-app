@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 //@ts-ignore
 import { User, Layers, Star, Heart, CreditCard, Settings, HelpCircle, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,7 +11,8 @@ interface AccountSidebarProps {
 }
 
 const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
   const menuItems = [
     { icon: User, label: 'My profile', href: '/dashboard' },
@@ -74,6 +76,7 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
             return (
               <button
                 key={index}
+                onClick={() => router.push(item.href)}
                 className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left ${
                   isActive 
                     ? 'bg-gray-100 text-gray-900' 
@@ -107,7 +110,10 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
       
       {/* Log Out - No Background */}
       <div className="px-4">
-        <button className="flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left text-red-500 hover:bg-red-50 w-full">
+        <button 
+          onClick={logout}
+          className="flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left text-red-500 hover:bg-red-50 w-full"
+        >
           <LogOut size={16} className="text-red-500" />
           <span 
             className="font-medium"
