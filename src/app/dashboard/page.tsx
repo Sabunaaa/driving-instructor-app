@@ -50,8 +50,9 @@ const DashboardPage = () => {
       {/* Use the same Navbar component */}
       <Navbar />
       
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Dashboard Layout */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="w-full">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -99,7 +100,8 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };
