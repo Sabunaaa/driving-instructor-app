@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { User, Car, Calendar, BookOpen, Settings } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
+import AccountSidebar from '@/components/dashboard/AccountSidebar';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -52,7 +53,12 @@ const DashboardPage = () => {
       
       {/* Dashboard Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <main className="w-full">
+        <div className="flex gap-8">
+          {/* Account Sidebar */}
+          <AccountSidebar activeItem="My profile" />
+          
+          {/* Main Content */}
+          <main className="flex-1">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -100,7 +106,8 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );
