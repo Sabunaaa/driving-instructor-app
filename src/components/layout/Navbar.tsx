@@ -10,6 +10,7 @@ const Navbar = () => {
   const router = useRouter();
   const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const [isHelpDropdownOpen, setIsHelpDropdownOpen] = React.useState(false);
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
@@ -17,16 +18,19 @@ const Navbar = () => {
       if (isDropdownOpen) {
         setIsDropdownOpen(false);
       }
+      if (isHelpDropdownOpen) {
+        setIsHelpDropdownOpen(false);
+      }
     };
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isHelpDropdownOpen) {
       document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isHelpDropdownOpen]);
 
   return (
     <nav className="w-full bg-white text-base">
@@ -43,69 +47,97 @@ const Navbar = () => {
             className="text-gray-900 font-semibold" 
             style={{ fontSize: '24px', lineHeight: '32px', fontWeight: 600 }}
           >
-            Finder
+            DriveConnect
           </span>
         </div>
 
         {/* Navigation */}
         <div className="flex items-center">
-          {/* Dropdown: New cars */}
-          <div className="flex items-center gap-1.5 px-4.5 py-2">
+          {/* Nav link: Find Instructors */}
+          <div className="flex items-center px-4.5 py-2 cursor-pointer" onClick={() => router.push('/find-instructors')}>
             <span 
               className="text-gray-700 font-medium" 
               style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 500, color: '#333D4C' }}
             >
-              New cars
+              Find Instructors
             </span>
-            <div className="flex items-center pt-0.75">
-              <ChevronDown size={16} color="#333D4C" />
-            </div>
           </div>
 
-          {/* Dropdown: Used cars */}
-          <div className="flex items-center gap-1.5 px-4.5 py-2">
-            <span 
-              className="text-gray-700 font-medium" 
-              style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 500, color: '#333D4C' }}
-            >
-              Used cars
-            </span>
-            <div className="flex items-center pt-0.75">
-              <ChevronDown size={16} color="#333D4C" />
-            </div>
-          </div>
-
-          {/* Nav link: Online appraisal */}
+          {/* Nav link: How it Works */}
           <div className="flex items-center px-4.5 py-2">
             <span 
               className="text-gray-700 font-medium" 
               style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 500, color: '#333D4C' }}
             >
-              Online appraisal
+              How it Works
             </span>
           </div>
 
-          {/* Dropdown: Dealers */}
-          <div className="flex items-center gap-1.5 px-4.5 py-2">
-            <span 
-              className="text-gray-700 font-medium" 
-              style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 500, color: '#333D4C' }}
-            >
-              Dealers
-            </span>
-            <div className="flex items-center pt-0.75">
-              <ChevronDown size={16} color="#333D4C" />
-            </div>
-          </div>
-
-          {/* Nav link: Contact */}
+          {/* Nav link: Blog */}
           <div className="flex items-center px-4.5 py-2">
             <span 
               className="text-gray-700 font-medium" 
               style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 500, color: '#333D4C' }}
             >
-              Contact
+              Blog
             </span>
+          </div>
+
+          {/* Dropdown: Help */}
+          <div className="flex items-center gap-1.5 px-4.5 py-2 relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsHelpDropdownOpen(!isHelpDropdownOpen);
+              }}
+              className="flex items-center gap-1.5"
+            >
+              <span 
+                className="text-gray-700 font-medium" 
+                style={{ fontSize: '16px', lineHeight: '24px', fontWeight: 500, color: '#333D4C' }}
+              >
+                Help
+              </span>
+              <div className="flex items-center pt-0.75">
+                <ChevronDown size={16} color="#333D4C" />
+              </div>
+            </button>
+            
+            {/* Help Dropdown Menu */}
+            {isHelpDropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsHelpDropdownOpen(false);
+                    router.push('/help');
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Help Center
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsHelpDropdownOpen(false);
+                    router.push('/for-instructors');
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  For Instructors
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsHelpDropdownOpen(false);
+                    router.push('/contact');
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Contact Us
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -235,3 +267,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
