@@ -19,7 +19,11 @@ import {
   Clock,
   BookOpen,
   Mail,
-  Bookmark
+  Bookmark,
+  ArrowUpDown,
+  Grid2X2,
+  List,
+  GeorgianLari
 } from 'lucide-react';
 
 const FindInstructorsPage = () => {
@@ -28,9 +32,10 @@ const FindInstructorsPage = () => {
   const [selectedRadius, setSelectedRadius] = React.useState('50 mi');
 
   const [selectedSpecialty, setSelectedSpecialty] = React.useState('ავტომატიკა');
-  const [selectedBudget, setSelectedBudget] = React.useState('$$');
-  const [selectedFeatures, setSelectedFeatures] = React.useState(['Verified instructors', 'Flexible scheduling']);
+  const [budgetRange, setBudgetRange] = React.useState([40, 100]);
+  const [selectedWeekdays, setSelectedWeekdays] = React.useState(['Monday', 'Tuesday']);
   const [selectedRatings, setSelectedRatings] = React.useState(['5', '4']);
+  const [viewMode, setViewMode] = React.useState<'list' | 'grid'>('list');
 
   const instructors = [
     {
@@ -68,8 +73,8 @@ const FindInstructorsPage = () => {
   const activeFilters = [
     selectedLocation,
     selectedSpecialty,
-    selectedBudget,
-    ...selectedFeatures,
+    `Budget: ${budgetRange[0]}-${budgetRange[1]}`,
+    ...selectedWeekdays,
     ...selectedRatings.map(r => `${r} ⭐`)
   ];
 
@@ -78,15 +83,14 @@ const FindInstructorsPage = () => {
     'მექანიკა'
   ];
 
-  const featureOptions = [
-    'Verified instructors',
-    'Flexible scheduling',
-    'Online booking',
-    'Free consultation',
-    'Weekend availability',
-    'Pickup service',
-    'Modern vehicles',
-    'Dual controls'
+  const weekdayOptions = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
   ];
 
   const locationOptions = [
@@ -194,47 +198,155 @@ const FindInstructorsPage = () => {
 
             {/* Budget */}
             <div className="space-y-4">
-              <h3 className="text-base font-semibold text-gray-900">Budget</h3>
-              <div className="space-y-4">
-                {['$$$$', '$$$', '$$', '$'].map((budget) => (
-                  <div key={budget} className="flex items-center gap-3">
-                    <input 
-                      type="radio" 
-                      id={budget}
-                      name="budget"
-                      checked={selectedBudget === budget}
-                      onChange={() => setSelectedBudget(budget)}
-                      className="w-5 h-5"
-                    />
-                    <label htmlFor={budget} className="text-sm text-gray-900 cursor-pointer">
-                      {budget}
-                    </label>
-                  </div>
-                ))}
+              <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
+                <GeorgianLari size={16} className="text-gray-600" />
+                Budget
+              </h3>
+              <div className="pt-6 pb-1">
+                                  {/* Functional Range Slider */}
+                <div className="relative">
+                  {/* Helper function to convert value to percentage */}
+                  {(() => {
+                    const getPercentage = (value: number) => ((value - 40) / (100 - 40)) * 100;
+                    const leftPercent = getPercentage(budgetRange[0]);
+                    const rightPercent = getPercentage(budgetRange[1]);
+                    
+                    return (
+                      <>
+                        {/* Base Track Input (for track clicking) */}
+                        <input
+                          type="range"
+                          min="40"
+                          max="100"
+                          value={budgetRange[0]}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            // Determine which handle is closer and move that one
+                            const leftDist = Math.abs(value - budgetRange[0]);
+                            const rightDist = Math.abs(value - budgetRange[1]);
+                            
+                            if (leftDist <= rightDist && value < budgetRange[1]) {
+                              setBudgetRange([value, budgetRange[1]]);
+                            } else if (rightDist < leftDist && value > budgetRange[0]) {
+                              setBudgetRange([budgetRange[0], value]);
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-8 opacity-0 cursor-pointer z-10"
+                          style={{
+                            WebkitAppearance: 'none',
+                            appearance: 'none'
+                          }}
+                          onDragStart={(e) => e.preventDefault()}
+                        />
+
+                        {/* Left Handle Input */}
+                        <input
+                          type="range"
+                          min="40"
+                          max={budgetRange[1] - 1}
+                          value={budgetRange[0]}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setBudgetRange([value, budgetRange[1]]);
+                          }}
+                          className="absolute inset-0 w-full h-8 opacity-0 cursor-grab active:cursor-grabbing z-30"
+                          style={{ 
+                            clipPath: `polygon(0% 0%, ${leftPercent + 8}% 0%, ${leftPercent + 8}% 100%, 0% 100%)`,
+                            WebkitAppearance: 'none',
+                            appearance: 'none'
+                          }}
+                          onDragStart={(e) => e.preventDefault()}
+                        />
+
+                        {/* Right Handle Input */}
+                        <input
+                          type="range"
+                          min={budgetRange[0] + 1}
+                          max="100"
+                          value={budgetRange[1]}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setBudgetRange([budgetRange[0], value]);
+                          }}
+                          className="absolute inset-0 w-full h-8 opacity-0 cursor-grab active:cursor-grabbing z-30"
+                          style={{ 
+                            clipPath: `polygon(${rightPercent - 8}% 0%, 100% 0%, 100% 100%, ${rightPercent - 8}% 100%)`,
+                            WebkitAppearance: 'none',
+                            appearance: 'none'
+                          }}
+                          onDragStart={(e) => e.preventDefault()}
+                        />
+                        
+                        {/* Visual Track */}
+                        <div className="w-full h-0.5 bg-gray-200 rounded-full relative pointer-events-none">
+                          {/* Active Track (between handles) */}
+                          <div 
+                            className="absolute top-0 h-0.5 bg-gray-900 rounded-full"
+                            style={{ 
+                              left: `${leftPercent}%`, 
+                              width: `${rightPercent - leftPercent}%` 
+                            }}
+                          ></div>
+                        </div>
+                        
+                        {/* Left Handle Visual */}
+                        <div 
+                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-900 rounded-full pointer-events-none z-40"
+                          style={{ left: `calc(${leftPercent}% - 8px)` }}
+                        >
+                          {/* Left Tooltip */}
+                          <div 
+                            className="absolute bottom-5 left-1/2 -translate-x-1/2 text-gray-900 text-sm font-normal whitespace-nowrap select-none pointer-events-none"
+                            style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '14px', textAlign: 'center' }}
+                          >
+                            {budgetRange[0]}
+                          </div>
+                        </div>
+
+                        {/* Right Handle Visual */}
+                        <div 
+                          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-900 rounded-full pointer-events-none z-40"
+                          style={{ left: `calc(${rightPercent}% - 8px)` }}
+                        >
+                          {/* Right Tooltip */}
+                          <div 
+                            className="absolute bottom-5 left-1/2 -translate-x-1/2 text-gray-900 text-sm font-normal whitespace-nowrap select-none pointer-events-none"
+                            style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '14px', textAlign: 'center' }}
+                          >
+                            {budgetRange[1]}
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
 
-            {/* Features */}
+            {/* Available Days */}
             <div className="space-y-4">
-              <h3 className="text-base font-semibold text-gray-900">Features</h3>
+              <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
+                <Calendar size={16} className="text-gray-600" />
+                Available Days
+              </h3>
               <div className="space-y-4">
-                {featureOptions.map((feature) => (
-                  <div key={feature} className="flex items-center gap-3">
+                {weekdayOptions.map((weekday) => (
+                  <div key={weekday} className="flex items-center gap-3">
                     <input 
                       type="checkbox" 
-                      id={feature}
-                      checked={selectedFeatures.includes(feature)}
+                      id={weekday}
+                      checked={selectedWeekdays.includes(weekday)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedFeatures([...selectedFeatures, feature]);
+                          setSelectedWeekdays([...selectedWeekdays, weekday]);
                         } else {
-                          setSelectedFeatures(selectedFeatures.filter(f => f !== feature));
+                          setSelectedWeekdays(selectedWeekdays.filter(w => w !== weekday));
                         }
                       }}
                       className="w-5 h-5 rounded border-gray-300"
                     />
-                    <label htmlFor={feature} className="text-sm text-gray-900 cursor-pointer">
-                      {feature}
+                    <label htmlFor={weekday} className="text-sm text-gray-900 cursor-pointer">
+                      {weekday}
                     </label>
                   </div>
                 ))}
@@ -286,116 +398,231 @@ const FindInstructorsPage = () => {
               </button>
             </div>
 
-            {/* Sorting */}
+            {/* Sorting + View Switcher */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Showing {instructors.length} results</span>
-              <div className="flex items-center gap-3 px-4 py-2.5 border border-gray-300 rounded-lg bg-white">
-                <span className="text-sm text-gray-900">Popular</span>
-                <ChevronDown size={16} className="text-gray-500" />
+              <span className="text-sm text-[#4E5562]">Showing 73 results</span>
+              
+              <div className="flex items-center gap-4">
+                {/* Sort Select */}
+                <div className="flex items-center">
+                  <span className="text-sm font-semibold text-[#111827] mr-3">
+                    Sort by:
+                  </span>
+                  <button className="flex items-center justify-between px-4 py-2.5 w-[180px] rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                    {/* Left side: Icon + Text */}
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-5 h-5">
+                        <ArrowUpDown size={16} className="text-[#4E5562]" />
+                      </div>
+                      <span className="text-sm text-[#4E5562]">Popular</span>
+                    </div>
+                    {/* Right side: Dropdown Arrow */}
+                    <div className="flex items-center justify-center w-4 h-5">
+                      <ChevronDown size={14} className="text-[#4E5562]" />
+                    </div>
+                  </button>
+                </div>
+                
+                              {/* View Switcher */}
+              <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-lg transition-all duration-200 ${
+                    viewMode === 'grid' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <Grid2X2 size={18} />
+                </button>
+                <button 
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-lg transition-all duration-200 ${
+                    viewMode === 'list' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <List size={18} />
+                </button>
+              </div>
               </div>
             </div>
 
             {/* Instructor Listings */}
-            <div className="space-y-6">
-              {instructors.map((instructor) => {
-                const AvatarIcon = instructor.avatar;
-                
-                return (
-                  <div key={instructor.id} className="flex bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                    {/* Image Gallery */}
-                    <div className="w-[306px] h-[261px] bg-gray-100 relative flex items-center justify-center">
-                      {/* Single centered icon instead of grid */}
-                      <AvatarIcon size={80} className="text-gray-400" />
-                      
-                      {/* Overlay gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/16"></div>
-                      
-                      {/* Pagination dots */}
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
-                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+            {viewMode === 'list' ? (
+              // List View (Current Design)
+              <div className="space-y-4">
+                {instructors.map((instructor) => {
+                  const AvatarIcon = instructor.avatar;
+                  
+                  return (
+                    <div key={instructor.id} className="flex bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                      {/* Image Gallery */}
+                      <div className="w-[220px] h-[180px] bg-gray-100 relative flex items-center justify-center">
+                        {/* Single centered icon instead of grid */}
+                        <AvatarIcon size={60} className="text-gray-400" />
+                        
+                        {/* Overlay gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/16"></div>
+                        
+                        {/* Pagination dots */}
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                        </div>
+
+                        {/* Bookmark button */}
+                        <button className="absolute top-3 right-3 p-2.5 rounded-xl bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg hover:bg-white hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+                          <Bookmark size={16} className="text-gray-600 hover:text-red-500 transition-colors duration-200" />
+                        </button>
                       </div>
 
-                      {/* Bookmark button */}
-                      <button className="absolute top-0 right-0 p-3 rounded-full border border-gray-200 bg-white m-3 hover:bg-gray-50 transition-colors">
-                        <Bookmark size={16} className="text-gray-700" />
-                      </button>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex flex-1">
-                      {/* Main Content Area */}
-                      <div className="flex-1 p-6">
-                        {/* Contractor Info */}
-                        <div className="space-y-3">
-                          {/* Header */}
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                              <AvatarIcon size={24} className="text-gray-600" />
+                      {/* Content */}
+                      <div className="flex flex-1">
+                        {/* Main Content Area */}
+                        <div className="flex-1 p-4">
+                          {/* Contractor Info */}
+                          <div className="space-y-2">
+                            {/* Header */}
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                                <AvatarIcon size={20} className="text-gray-600" />
+                              </div>
+                              <h3 className="text-sm font-semibold text-gray-900 leading-5" style={{ fontFamily: 'Inter', fontWeight: 600, fontSize: '14px' }}>
+                                {instructor.name}
+                              </h3>
                             </div>
-                            <h3 className="text-base font-semibold text-gray-900 leading-6" style={{ fontFamily: 'Inter', fontWeight: 600, fontSize: '16px' }}>
+                            
+                            {/* Services */}
+                            <p className="text-xs font-medium text-gray-900 leading-[1.43em]" style={{ fontFamily: 'Inter', fontWeight: 500, fontSize: '12px' }}>
+                              {instructor.specialties}
+                            </p>
+                            
+                            {/* Bio */}
+                            <p className="text-xs text-gray-600 leading-[1.57em] line-clamp-2" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '12px', color: '#4E5562' }}>
+                              {instructor.bio}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Vertical Divider */}
+                        <div className="w-px bg-gray-200"></div>
+
+                        {/* Listing Info */}
+                        <div className="w-40 p-4 flex flex-col justify-between">
+                          {/* Top section with rating and badges */}
+                          <div className="space-y-2 pt-6">
+                            {/* Rating */}
+                            <div className="flex items-center gap-1">
+                              <Star size={14} className="text-orange-400 fill-current" />
+                              <span className="text-xs text-gray-900" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '12px' }}>
+                                {instructor.rating}
+                              </span>
+                              <span className="text-xs text-gray-500" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '10px', color: '#6C727F' }}>
+                                ({instructor.reviews})
+                              </span>
+                            </div>
+                            
+                            {/* Badge */}
+                            {instructor.badges.map((badge, idx) => (
+                              <div key={idx} className="inline-flex items-center gap-1 py-0.5 rounded">
+                                <div className="w-3 h-3 flex items-center justify-center">
+                                  <div className="w-2 h-2 border border-gray-700 rounded-sm flex items-center justify-center">
+                                    <div className="w-1 h-1 bg-gray-700 rounded-sm"></div>
+                                  </div>
+                                </div>
+                                <span className="text-xs text-gray-900" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '11px', color: '#333D4C' }}>
+                                  {badge}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Connect Button */}
+                          <button className="flex items-center justify-center gap-1 px-3 py-2 rounded-md bg-gray-900 border border-gray-800 text-white text-xs font-medium hover:bg-gray-800 transition-colors w-full" style={{ fontFamily: 'Inter', fontWeight: 500, fontSize: '12px' }}>
+                            <Mail size={14} className="text-white" />
+                            <span>Connect</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              // Grid View (Figma Design)
+              <div className="grid grid-cols-2 gap-6">
+                {instructors.map((instructor) => {
+                  const AvatarIcon = instructor.avatar;
+                  
+                  return (
+                    <div key={instructor.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col h-full">
+                      {/* Body */}
+                      <div className="flex gap-4 pb-6 border-b border-gray-200">
+                        {/* Avatar */}
+                        <div className="w-[100px] h-[110px] bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <AvatarIcon size={40} className="text-gray-500" />
+                        </div>
+                        
+                        {/* Info */}
+                        <div className="flex-1 space-y-3 min-w-0">
+                          {/* Name + Rating */}
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="text-lg font-semibold text-[#111827] truncate">
                               {instructor.name}
                             </h3>
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                              <Star size={14} className="text-[#FC9231] fill-current" />
+                              <span className="text-sm text-[#111827]">{instructor.rating}</span>
+                              <span className="text-xs text-[#6C727F]">({instructor.reviews})</span>
+                            </div>
                           </div>
                           
-                          {/* Services */}
-                          <p className="text-sm font-medium text-gray-900 leading-[1.43em]" style={{ fontFamily: 'Inter', fontWeight: 500, fontSize: '14px' }}>
-                            {instructor.specialties}
-                          </p>
+                          {/* Profession */}
+                          <p className="text-sm font-semibold text-[#111827] truncate">{instructor.specialties}</p>
+                          
+                          {/* Badge + Expertise */}
+                          <div className="flex flex-wrap items-center gap-2">
+                            {instructor.verified && (
+                              <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3D7A81] rounded text-white text-xs font-medium">
+                                <Shield size={12} className="text-white" />
+                                <span>Verified</span>
+                              </div>
+                            )}
+                            <div className="flex items-center gap-1">
+                              <Award size={14} className="text-[#333D4C]" />
+                              <span className="text-sm text-[#333D4C]">8+ years experience</span>
+                            </div>
+                          </div>
                           
                           {/* Bio */}
-                          <p className="text-sm text-gray-600 leading-[1.57em]" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '14px', color: '#4E5562' }}>
+                          <p className="text-sm text-[#4E5562] line-clamp-2 leading-relaxed">
                             {instructor.bio}
                           </p>
                         </div>
                       </div>
-
-                      {/* Vertical Divider */}
-                      <div className="w-px bg-gray-200"></div>
-
-                      {/* Listing Info */}
-                      <div className="w-48 p-6 flex flex-col justify-between">
-                        {/* Top section with rating and badges */}
-                        <div className="space-y-2 pt-11">
-                          {/* Rating */}
-                          <div className="flex items-center gap-1">
-                            <Star size={16} className="text-orange-400 fill-current" />
-                            <span className="text-sm text-gray-900" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '14px' }}>
-                              {instructor.rating}
-                            </span>
-                            <span className="text-xs text-gray-500" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '12px', color: '#6C727F' }}>
-                              ({instructor.reviews})
-                            </span>
-                          </div>
-                          
-                          {/* Badge */}
-                          {instructor.badges.map((badge, idx) => (
-                            <div key={idx} className="inline-flex items-center gap-1 py-0.5 rounded">
-                              <div className="w-3.5 h-3.5 flex items-center justify-center">
-                                <div className="w-2.5 h-2.5 border border-gray-700 rounded-sm flex items-center justify-center">
-                                  <div className="w-1.5 h-1.5 bg-gray-700 rounded-sm"></div>
-                                </div>
-                              </div>
-                              <span className="text-sm text-gray-900" style={{ fontFamily: 'Inter', fontWeight: 400, fontSize: '14px', color: '#333D4C' }}>
-                                {badge}
-                              </span>
-                            </div>
-                          ))}
+                      
+                      {/* Footer */}
+                      <div className="flex items-end justify-between pt-4 mt-auto">
+                        {/* Price */}
+                        <div className="flex-1">
+                          <p className="text-xl font-semibold text-[#111827]">From ${instructor.budget === '$' ? '30' : instructor.budget === '$$' ? '50' : '80'}.00</p>
+                          <p className="text-sm text-[#4E5562]">Online / Offline</p>
                         </div>
-
-                        {/* Connect Button */}
-                        <button className="flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-lg bg-gray-900 border border-gray-800 text-white text-sm font-medium hover:bg-gray-800 transition-colors w-full" style={{ fontFamily: 'Inter', fontWeight: 500, fontSize: '14px' }}>
-                          <Mail size={16} className="text-white" />
-                          <span>Connect</span>
+                        
+                        {/* Button */}
+                        <button className="px-5 py-2.5 border border-[#D85151] text-[#D85151] rounded-lg text-sm font-medium hover:bg-[#D85151] hover:text-white transition-colors flex-shrink-0">
+                          Book a lesson
                         </button>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Pagination */}
             <div className="flex justify-center gap-1 pt-2">
