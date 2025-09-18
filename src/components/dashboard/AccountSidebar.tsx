@@ -1,10 +1,19 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { useRouter } from "next/navigation";
 //@ts-ignore
-import { User, Layers, Star, Heart, CreditCard, Settings, HelpCircle, LogOut } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import {
+  User,
+  Layers,
+  Star,
+  Heart,
+  CreditCard,
+  Settings,
+  HelpCircle,
+  LogOut,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AccountSidebarProps {
   activeItem?: string;
@@ -15,54 +24,54 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
   const router = useRouter();
 
   const menuItems = [
-    { icon: User, label: 'My profile', href: '/dashboard' },
-    { icon: Layers, label: 'My listings', href: '/listings' },
-    { icon: Star, label: 'Reviews', href: '/reviews' },
-    { icon: Heart, label: 'Favorites', href: '/favorites' },
-    { icon: CreditCard, label: 'Payment details', href: '/payment' },
-    { icon: Settings, label: 'Account settings', href: '/account-settings' },
-    { icon: HelpCircle, label: 'Help center', href: '/help' },
+    { icon: User, label: "My profile", href: "/profile" },
+    { icon: Layers, label: "My listings", href: "/listings" },
+    { icon: Star, label: "Reviews", href: "/reviews" },
+    { icon: Heart, label: "Favorites", href: "/favorites" },
+    { icon: CreditCard, label: "Payment details", href: "/payment" },
+    { icon: Settings, label: "Account settings", href: "/account-settings" },
+    { icon: HelpCircle, label: "Help center", href: "/help" },
   ];
 
   return (
-    <div className="flex flex-col gap-2" style={{ width: '266px' }}>
-      <div 
+    <div className="flex flex-col gap-2" style={{ width: "266px" }}>
+      <div
         className="bg-white rounded-lg shadow-sm border border-gray-100"
-        style={{ minHeight: '350px' }}
+        style={{ minHeight: "350px" }}
       >
         {/* Header */}
         <div className="flex flex-col items-center gap-3 p-6 pb-4">
           {/* Avatar */}
-          <div 
+          <div
             className="rounded-full bg-gray-300 flex items-center justify-center"
-            style={{ width: '64px', height: '64px' }}
+            style={{ width: "64px", height: "64px" }}
           >
             <User size={24} className="text-gray-600" />
           </div>
-          
+
           {/* Name and Email */}
           <div className="flex flex-col items-center gap-1">
-            <span 
+            <span
               className="text-gray-900 font-semibold text-center"
-              style={{ 
-                fontFamily: 'Inter', 
-                fontWeight: 600, 
-                fontSize: '16px', 
-                lineHeight: '1.5em' 
+              style={{
+                fontFamily: "Inter",
+                fontWeight: 600,
+                fontSize: "16px",
+                lineHeight: "1.5em",
               }}
             >
-              {user?.name || 'Sarah Instructor'}
+              {user?.name || "Sarah Instructor"}
             </span>
-            <span 
+            <span
               className="text-gray-500 text-center"
-              style={{ 
-                fontFamily: 'Inter', 
-                fontWeight: 400, 
-                fontSize: '14px', 
-                lineHeight: '1.4em' 
+              style={{
+                fontFamily: "Inter",
+                fontWeight: 400,
+                fontSize: "14px",
+                lineHeight: "1.4em",
               }}
             >
-              {user?.email || 'instructor@demo.com'}
+              {user?.email || "instructor@demo.com"}
             </span>
           </div>
         </div>
@@ -72,32 +81,28 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
           {menuItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = activeItem === item.label;
-            
+
             return (
               <button
                 key={index}
                 onClick={() => router.push(item.href)}
                 className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left ${
-                  isActive 
-                    ? 'bg-gray-100 text-gray-900' 
-                    : 'text-gray-600 hover:bg-gray-50'
+                  isActive
+                    ? "bg-gray-100 text-gray-900"
+                    : "text-gray-600 hover:bg-gray-50"
                 }`}
               >
-                <Icon 
-                  size={16} 
-                  className={`${
-                    isActive 
-                      ? 'text-gray-900' 
-                      : 'text-gray-500'
-                  }`}
+                <Icon
+                  size={16}
+                  className={`${isActive ? "text-gray-900" : "text-gray-500"}`}
                 />
-                <span 
+                <span
                   className="font-medium"
-                  style={{ 
-                    fontFamily: 'Inter', 
-                    fontWeight: 500, 
-                    fontSize: '14px', 
-                    lineHeight: '1.4em' 
+                  style={{
+                    fontFamily: "Inter",
+                    fontWeight: 500,
+                    fontSize: "14px",
+                    lineHeight: "1.4em",
                   }}
                 >
                   {item.label}
@@ -107,21 +112,21 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
           })}
         </div>
       </div>
-      
+
       {/* Log Out - No Background */}
       <div className="px-4">
-        <button 
+        <button
           onClick={logout}
           className="flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left text-red-500 hover:bg-red-50 w-full"
         >
           <LogOut size={16} className="text-red-500" />
-          <span 
+          <span
             className="font-medium"
-            style={{ 
-              fontFamily: 'Inter', 
-              fontWeight: 500, 
-              fontSize: '14px', 
-              lineHeight: '1.4em' 
+            style={{
+              fontFamily: "Inter",
+              fontWeight: 500,
+              fontSize: "14px",
+              lineHeight: "1.4em",
             }}
           >
             Log out

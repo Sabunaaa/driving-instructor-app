@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F5F7FA;
+  --background: #f5f7fa;
   --foreground: #171717;
 }
 
@@ -14,7 +14,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #F5F7FA;
+    --background: #f5f7fa;
     --foreground: #171717;
   }
 }
@@ -24,4 +24,19 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), Inter, sans-serif;
   font-weight: 500;
+}
+
+/* Hide native date picker indicators when we render our own calendar icon */
+input.dc-date-custom::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+}
+input.dc-date-custom::-ms-clear,
+input.dc-date-custom::-ms-reveal {
+  display: none;
+}
+/* Firefox: hide calendar icon background button while keeping functionality */
+input.dc-date-custom[type="date"] {
+  /* Remove built-in icon padding so text aligns */
+  background: transparent;
 }
