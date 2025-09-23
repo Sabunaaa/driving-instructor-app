@@ -21,7 +21,7 @@ export const articles: Article[] = [
     author: { name: "Team Finder", avatarUrl: "/images/404/404.png" },
     date: "2025-08-12",
     tag: "Getting Started",
-    imageUrl: "/window.svg",
+    imageUrl: "/images/404/instru.png",
   },
   {
     slug: "lesson-pricing-guide-georgia",
@@ -33,7 +33,7 @@ export const articles: Article[] = [
     author: { name: "Team Finder", avatarUrl: "/images/404/404.png" },
     date: "2025-07-30",
     tag: "Pricing",
-    imageUrl: "/window.svg",
+    imageUrl: "/images/404/instru.png",
   },
   {
     slug: "booking-checklist-first-lesson",
@@ -45,7 +45,7 @@ export const articles: Article[] = [
     author: { name: "Team Finder", avatarUrl: "/images/404/404.png" },
     date: "2025-07-14",
     tag: "Booking",
-    imageUrl: "/window.svg",
+    imageUrl: "/images/404/instru.png",
   },
   {
     slug: "safety-verifying-instructors-vehicles",
@@ -57,7 +57,7 @@ export const articles: Article[] = [
     author: { name: "Team Finder", avatarUrl: "/images/404/404.png" },
     date: "2025-06-28",
     tag: "Safety",
-    imageUrl: "/window.svg",
+    imageUrl: "/images/404/instru.png",
   },
 ];
 

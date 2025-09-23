@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import Button from "@/components/ui/Button";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
+import { toCategorySlug, toSlug } from "./articles/data";
 
 const HelpPage = () => {
   const { user } = useAuth();
@@ -133,7 +134,7 @@ const HelpPage = () => {
           <AccountSidebar activeItem="Help center" />
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1" aria-label="Help center main content">
             <div className="space-y-8">
               {/* Header */}
               <div className="text-center">
@@ -162,7 +163,7 @@ const HelpPage = () => {
               </div>
 
               {/* Help Categories */}
-              <div>
+              <div aria-label="Browse by Category section">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   Browse by Category
                 </h2>
@@ -173,6 +174,11 @@ const HelpPage = () => {
                       <div
                         key={index}
                         className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                        onClick={() =>
+                          router.push(
+                            `/help/category/${toCategorySlug(category.title)}`
+                          )
+                        }
                       >
                         <div className="flex items-start gap-4">
                           <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
@@ -188,13 +194,25 @@ const HelpPage = () => {
                             <div className="space-y-1">
                               {category.articles.map(
                                 (article, articleIndex) => (
-                                  <div
+                                  <button
                                     key={articleIndex}
-                                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 cursor-pointer"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const articleSlug = toSlug(article);
+                                      const fullSlug = `${toCategorySlug(
+                                        category.title
+                                      )}-${articleSlug}`;
+                                      if (articleSlug === "payment-methods") {
+                                        router.push("/payment");
+                                        return;
+                                      }
+                                      router.push(`/help/articles/${fullSlug}`);
+                                    }}
+                                    className="w-full flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 cursor-pointer text-left"
                                   >
                                     <ChevronRight size={14} />
                                     <span>{article}</span>
-                                  </div>
+                                  </button>
                                 )
                               )}
                             </div>
@@ -207,28 +225,31 @@ const HelpPage = () => {
               </div>
 
               {/* Popular Articles */}
-              <div>
+              <div aria-label="Popular Articles section">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   Popular Articles
                 </h2>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 divide-y divide-gray-100">
                   {popularArticles.map((article, index) => (
-                    <div
+                    <button
                       key={index}
-                      className="flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer"
+                      onClick={() =>
+                        router.push(`/help/articles/${toSlug(article)}`)
+                      }
+                      className="w-full flex items-center justify-between p-4 hover:bg-gray-50 text-left"
                     >
                       <div className="flex items-center gap-3">
                         <Book size={16} className="text-gray-400" />
                         <span className="text-gray-900">{article}</span>
                       </div>
                       <ChevronRight size={16} className="text-gray-400" />
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
 
               {/* Contact Support */}
-              <div>
+              <div aria-label="Contact Support section">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   Contact Support
                 </h2>
@@ -249,7 +270,18 @@ const HelpPage = () => {
                         <p className="text-sm text-gray-600 mb-4">
                           {option.description}
                         </p>
-                        <Button block disabled={!option.available}>
+                        <Button
+                          block
+                          disabled={!option.available}
+                          onClick={() => {
+                            if (!option.available) return;
+                            if (option.title === "Live Chat") {
+                              router.push("/help/chat");
+                            } else if (option.title === "Email Support") {
+                              router.push("/help/email");
+                            }
+                          }}
+                        >
                           {option.action}
                         </Button>
                         {!option.available && (
@@ -264,7 +296,10 @@ const HelpPage = () => {
               </div>
 
               {/* Quick Tips */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <div
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                aria-label="Quick Tips section"
+              >
                 <h3 className="font-semibold text-gray-900 mb-3">
                   💡 Quick Tips
                 </h3>

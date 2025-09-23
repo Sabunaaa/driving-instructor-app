@@ -105,7 +105,7 @@ const AccountSettings = () => {
       ...prev,
       [field]: value,
     }));
-  setPwdStatus({ type: "idle" });
+    setPwdStatus({ type: "idle" });
   };
 
   const togglePasswordVisibility = (field: "current" | "new" | "confirm") => {
@@ -224,11 +224,21 @@ const AccountSettings = () => {
       passwordData.newPassword
     );
     if (!ok) {
-      setPwdStatus({ type: "error", message: "Current password is incorrect." });
+      setPwdStatus({
+        type: "error",
+        message: "Current password is incorrect.",
+      });
       return;
     }
-    setPwdStatus({ type: "success", message: "Password updated successfully." });
-    setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setPwdStatus({
+      type: "success",
+      message: "Password updated successfully.",
+    });
+    setPasswordData({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    });
   };
 
   return (
@@ -592,7 +602,7 @@ const AccountSettings = () => {
                   {/* Password and Security Tab */}
                   {activeTab === "Password and security" && (
                     <>
-                        {/* Password Settings */}
+                      {/* Password Settings */}
                       <div className="space-y-6">
                         <p
                           className="text-gray-600"
@@ -766,7 +776,8 @@ const AccountSettings = () => {
 
                         {/* Password Requirements */}
                         <div className="text-sm text-gray-500 -mt-2">
-                          Use at least 8 characters, including letters and numbers.
+                          Use at least 8 characters, including letters and
+                          numbers.
                         </div>
 
                         {/* Password Update Buttons */}

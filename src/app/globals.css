@@ -5,12 +5,7 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-inter);
-}
+/* Theme variables are declared via CSS custom properties above */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -39,4 +34,15 @@ input.dc-date-custom::-ms-reveal {
 input.dc-date-custom[type="date"] {
   /* Remove built-in icon padding so text aligns */
   background: transparent;
+}
+
+/* Compact number input for Hours: hide spinners only where applied */
+.hours-input-hide-spinners::-webkit-outer-spin-button,
+.hours-input-hide-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.hours-input-hide-spinners[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield; /* Firefox */
 }

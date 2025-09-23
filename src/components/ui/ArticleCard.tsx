@@ -78,6 +78,7 @@ export default function ArticleCard({
   variant = "list",
 }: ArticleCardProps) {
   const isFeatured = variant === "featured";
+  const defaultImage = "/images/404/instru.png";
 
   const card = isFeatured ? (
     // Featured: large top image, content below
@@ -89,20 +90,14 @@ export default function ArticleCard({
     >
       {/* Image */}
       <div className="relative h-64 sm:h-72 md:h-80 w-full">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={imageAlt || title}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gray-50 text-sm text-gray-400">
-            No image
-          </div>
-        )}
+        <Image
+          src={imageUrl || defaultImage}
+          alt={imageAlt || title}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
+          priority
+        />
       </div>
       {/* Content */}
       <div className="p-5 sm:p-6">
@@ -164,19 +159,13 @@ export default function ArticleCard({
         {/* Right: Image with dashed divider */}
         <div className="flex items-center pl-6 border-l border-dashed border-gray-200">
           <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-md ring-1 ring-gray-200/70">
-            {imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt={imageAlt || title}
-                fill
-                sizes="(max-width: 640px) 8rem, 12rem"
-                className="object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gray-50 text-xs text-gray-400">
-                No image
-              </div>
-            )}
+            <Image
+              src={imageUrl || defaultImage}
+              alt={imageAlt || title}
+              fill
+              sizes="(max-width: 640px) 8rem, 12rem"
+              className="object-cover"
+            />
           </div>
         </div>
       </div>

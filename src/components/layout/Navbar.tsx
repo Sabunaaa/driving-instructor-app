@@ -89,17 +89,13 @@ const Navbar = () => {
 
           {/* Nav link: How it Works */}
           <div className="flex items-center px-4 sm:px-6 py-2">
-            <span
-              className="text-gray-700 font-medium"
-              style={{
-                fontSize: "16px",
-                lineHeight: "24px",
-                fontWeight: 500,
-                color: "#333D4C",
-              }}
+            <Link
+              href="/how-it-works"
+              className="text-gray-700 font-medium hover:text-gray-900 hover:underline underline-offset-4 transition-colors"
+              style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
             >
               How it Works
-            </span>
+            </Link>
           </div>
 
           {/* Nav link: Blog */}
@@ -338,13 +334,13 @@ const Navbar = () => {
               >
                 Find Instructors
               </Link>
-              <button
-                type="button"
-                className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800"
+              <Link
+                href="/how-it-works"
                 onClick={() => setIsMobileNavOpen(false)}
+                className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800"
               >
                 How it Works
-              </button>
+              </Link>
               <Link
                 href="/blog"
                 onClick={() => setIsMobileNavOpen(false)}

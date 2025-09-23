@@ -69,8 +69,8 @@ const StyledWrapper = styled.div`
   }
 
   .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background {
-    background-color: #fc9231; /* orange */
-    box-shadow: inset 0 0 0 1px #e07f2a;
+    background-color: #f03d3d; /* brand red */
+    box-shadow: inset 0 0 0 1px #d73535;
   }
 
   .toggle-switch
@@ -78,12 +78,12 @@ const StyledWrapper = styled.div`
     + .toggle-switch-background
     .toggle-switch-handle {
     transform: translateX(20px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px #fc9231;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px #f03d3d;
   }
 
   .toggle-switch input[type="checkbox"]:checked::before {
     content: "On";
-    color: #fc9231;
+    color: #f03d3d;
     right: -15px;
   }
 `;

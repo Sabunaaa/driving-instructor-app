@@ -32,7 +32,10 @@ interface AuthContextType {
   logout: () => void;
   isLoading: boolean;
   updateUser: (updates: Partial<User>) => void;
-  updatePassword: (currentPassword: string, newPassword: string) => Promise<boolean>;
+  updatePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -100,9 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Check if email exists and password is correct (support stored password or demo default: "password")
     const foundUser = demoUsers.find((u) => u.email === email);
     const storedPwd = foundUser ? getStoredPassword(foundUser.id) : null;
-    if (
-      foundUser && (password === storedPwd || password === "password")
-    ) {
+    if (foundUser && (password === storedPwd || password === "password")) {
       setUser(foundUser);
       localStorage.setItem("user", JSON.stringify(foundUser));
       // Persist password for future validations if not yet stored
@@ -138,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setUser(newUser);
     localStorage.setItem("user", JSON.stringify(newUser));
-  setStoredPassword(newUser.id, password);
+    setStoredPassword(newUser.id, password);
     setIsLoading(false);
     return true;
   };
@@ -175,8 +176,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     signup,
     logout,
     isLoading,
-  updateUser,
-  updatePassword,
+    updateUser,
+    updatePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
