@@ -10,6 +10,7 @@ export interface ButtonProps
   variant?: Variant;
   size?: Size;
   block?: boolean;
+  asChild?: boolean; // render child element with button styles
 }
 
 const COLORS = {
@@ -41,25 +42,39 @@ export default function Button({
   size = "md",
   block,
   disabled,
+  asChild,
   className = "",
   children,
   ...props
 }: ButtonProps) {
   const color = disabled ? COLORS[variant].disabled : COLORS[variant].base;
   const width = block ? "w-full" : "";
+  const classes = [
+    "rounded-lg font-medium transition-colors",
+    color,
+    SIZES[size],
+    width,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  // If asChild is set, clone the child element and merge classes/handlers
+  if (asChild && React.isValidElement(children)) {
+    const child = children as React.ReactElement<any>;
+    const mergedClass = [classes, child.props?.className]
+      .filter(Boolean)
+      .join(" ");
+    const { onClick, ...restProps } = props;
+    return React.cloneElement(child, {
+      className: mergedClass,
+      onClick,
+      role: child.props?.role || "button",
+    });
+  }
 
   return (
-    <button
-      className={[
-        "rounded-lg font-medium transition-colors",
-        color,
-        SIZES[size],
-        width,
-        className,
-      ].join(" ")}
-      disabled={disabled}
-      {...props}
-    >
+    <button className={classes} disabled={disabled} {...props}>
       {children}
     </button>
   );
