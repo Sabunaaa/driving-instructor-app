@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
 const Error404 = () => {
   return (
@@ -18,31 +18,31 @@ const Error404 = () => {
           priority
         />
       </div>
-      
+
       {/* Title */}
-      <h1 
+      <h1
         className="text-center text-gray-900 font-semibold"
         style={{
-          fontFamily: 'Inter',
+          fontFamily: "Inter",
           fontWeight: 600,
-          fontSize: '48px',
-          lineHeight: '56px',
-          color: '#111827'
+          fontSize: "48px",
+          lineHeight: "56px",
+          color: "#111827",
         }}
       >
         Error 404...
       </h1>
-      
+
       {/* Back to Home Button */}
-      <button 
-        className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
-        style={{ 
-          backgroundColor: '#D85151', 
-          fontSize: '14px', 
-          lineHeight: '20px', 
-          fontWeight: 500 
+      <button
+        className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#F03D3D] text-white rounded-lg font-medium hover:opacity-90 transition-colors"
+        style={{
+          backgroundColor: "#F03D3D",
+          fontSize: "14px",
+          lineHeight: "20px",
+          fontWeight: 500,
         }}
-        onClick={() => window.location.href = '/'}
+        onClick={() => (window.location.href = "/")}
       >
         <span>Back to Home</span>
       </button>

@@ -1,53 +1,53 @@
 import { ArticleCard, BlogSidebar } from "@/components/ui";
+import { articles } from "./data";
 
 export const metadata = {
   title: "Our blog",
 };
 
-const articles = [
-  {
-    title: "Best practices for using AI in digital pharma advertising",
-    excerpt:
-      "Today’s healthcare consumers have a strong preference for a patient-centric approach, prioritizing personalized experiences and convenience...",
-    author: { name: "Dr. Martha Simpson", avatarUrl: "/images/404/404.png" },
-    date: "2024-06-23",
-    tag: "Healthcare Trends",
-    imageUrl: "/window.svg",
-    href: "#",
-  },
-  {
-    title: "How Healthgrades rates America’s best hospitals",
-    excerpt:
-      "Since its establishment in 1998, Healthgrades has been aiding consumers in assessing and contrasting hospital performance concerning care delivered during a hospital...",
-    author: { name: "Dr. Jacob Cruz", avatarUrl: "/images/404/404.png" },
-    date: "2024-06-08",
-    tag: "Hospital Quality",
-    imageUrl: "/window.svg",
-    href: "#",
-  },
-];
+// Articles come from ./data and include slugs
 
 export default function BlogPage() {
   return (
-    <main className="mx-auto max-w-6xl px-4 sm:px-6 md:px-8 py-10">
-      <h1 className="mb-6 text-3xl font-semibold">Our blog</h1>
+    <main className="mx-auto px-3 sm:px-4 md:px-6 lg:px-8 2xl:px-[120px] 3xl:px-[120px] py-8 max-w-[1200px] xl:max-w-[1400px] 2xl:max-w-none 3xl:max-w-none">
+      {/* Removed hero banner per request */}
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-10 lg:grid-cols-[1fr_360px] xl:gap-12">
         {/* Left: content */}
         <div>
           {/* Featured grid */}
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2 xl:gap-10">
             {articles.slice(0, 2).map((a, i) => (
-              <ArticleCard key={i} {...a} variant="featured" />
+              <ArticleCard
+                key={i}
+                {...a}
+                href={`/blog/${a.slug}`}
+                variant="featured"
+              />
             ))}
           </div>
 
-          <hr className="my-10 border-gray-200" />
+          <div className="my-8 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-[#111827]">
+              Latest articles
+            </h2>
+            <a
+              href="#"
+              className="text-sm font-medium text-[#D85151] hover:opacity-90"
+            >
+              Browse all
+            </a>
+          </div>
 
           {/* List */}
-          <div className="space-y-4">
+          <div className="space-y-5 xl:space-y-6">
             {articles.map((a, i) => (
-              <ArticleCard key={`list-${i}`} {...a} variant="list" />
+              <ArticleCard
+                key={`list-${i}`}
+                {...a}
+                href={`/blog/${a.slug}`}
+                variant="list"
+              />
             ))}
           </div>
         </div>

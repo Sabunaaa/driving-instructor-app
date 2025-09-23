@@ -1,34 +1,33 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Navbar from '@/components/layout/Navbar';
+import React from "react";
 // @ts-ignore
-import { Phone, Mail, User, MessageCircle } from 'lucide-react';
+import { Phone, Mail, User, MessageCircle } from "lucide-react";
 
 export default function ContactPage() {
   const [formData, setFormData] = React.useState({
-    fullName: '',
-    email: '',
-    message: ''
+    fullName: "",
+    email: "",
+    message: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // Handle form submission here
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
-      <Navbar />
-      
       {/* Contact Section */}
       <div className="max-w-[1296px] mx-auto px-4 py-28">
         <div className="flex gap-[134px] items-start">
@@ -40,7 +39,9 @@ export default function ContactPage() {
                 Contact us
               </h1>
               <p className="text-base text-[#4E5562] leading-6 w-[469px]">
-                Write to us if you have any difficulties in working with the service. We are open to communication and want to know more about those who trust us.
+                Write to us if you have any difficulties in working with the
+                service. We are open to communication and want to know more
+                about those who trust us.
               </p>
             </div>
 
@@ -63,8 +64,12 @@ export default function ContactPage() {
                   Questions?
                 </h3>
                 <div className="flex gap-2 items-center">
-                  <span className="text-sm text-[#4E5562]">Give us a call right now</span>
-                  <span className="text-sm font-semibold text-[#333D4C]">(406) 555-0120</span>
+                  <span className="text-sm text-[#4E5562]">
+                    Give us a call right now
+                  </span>
+                  <span className="text-sm font-semibold text-[#333D4C]">
+                    (406) 555-0120
+                  </span>
                 </div>
               </div>
             </div>
@@ -120,7 +125,7 @@ export default function ContactPage() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-[#3D7A81] text-white font-medium py-3 px-6 rounded-lg hover:bg-[#2d5b61] transition-colors"
+                  className="w-full bg-[#F03D3D] border border-[#F03D3D] text-white font-medium py-3 px-6 rounded-lg hover:opacity-90 transition-colors"
                 >
                   Submit form
                 </button>

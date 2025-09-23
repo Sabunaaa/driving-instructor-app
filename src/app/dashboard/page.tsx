@@ -87,8 +87,8 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-[120px] py-8 max-w-7xl 2xl:max-w-none">
+        <div className="flex flex-col lg:flex-row gap-8">
           <AccountSidebar />
           <main className="flex-1">
             <div className="mb-8">

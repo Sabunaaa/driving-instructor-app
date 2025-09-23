@@ -8,17 +8,21 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "400px",
+        "3xl": "1920px",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        'custom-bg': '#F5F7FA',
+        "custom-bg": "#F5F7FA",
       },
       fontFamily: {
-        inter: ['var(--font-inter)', 'Inter', 'sans-serif'],
-        sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
+        inter: ["var(--font-inter)", "Inter", "sans-serif"],
+        sans: ["var(--font-inter)", "Inter", "sans-serif"],
       },
       fontWeight: {
-        'medium': '500',
+        medium: "500",
       },
     },
   },

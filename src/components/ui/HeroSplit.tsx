@@ -15,6 +15,8 @@ type HeroSplitProps = {
   rightImageAlt?: string;
   // Tailwind classes for left background color/gradient
   leftBgClassName?: string;
+  // When true, hero will fill the viewport height
+  fullHeight?: boolean;
 };
 
 export default function HeroSplit({
@@ -27,32 +29,41 @@ export default function HeroSplit({
   rightImageSrc = "/images/instructor-hero.jpg",
   rightImageAlt = "Driving instructor with car",
   leftBgClassName = "bg-gradient-to-br from-indigo-700 to-indigo-600",
+  fullHeight = false,
 }: HeroSplitProps) {
   const stars = Math.max(0, Math.min(5, rating));
 
   return (
     <section className="w-full">
-      <div className="grid md:grid-cols-3 min-h-[680px] rounded-none md:rounded-xl overflow-hidden">
+      <div
+        className={`grid md:grid-cols-3 ${
+          fullHeight
+            ? "min-h-[520px] md:min-h-[80vh]"
+            : "min-h-[560px] md:min-h-[680px]"
+        } rounded-none overflow-hidden ${leftBgClassName}`}
+      >
         {/* Left: content */}
         <div
-          className={`md:col-span-2 flex items-center ${leftBgClassName} text-gray-900 px-6 sm:px-10 py-20`}
+          className={`md:col-span-2 relative flex items-start text-gray-900 px-6 sm:px-10 pt-6 pb-10 md:pt-8 md:pb-12 lg:pb-[170px]`}
         >
-          <div className="max-w-xl mx-auto md:mx-0">
+          <div className="max-w-6xl mx-auto md:mx-0">
             {eyebrow && (
-              <p className="text-black/80 font-semibold tracking-wide mb-4">
+              <p className="text-black/80 font-semibold tracking-wide mb-6 text-2xl sm:text-3xl">
                 {eyebrow}
               </p>
             )}
-            <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
+            <h1 className="text-7xl sm:text-8xl font-bold leading-tight">
               {title}
             </h1>
             {typeof subtitle === "string" && subtitle.length > 0 && (
-              <p className="mt-4 text-gray-700 text-lg">{subtitle}</p>
+              <p className="mt-8 text-gray-800 text-3xl sm:text-4xl">
+                {subtitle}
+              </p>
             )}
 
             {/* Rating */}
             <div
-              className="mt-5 flex gap-1"
+              className="mt-10 flex gap-1"
               aria-label={`${stars} out of 5 stars`}
             >
               {Array.from({ length: 5 }).map((_, i) => (
@@ -69,10 +80,10 @@ export default function HeroSplit({
 
             {/* CTA */}
             {ctaLabel && (
-              <div className="mt-8">
+              <div className="mt-12 lg:mt-0 lg:absolute lg:left-10 lg:bottom-[100px]">
                 <Link
                   href={ctaHref}
-                  className="inline-flex items-center justify-center rounded-full bg-white text-gray-900 font-semibold px-6 py-3 shadow-sm hover:shadow-md hover:scale-[1.02] transition"
+                  className="inline-flex items-center justify-center rounded-full bg-black text-white font-semibold px-6 py-3 shadow-sm hover:shadow-md hover:scale-[1.02] transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black/60"
                 >
                   {ctaLabel}
                 </Link>
@@ -82,12 +93,12 @@ export default function HeroSplit({
         </div>
 
         {/* Right: image */}
-        <div className="md:col-span-1 relative h-[320px] md:h-full bg-gray-200">
+        <div className="md:col-span-1 relative h-[320px] md:h-full flex items-end justify-center px-6 md:px-8 pb-10 md:pb-12 pt-4 md:pt-0">
           {/* Plain img keeps it simple without Next config for external domains */}
           <img
             src={rightImageSrc}
             alt={rightImageAlt}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-auto max-w-full max-h-[360px] sm:max-h-[460px] md:max-h-[780px] lg:max-h-[840px] object-contain drop-shadow-md select-none pointer-events-none"
             onError={(e) => {
               // graceful fallback to a subtle gradient if image missing
               const target = e.currentTarget as HTMLImageElement;

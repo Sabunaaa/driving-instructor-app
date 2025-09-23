@@ -6,15 +6,14 @@ import React from "react";
 type Category = { label: string; count: number; href?: string };
 
 const defaultCategories: Category[] = [
-  { label: "All topics", count: 130 },
-  { label: "Healthcare system", count: 8 },
-  { label: "Hospital quality", count: 5 },
-  { label: "Advertising", count: 10 },
-  { label: "Medical industry", count: 9 },
-  { label: "Life sciences", count: 4 },
-  { label: "Herbal medicine", count: 12 },
-  { label: "Upcoming events", count: 3 },
-  { label: "Family medicine", count: 3 },
+  { label: "All topics", count: 34 },
+  { label: "Finding instructors", count: 8 },
+  { label: "Manual vs automatic", count: 6 },
+  { label: "Pricing & packages", count: 7 },
+  { label: "Scheduling & booking", count: 5 },
+  { label: "Test preparation", count: 4 },
+  { label: "Safety & verification", count: 3 },
+  { label: "Platform updates", count: 1 },
 ];
 
 export default function BlogSidebar({
@@ -106,7 +105,7 @@ export default function BlogSidebar({
           />
           <button
             type="submit"
-            className="w-full rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-800"
+            className="w-full rounded-lg bg-[#F03D3D] px-4 py-2.5 text-sm font-medium text-white hover:opacity-90"
           >
             Subscribe
           </button>

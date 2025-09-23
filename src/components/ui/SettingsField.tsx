@@ -52,7 +52,7 @@ export default function SettingsField({
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const baseInputClasses =
-    "focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 w-full";
+    "focus:outline-none focus:ring-2 focus:ring-[#F03D3D] text-gray-700 w-full";
   const baseStyle: React.CSSProperties = {
     fontFamily: "Inter",
     fontWeight: 400,
@@ -87,7 +87,7 @@ export default function SettingsField({
     if (rightIcon === "chevron") {
       return (
         <ChevronDown
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 group-hover:text-[#F03D3D]"
           size={16}
         />
       );
@@ -97,24 +97,19 @@ export default function SettingsField({
         <button
           type="button"
           aria-label="Open date picker"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#F03D3D] transition-colors"
           onMouseDown={(e) => {
-            // Prevent stealing focus before we decide to toggle
+            // Keep control of focus to ensure picker opens reliably
             e.preventDefault();
           }}
           onClick={() => {
             const el = inputRef.current as HTMLInputElement | null;
-            // Prefer native date picker when supported
-            // @ts-ignore - showPicker not in all TS lib doms yet
             if (!el) return;
-            const isFocused = document.activeElement === el;
-            if (isFocused) {
-              // Toggle off: close picker
-              el.blur();
-              return;
-            }
-            if (typeof (el as any).showPicker === "function") {
-              (el as any).showPicker();
+            // Always attempt to open the native picker when available
+            // @ts-ignore
+            if (typeof el.showPicker === "function") {
+              // @ts-ignore
+              el.showPicker();
               el.focus();
             } else {
               el.focus();
@@ -144,7 +139,7 @@ export default function SettingsField({
       </div>
 
       {/* Field wrapper for right adornments */}
-      <div className="relative">
+      <div className="relative group">
         {as === "textarea" && (
           <textarea
             rows={rows}

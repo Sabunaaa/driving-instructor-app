@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 interface ToggleSwitchProps {
   checked: boolean;
@@ -10,18 +10,14 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange }) => {
   return (
     <StyledWrapper>
       <label className="toggle-switch">
-        <input 
-          type="checkbox" 
-          checked={checked}
-          onChange={onChange}
-        />
+        <input type="checkbox" checked={checked} onChange={onChange} />
         <div className="toggle-switch-background">
           <div className="toggle-switch-handle" />
         </div>
       </label>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   .toggle-switch {
@@ -73,18 +69,21 @@ const StyledWrapper = styled.div`
   }
 
   .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background {
-    background-color: #05c46b;
-    box-shadow: inset 0 0 0 1px #04b360;
+    background-color: #fc9231; /* orange */
+    box-shadow: inset 0 0 0 1px #e07f2a;
   }
 
-  .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background .toggle-switch-handle {
+  .toggle-switch
+    input[type="checkbox"]:checked
+    + .toggle-switch-background
+    .toggle-switch-handle {
     transform: translateX(20px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px #05c46b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px #fc9231;
   }
 
   .toggle-switch input[type="checkbox"]:checked::before {
     content: "On";
-    color: #05c46b;
+    color: #fc9231;
     right: -15px;
   }
 `;

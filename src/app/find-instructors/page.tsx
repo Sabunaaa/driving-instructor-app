@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import Button from "@/components/ui/Button";
 // @ts-ignore
 import {
   ChevronRight,
+  ChevronLeft,
   MapPin,
   Navigation,
   Search,
@@ -46,13 +48,23 @@ const FindInstructorsPage = () => {
   ]);
   const [selectedRatings, setSelectedRatings] = React.useState(["5", "4"]);
   const [viewMode, setViewMode] = React.useState<"list" | "grid">("list");
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
+  const totalPages = 10; // keep consistent with UI expectation
+
+  const getPageNumbers = (current: number, total: number): number[] => {
+    if (total <= 3) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 1) return [1, 2, 3];
+    if (current >= total) return [total - 2, total - 1, total];
+    return [current - 1, current, current + 1];
+  };
 
   // Budget slider drag helpers
-  const trackRef = React.useRef<HTMLDivElement | null>(null);
+  // Track ref for the budget slider (used for pointer math)
+  const budgetTrackRef = React.useRef<HTMLDivElement | null>(null);
   const draggingRef = React.useRef<null | "left" | "right">(null);
 
   const valueFromClientX = (clientX: number) => {
-    const rect = trackRef.current?.getBoundingClientRect();
+    const rect = budgetTrackRef.current?.getBoundingClientRect();
     if (!rect) return null;
     const pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
     return Math.round(40 + pct * (100 - 40));
@@ -73,8 +85,10 @@ const FindInstructorsPage = () => {
 
   const stopDrag = () => {
     draggingRef.current = null;
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", stopDrag);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", stopDrag);
+    }
   };
 
   const startDrag =
@@ -82,8 +96,10 @@ const FindInstructorsPage = () => {
       draggingRef.current = side;
       // Kick off with initial move
       onPointerMove(e.nativeEvent);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", stopDrag);
+      if (typeof window !== "undefined") {
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", stopDrag);
+      }
     };
 
   const instructors = [
@@ -190,24 +206,29 @@ const FindInstructorsPage = () => {
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = () => {
       if (isLocationDropdownOpen) {
         setIsLocationDropdownOpen(false);
       }
     };
 
-    if (isLocationDropdownOpen) {
+    if (isLocationDropdownOpen && typeof document !== "undefined") {
       document.addEventListener("click", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("click", handleClickOutside);
+      }
     };
   }, [isLocationDropdownOpen]);
 
+  // Mobile filters toggle
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = React.useState(false);
+
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
-      <div className="max-w-[1296px] mx-auto px-6 py-6">
+      <div className="mx-auto px-4 sm:px-6 2xl:px-[120px] 3xl:px-[120px] py-6 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-8">
           <span className="text-sm font-medium text-gray-600">Homepage</span>
@@ -218,9 +239,26 @@ const FindInstructorsPage = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex gap-16">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
+          {/* Mobile Filters Toggle */}
+          <div className="lg:hidden flex items-center justify-between mb-2">
+            <span className="text-sm text-gray-600">Filters</span>
+            <button
+              type="button"
+              onClick={() => setIsMobileFiltersOpen((s) => !s)}
+              className="px-3 py-2 text-sm rounded-lg border bg-black border-black text-white hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              aria-expanded={isMobileFiltersOpen}
+            >
+              {isMobileFiltersOpen ? "Hide" : "Show"}
+            </button>
+          </div>
           {/* Filters Sidebar */}
-          <div className="w-[266px] space-y-10">
+          <aside
+            className={`w-full lg:w-[266px] space-y-10 ${
+              isMobileFiltersOpen ? "block" : "hidden"
+            } lg:block`}
+            aria-label="Filters"
+          >
             {/* Location and Radius */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
@@ -230,7 +268,7 @@ const FindInstructorsPage = () => {
                 </h3>
               </div>
               <div className="space-y-4">
-                <div className="relative" ref={trackRef}>
+                <div className="relative">
                   <button
                     onClick={() =>
                       setIsLocationDropdownOpen(!isLocationDropdownOpen)
@@ -305,7 +343,7 @@ const FindInstructorsPage = () => {
               </h3>
               <div className="pt-6 pb-1">
                 {/* Functional Range Slider */}
-                <div className="relative">
+                <div className="relative" ref={budgetTrackRef}>
                   {/* Helper function to convert value to percentage */}
                   {(() => {
                     const getPercentage = (value: number) =>
@@ -417,7 +455,7 @@ const FindInstructorsPage = () => {
 
                         {/* Left Handle Visual */}
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white border-2 border-gray-900 rounded-full pointer-events-none z-40 shadow-sm"
+                          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-black border-2 border-black rounded-full pointer-events-none z-40 shadow-sm"
                           style={{ left: `calc(${leftPercent}% - 10px)` }}
                         >
                           {/* Left Tooltip */}
@@ -436,7 +474,7 @@ const FindInstructorsPage = () => {
 
                         {/* Right Handle Visual */}
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white border-2 border-gray-900 rounded-full pointer-events-none z-40 shadow-sm"
+                          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-black border-2 border-black rounded-full pointer-events-none z-40 shadow-sm"
                           style={{ left: `calc(${rightPercent}% - 10px)` }}
                         >
                           {/* Right Tooltip */}
@@ -531,13 +569,13 @@ const FindInstructorsPage = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </aside>
 
           {/* Main Content Area */}
           <div className="flex-1 space-y-8">
             {/* Active Filters */}
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex gap-2 overflow-x-auto sm:overflow-visible whitespace-nowrap sm:whitespace-normal sm:flex-wrap">
                 {chips.slice(0, 12).map((chip, index) => (
                   <button
                     key={index}
@@ -559,14 +597,14 @@ const FindInstructorsPage = () => {
                   setSelectedWeekdays([]);
                   setSelectedRatings([]);
                 }}
-                className="text-sm font-medium text-gray-900 hover:text-gray-700"
+                className="text-sm font-medium text-gray-900 hover:text-gray-700 self-start sm:self-auto"
               >
                 Clear all
               </button>
             </div>
 
             {/* Sorting + View Switcher */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <span className="text-sm text-[#4E5562]">Showing 73 results</span>
 
               <div className="flex items-center gap-4">
@@ -575,7 +613,7 @@ const FindInstructorsPage = () => {
                   <span className="text-sm font-semibold text-[#111827] mr-3">
                     Sort by:
                   </span>
-                  <button className="flex items-center justify-between px-4 py-2.5 w-[180px] rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+                  <button className="flex items-center justify-between px-4 py-2.5 w-[160px] sm:w-[180px] rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
                     {/* Left side: Icon + Text */}
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-5 h-5">
@@ -591,7 +629,7 @@ const FindInstructorsPage = () => {
                 </div>
 
                 {/* View Switcher */}
-                <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
+                <div className="hidden md:flex gap-1 bg-gray-100 p-1 rounded-xl">
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-lg transition-all duration-200 ${
@@ -626,22 +664,35 @@ const FindInstructorsPage = () => {
                   return (
                     <div
                       key={instructor.id}
-                      className="flex bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+                      className="flex flex-col lg:flex-row bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
                     >
                       {/* Image Gallery */}
-                      <div className="w-[220px] h-[180px] bg-gray-100 relative flex items-center justify-center">
-                        {/* Single centered icon instead of grid */}
-                        <AvatarIcon size={60} className="text-gray-400" />
+                      <div className="w-full h-40 lg:w-[220px] lg:h-[180px] bg-gray-100 relative flex items-center justify-center overflow-hidden">
+                        {/* Instructor photo */}
+                        <img
+                          src="/images/404/profile.jpg"
+                          alt={`${instructor.name} photo`}
+                          className="w-full h-full object-cover"
+                        />
 
                         {/* Overlay gradient */}
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/16"></div>
 
-                        {/* Pagination dots */}
+                        {/* Pagination numbers (static for now) */}
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-                          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-                          <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                          {[1, 2, 3, 4].map((n, idx) => (
+                            <div
+                              key={n}
+                              className={
+                                `w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium border ` +
+                                (idx === 0
+                                  ? "bg-black text-white border-black"
+                                  : "bg-white/90 text-black border-black/80")
+                              }
+                            >
+                              {n}
+                            </div>
+                          ))}
                         </div>
 
                         {/* Bookmark button */}
@@ -654,17 +705,18 @@ const FindInstructorsPage = () => {
                       </div>
 
                       {/* Content */}
-                      <div className="flex flex-1">
+                      <div className="flex flex-col lg:flex-row flex-1">
                         {/* Main Content Area */}
                         <div className="flex-1 p-4">
                           {/* Contractor Info */}
                           <div className="space-y-2">
                             {/* Header */}
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                                <AvatarIcon
-                                  size={20}
-                                  className="text-gray-600"
+                              <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
+                                <img
+                                  src="/images/404/profile.jpg"
+                                  alt={`${instructor.name} avatar`}
+                                  className="w-full h-full object-cover"
                                 />
                               </div>
                               <h3
@@ -677,6 +729,59 @@ const FindInstructorsPage = () => {
                               >
                                 {instructor.name}
                               </h3>
+                            </div>
+
+                            {/* Mobile: Rating next to name */}
+                            <div className="flex items-center gap-1 lg:hidden">
+                              <Star
+                                size={14}
+                                className="text-orange-400 fill-current"
+                              />
+                              <span
+                                className="text-xs text-gray-900"
+                                style={{
+                                  fontFamily: "Inter",
+                                  fontWeight: 400,
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {instructor.rating}
+                              </span>
+                              <span
+                                className="text-[10px] text-gray-500"
+                                style={{ fontFamily: "Inter", fontWeight: 400 }}
+                              >
+                                ({instructor.reviews})
+                              </span>
+                            </div>
+
+                            {/* Mobile: Badges under name */}
+                            <div className="flex flex-wrap items-center gap-2 lg:hidden">
+                              {instructor.verified && (
+                                <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3D7A81] rounded text-white text-[10px] font-medium">
+                                  <Shield size={12} className="text-white" />
+                                  <span>Verified</span>
+                                </div>
+                              )}
+                              {instructor.badges.includes("Top Instructor") && (
+                                <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-[10px] font-medium">
+                                  <Award size={12} />
+                                  <span>Top instructor</span>
+                                </div>
+                              )}
+                              {instructor.badges
+                                .filter(
+                                  (b) =>
+                                    b !== "Top Instructor" && b !== "Verified"
+                                )
+                                .map((badge, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-medium"
+                                  >
+                                    <span>{badge}</span>
+                                  </div>
+                                ))}
                             </div>
 
                             {/* Services */}
@@ -707,12 +812,12 @@ const FindInstructorsPage = () => {
                         </div>
 
                         {/* Vertical Divider */}
-                        <div className="w-px bg-gray-200"></div>
+                        <div className="w-px bg-gray-200 hidden lg:block"></div>
 
                         {/* Listing Info */}
-                        <div className="w-40 p-4 flex flex-col justify-between">
-                          {/* Top section with rating and badges */}
-                          <div className="space-y-2 pt-6">
+                        <div className="w-full lg:w-40 p-4 flex flex-col justify-between">
+                          {/* Top section with rating and badges (desktop only) */}
+                          <div className="hidden lg:block space-y-2 lg:pt-6">
                             {/* Rating */}
                             <div className="flex items-center gap-1">
                               <Star
@@ -741,36 +846,40 @@ const FindInstructorsPage = () => {
                                 ({instructor.reviews})
                               </span>
                             </div>
-
-                            {/* Badge */}
-                            {instructor.badges.map((badge, idx) => (
-                              <div
-                                key={idx}
-                                className="inline-flex items-center gap-1 py-0.5 rounded"
-                              >
-                                <div className="w-3 h-3 flex items-center justify-center">
-                                  <div className="w-2 h-2 border border-gray-700 rounded-sm flex items-center justify-center">
-                                    <div className="w-1 h-1 bg-gray-700 rounded-sm"></div>
-                                  </div>
+                            {/* Badges */}
+                            <div className="flex flex-col gap-1">
+                              {instructor.verified && (
+                                <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3D7A81] rounded text-white text-[11px] font-medium w-max">
+                                  <Shield size={12} className="text-white" />
+                                  <span>Verified</span>
                                 </div>
-                                <span
-                                  className="text-xs text-gray-900"
-                                  style={{
-                                    fontFamily: "Inter",
-                                    fontWeight: 400,
-                                    fontSize: "11px",
-                                    color: "#333D4C",
-                                  }}
-                                >
-                                  {badge}
-                                </span>
-                              </div>
-                            ))}
+                              )}
+                              {instructor.badges.includes("Top Instructor") && (
+                                <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-800 rounded text-[11px] font-medium w-max">
+                                  <Award size={12} />
+                                  <span>Top instructor</span>
+                                </div>
+                              )}
+                              {instructor.badges
+                                .filter(
+                                  (b) =>
+                                    b !== "Top Instructor" && b !== "Verified"
+                                )
+                                .map((badge, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[11px] font-medium w-max"
+                                  >
+                                    <span>{badge}</span>
+                                  </div>
+                                ))}
+                            </div>
                           </div>
 
                           {/* Connect Button */}
-                          <button
-                            className="flex items-center justify-center gap-1 px-3 py-2 rounded-md bg-gray-900 border border-gray-800 text-white text-xs font-medium hover:bg-gray-800 transition-colors w-full"
+                          <Button
+                            className="flex items-center justify-center gap-1 w-full"
+                            size="sm"
                             style={{
                               fontFamily: "Inter",
                               fontWeight: 500,
@@ -779,7 +888,7 @@ const FindInstructorsPage = () => {
                           >
                             <Mail size={14} className="text-white" />
                             <span>Connect</span>
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -788,7 +897,7 @@ const FindInstructorsPage = () => {
               </div>
             ) : (
               // Grid View (Figma Design)
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {instructors.map((instructor) => {
                   const AvatarIcon = instructor.avatar;
 
@@ -800,8 +909,12 @@ const FindInstructorsPage = () => {
                       {/* Body */}
                       <div className="flex gap-4 pb-6 border-b border-gray-200">
                         {/* Avatar */}
-                        <div className="w-[100px] h-[110px] bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <AvatarIcon size={40} className="text-gray-500" />
+                        <div className="w-[100px] h-[110px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+                          <img
+                            src="/images/404/profile.jpg"
+                            alt={`${instructor.name} avatar`}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
 
                         {/* Info */}
@@ -872,9 +985,9 @@ const FindInstructorsPage = () => {
                         </div>
 
                         {/* Button */}
-                        <button className="px-5 py-2.5 border border-[#D85151] text-[#D85151] rounded-lg text-sm font-medium hover:bg-[#D85151] hover:text-white transition-colors flex-shrink-0">
+                        <Button size="md" className="flex-shrink-0">
                           Book a lesson
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   );
@@ -882,20 +995,59 @@ const FindInstructorsPage = () => {
               </div>
             )}
 
-            {/* Pagination */}
-            <div className="flex justify-center gap-1 pt-2">
-              {[1, 2, 3, 4, "...", 10].map((page, index) => (
-                <button
-                  key={index}
-                  className={`px-3 py-2 text-sm font-medium rounded-lg ${
-                    page === 1
-                      ? "bg-gray-200 text-gray-900"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
+            {/* Results Pagination */}
+            <div className="flex items-center justify-center gap-2 pt-2">
+              {/* Prev */}
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                aria-label="Previous page"
+                className={`px-2 py-2 rounded-lg transition-colors text-black ${
+                  currentPage === 1
+                    ? "opacity-40 cursor-not-allowed"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              {/* Page numbers (always 3 max) */}
+              {getPageNumbers(currentPage, totalPages).map((page) => {
+                const isActive = page === currentPage;
+                return (
+                  <button
+                    key={`page-${page}`}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`min-w-9 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      isActive
+                        ? "bg-black text-white"
+                        : "bg-white text-black hover:bg-gray-100"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+
+              {/* Next */}
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                }
+                disabled={currentPage === totalPages}
+                aria-label="Next page"
+                className={`px-2 py-2 rounded-lg transition-colors text-black ${
+                  currentPage === totalPages
+                    ? "opacity-40 cursor-not-allowed"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                <ChevronRight size={18} />
+              </button>
             </div>
           </div>
         </div>

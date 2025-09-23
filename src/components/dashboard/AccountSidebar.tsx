@@ -43,10 +43,19 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
         <div className="flex flex-col items-center gap-3 p-6 pb-4">
           {/* Avatar */}
           <div
-            className="rounded-full bg-gray-300 flex items-center justify-center"
+            className="rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
             style={{ width: "64px", height: "64px" }}
           >
-            <User size={24} className="text-gray-600" />
+            {user?.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={user.avatarUrl}
+                alt={`${user.name}'s avatar`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User size={24} className="text-gray-600" />
+            )}
           </div>
 
           {/* Name and Email */}

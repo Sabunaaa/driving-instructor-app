@@ -18,6 +18,7 @@ import {
   Shield,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import Button from "@/components/ui/Button";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
 
 const HelpPage = () => {
@@ -126,7 +127,7 @@ const HelpPage = () => {
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       {/* Dashboard Layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-[120px] py-8 max-w-7xl 2xl:max-w-none">
         <div className="flex gap-8">
           {/* Account Sidebar */}
           <AccountSidebar activeItem="Help center" />
@@ -248,16 +249,9 @@ const HelpPage = () => {
                         <p className="text-sm text-gray-600 mb-4">
                           {option.description}
                         </p>
-                        <button
-                          className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                            option.available
-                              ? "bg-red-600 text-white hover:bg-red-700"
-                              : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          }`}
-                          disabled={!option.available}
-                        >
+                        <Button block disabled={!option.available}>
                           {option.action}
-                        </button>
+                        </Button>
                         {!option.available && (
                           <p className="text-xs text-gray-400 mt-2">
                             Currently unavailable
@@ -270,11 +264,11 @@ const HelpPage = () => {
               </div>
 
               {/* Quick Tips */}
-              <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
-                <h3 className="font-semibold text-blue-900 mb-3">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="font-semibold text-gray-900 mb-3">
                   💡 Quick Tips
                 </h3>
-                <ul className="space-y-2 text-sm text-blue-800">
+                <ul className="space-y-2 text-sm text-gray-600">
                   <li>
                     • Check your email for booking confirmations and updates
                   </li>
