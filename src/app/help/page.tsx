@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
 import { toCategorySlug, toSlug } from "./articles/data";
 
@@ -171,9 +172,10 @@ const HelpPage = () => {
                   {helpCategories.map((category, index) => {
                     const Icon = category.icon;
                     return (
-                      <div
+                      <Card
                         key={index}
-                        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                        padding="md"
+                        interactive
                         onClick={() =>
                           router.push(
                             `/help/category/${toCategorySlug(category.title)}`
@@ -218,7 +220,7 @@ const HelpPage = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Card>
                     );
                   })}
                 </div>
@@ -257,10 +259,7 @@ const HelpPage = () => {
                   {contactOptions.map((option, index) => {
                     const Icon = option.icon;
                     return (
-                      <div
-                        key={index}
-                        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center"
-                      >
+                      <Card key={index} padding="md">
                         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                           <Icon size={24} className="text-red-600" />
                         </div>
@@ -289,7 +288,7 @@ const HelpPage = () => {
                             Currently unavailable
                           </p>
                         )}
-                      </div>
+                      </Card>
                     );
                   })}
                 </div>

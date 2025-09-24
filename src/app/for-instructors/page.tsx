@@ -48,9 +48,9 @@ export default function ForInstructorsPage() {
   ];
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <main className="w-full pt-0">
       {/* Hero */}
-      <div id="welcome" className="mb-10">
+      <div id="welcome" className="mb-8">
         <HeroSplit
           eyebrow="For Instructors"
           title={
@@ -65,11 +65,12 @@ export default function ForInstructorsPage() {
           rightImageSrc="/images/404/instructor.png"
           rightImageAlt="Instructor with student"
           leftBgClassName="bg-gradient-to-br from-red-400 to-red-300"
+          compact
           rating={5}
         />
 
         {/* Quick stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
           {[
             { label: "Active students monthly", value: "500+" },
             { label: "Avg earnings", value: "$50/hr" },
@@ -87,7 +88,7 @@ export default function ForInstructorsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-6 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-6 items-start">
         {/* Sticky in-page nav */}
         <nav className="hidden lg:block sticky top-20 self-start">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
@@ -140,7 +141,7 @@ export default function ForInstructorsPage() {
                 icon={Calendar}
                 title="Set availability"
                 description="Keep your calendar up to date to maximize bookings."
-                href="/dashboard"
+                href="/instructor/schedule"
               />
             </div>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -175,12 +176,13 @@ export default function ForInstructorsPage() {
                 icon={Calendar}
                 title="Manage time slots"
                 description="Quickly add, edit, and repeat weekly schedules."
-                href="/dashboard"
+                href="/instructor/schedule"
               />
               <FeatureCard
                 icon={ChartBarBig}
                 title="Optimize availability"
                 description="Get tips on peak hours in your area."
+                href="/instructor/schedule"
               />
             </div>
             {/* Mock calendar */}
@@ -190,7 +192,7 @@ export default function ForInstructorsPage() {
             <div className="mt-4">
               <Button asChild>
                 {/* @ts-ignore next/link supports passHref */}
-                <Link href="/dashboard">Update Availability</Link>
+                <Link href="/instructor/schedule">Update Availability</Link>
               </Button>
             </div>
           </Section>
@@ -246,12 +248,13 @@ export default function ForInstructorsPage() {
                 icon={ChartBarBig}
                 title="Weekly summary"
                 description="Week of Sep 17: $300 (6 lessons)"
+                href="/instructor/earnings"
               />
             </div>
             <div className="mt-4">
               <Button variant="outline" asChild>
                 {/* @ts-ignore */}
-                <Link href="/dashboard">Check Earnings</Link>
+                <Link href="/instructor/earnings">Check Earnings</Link>
               </Button>
             </div>
           </Section>
@@ -277,7 +280,7 @@ export default function ForInstructorsPage() {
                 icon={BookOpen}
                 title="Safety guidelines"
                 description="Best practices to keep every lesson safe."
-                href="/help/articles/safety"
+                href="/help/articles/safety-security-safety-protocols"
               />
             </div>
           </Section>
@@ -348,6 +351,7 @@ export default function ForInstructorsPage() {
                 icon={Users}
                 title="Attract more students"
                 description="Offer a free consultation to increase conversions."
+                href="/instructor/resources"
               />
             </div>
           </Section>

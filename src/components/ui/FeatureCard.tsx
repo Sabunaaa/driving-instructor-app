@@ -1,5 +1,7 @@
 import React from "react";
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import Card from "./Card";
 
 type FeatureCardProps = {
   icon: LucideIcon;
@@ -17,7 +19,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   href,
 }) => {
   const content = (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 hover:shadow-md transition-shadow h-full">
+    <Card padding="lg" interactive>
       <div
         className="w-14 h-14 rounded-lg flex items-center justify-center mb-5"
         style={{ backgroundColor: "#FEEAEA" }}
@@ -26,18 +28,30 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       </div>
       <h3 className="font-semibold text-gray-900 mb-2 text-lg">{title}</h3>
       <p className="text-base text-gray-600 leading-relaxed">{description}</p>
-    </div>
+    </Card>
   );
 
   if (href) {
+    const isExternal =
+      /^(https?:)?\/\//.test(href) ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:");
+    if (isExternal) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block h-full"
+        >
+          {content}
+        </a>
+      );
+    }
     return (
-      <a
-        href={href}
-        className="block h-full focus:outline-none focus:ring-2 focus:ring-offset-2"
-        style={{ outlineColor: PRIMARY }}
-      >
+      <Link href={href} className="block h-full">
         {content}
-      </a>
+      </Link>
     );
   }
   return content;

@@ -75,10 +75,10 @@ export default function HowItWorksPage() {
         ctaHref="/find-instructors"
         ctaLabel="Find instructors"
         rating={5}
-        leftBgClassName="bg-gradient-to-br from-red-300 to-red-100"
+        leftBgClassName="bg-gradient-to-br from-red-400 to-red-300"
         rightImageSrc="/images/404/profile.jpg"
         rightImageAlt="Learner driver with instructor"
-        fullHeight
+        compact
       />
 
       {/* Steps */}
@@ -86,19 +86,12 @@ export default function HowItWorksPage() {
         <div className="max-w-[1296px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {steps.map(({ icon: Icon, title, desc }, i) => (
-              <div
+              <FeatureCard
                 key={i}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
-              >
-                <div
-                  className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-                  style={{ backgroundColor: "#FEEAEA" }}
-                >
-                  <Icon size={24} className="text-[#D85151]" />
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
-              </div>
+                icon={Icon}
+                title={title}
+                description={desc}
+              />
             ))}
           </div>
 

@@ -111,6 +111,39 @@ export default function BlogSidebar({
           </button>
         </form>
       </section>
+
+      {/* Trending */}
+      <section className="rounded-xl border border-gray-200 bg-white p-5">
+        <h3 className="mb-3 text-base font-semibold text-gray-900">
+          Trending now
+        </h3>
+        <ul className="space-y-3 text-sm">
+          <li>
+            <a
+              href="/blog/choose-right-driving-instructor"
+              className="text-gray-800 hover:underline"
+            >
+              How to choose the right driving instructor
+            </a>
+          </li>
+          <li>
+            <a
+              href="/blog/lesson-pricing-guide-georgia"
+              className="text-gray-800 hover:underline"
+            >
+              Lesson pricing guide in Georgia
+            </a>
+          </li>
+          <li>
+            <a
+              href="/blog/booking-checklist-first-lesson"
+              className="text-gray-800 hover:underline"
+            >
+              Booking checklist: first lesson
+            </a>
+          </li>
+        </ul>
+      </section>
     </aside>
   );
 }

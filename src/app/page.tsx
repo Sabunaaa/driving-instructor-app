@@ -26,11 +26,10 @@ export default function Home() {
         ctaHref="/contact"
         ctaLabel="Get in touch"
         rating={5}
-        // Suggest a bold but friendly palette: blue-cyan gradient
-        leftBgClassName="bg-gradient-to-br from-red-300 to-red-100"
+        leftBgClassName="bg-gradient-to-br from-red-400 to-red-300"
         rightImageSrc="/images/404/instructor.png"
         rightImageAlt="Smiling driving instructor next to a training car"
-        fullHeight
+        compact
       />
       {/* Benefits - below hero */}
       <BenefitsGrid

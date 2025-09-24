@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import { User, Car, Calendar, BookOpen, Settings } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
+import {
+  getLessonsForInstructor,
+  getUpcoming,
+  removeLesson,
+} from "@/lib/lessons";
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -17,6 +22,109 @@ const DashboardPage = () => {
     }
   }, [user, router]);
 
+  // IMPORTANT: Hooks must run unconditionally on every render.
+  // Keep state/effects above any early returns.
+  const [upcoming, setUpcoming] = React.useState<
+    ReturnType<typeof getUpcoming>
+  >([]);
+  const [recent, setRecent] = React.useState<typeof upcoming>([]);
+
+  React.useEffect(() => {
+    if (!user) return;
+    if (user.userType === "instructor") {
+      const list = getLessonsForInstructor(user.id);
+      const up = getUpcoming(list);
+      setUpcoming(up);
+      // If none upcoming, show up to 3 most recent past lessons as context
+      if (up.length === 0 && list.length > 0) {
+        const nowTs = Date.now();
+        const past = list
+          .filter((l) => new Date(`${l.date}T${l.time}`).getTime() < nowTs)
+          .sort(
+            (a, b) =>
+              new Date(`${b.date}T${b.time}`).getTime() -
+              new Date(`${a.date}T${a.time}`).getTime()
+          )
+          .slice(0, 3);
+        setRecent(past);
+      } else {
+        setRecent([]);
+      }
+    }
+  }, [user]);
+
+  const cancelLesson = (id: string) => {
+    if (!user) return;
+    removeLesson(user.id, id);
+    const list = getLessonsForInstructor(user.id);
+    setUpcoming(getUpcoming(list));
+  };
+
+  const studentFeatures = [
+    {
+      icon: Calendar,
+      title: "My Lessons",
+      description: "View and manage your driving lessons",
+      color: "bg-blue-500",
+      href: "/lessons",
+    },
+    {
+      icon: BookOpen,
+      title: "Learning Progress",
+      description: "Track your driving skills progress",
+      color: "bg-green-500",
+      href: "/help",
+    },
+    {
+      icon: User,
+      title: "Find Instructors",
+      description: "Browse and connect with instructors",
+      color: "bg-purple-500",
+      href: "/find-instructors",
+    },
+    {
+      icon: Settings,
+      title: "Settings",
+      description: "Manage your account preferences",
+      color: "bg-gray-500",
+      href: "/account-settings",
+    },
+  ];
+
+  const instructorFeatures = [
+    {
+      icon: User,
+      title: "My Students",
+      description: "Manage your student roster",
+      color: "bg-blue-500",
+      href: "/instructor/students",
+    },
+    {
+      icon: Calendar,
+      title: "Schedule",
+      description: "View and manage lesson schedules",
+      color: "bg-green-500",
+      href: "/instructor/schedule",
+    },
+    {
+      icon: Car,
+      title: "Vehicle Management",
+      description: "Manage your teaching vehicles",
+      color: "bg-orange-500",
+      href: "/instructor/vehicle",
+    },
+    {
+      icon: Settings,
+      title: "Business Settings",
+      description: "Configure rates and availability",
+      color: "bg-gray-500",
+      href: "/account-settings",
+    },
+  ];
+
+  const features =
+    user?.userType === "student" ? studentFeatures : instructorFeatures;
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -27,63 +135,6 @@ const DashboardPage = () => {
       </div>
     );
   }
-
-  const studentFeatures = [
-    {
-      icon: Calendar,
-      title: "My Lessons",
-      description: "View and manage your driving lessons",
-      color: "bg-blue-500",
-    },
-    {
-      icon: BookOpen,
-      title: "Learning Progress",
-      description: "Track your driving skills progress",
-      color: "bg-green-500",
-    },
-    {
-      icon: User,
-      title: "Find Instructors",
-      description: "Browse and connect with instructors",
-      color: "bg-purple-500",
-    },
-    {
-      icon: Settings,
-      title: "Settings",
-      description: "Manage your account preferences",
-      color: "bg-gray-500",
-    },
-  ];
-
-  const instructorFeatures = [
-    {
-      icon: User,
-      title: "My Students",
-      description: "Manage your student roster",
-      color: "bg-blue-500",
-    },
-    {
-      icon: Calendar,
-      title: "Schedule",
-      description: "View and manage lesson schedules",
-      color: "bg-green-500",
-    },
-    {
-      icon: Car,
-      title: "Vehicle Management",
-      description: "Manage your teaching vehicles",
-      color: "bg-orange-500",
-    },
-    {
-      icon: Settings,
-      title: "Business Settings",
-      description: "Configure rates and availability",
-      color: "bg-gray-500",
-    },
-  ];
-
-  const features =
-    user.userType === "student" ? studentFeatures : instructorFeatures;
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
@@ -106,9 +157,10 @@ const DashboardPage = () => {
               {features.map((feature, index) => {
                 const Icon = feature.icon as any;
                 return (
-                  <div
+                  <a
                     key={index}
-                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                    href={(feature as any).href}
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer block"
                   >
                     <div
                       className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}
@@ -121,10 +173,140 @@ const DashboardPage = () => {
                     <p className="text-sm text-gray-600">
                       {feature.description}
                     </p>
-                  </div>
+                  </a>
                 );
               })}
             </div>
+
+            {user.userType === "instructor" && (
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-gray-900 mb-3">
+                  Upcoming lessons
+                </h2>
+                {upcoming.length === 0 ? (
+                  recent.length > 0 ? (
+                    <div className="bg-white border border-gray-200 rounded-xl">
+                      <div className="p-4 border-b">
+                        <p className="text-sm text-gray-700">
+                          No upcoming lessons. Here are your recent lessons:
+                        </p>
+                      </div>
+                      <div className="divide-y">
+                        {recent.map((l) => (
+                          <div
+                            key={l.id}
+                            className="p-4 flex items-center justify-between"
+                          >
+                            <div className="text-sm">
+                              <div className="font-medium text-gray-900">
+                                {l.studentName}
+                              </div>
+                              <div className="text-gray-600">
+                                {l.date} · {l.time} · {l.durationMins}m
+                              </div>
+                            </div>
+                            <a
+                              href="/instructor/schedule/new"
+                              className="text-sm text-red-600 hover:underline"
+                            >
+                              Schedule another
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="p-3 text-right">
+                        <a
+                          href="/lessons"
+                          className="text-sm text-gray-700 hover:underline"
+                        >
+                          View all lessons
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 text-sm text-gray-700 flex items-center justify-between">
+                      <div>
+                        No upcoming lessons yet.
+                        <a
+                          href="/instructor/students"
+                          className="text-red-600 hover:underline ml-1"
+                        >
+                          Go to Your Students
+                        </a>
+                        <span className="mx-1">or</span>
+                        <a
+                          href="/instructor/schedule/new"
+                          className="text-red-600 hover:underline"
+                        >
+                          create one now
+                        </a>
+                        .
+                      </div>
+                      <a
+                        href="/instructor/schedule/new"
+                        className="rounded-lg font-medium transition-colors bg-[#F03D3D] border border-[#F03D3D] text-white hover:opacity-90 px-3 py-2 text-sm"
+                      >
+                        Schedule a lesson
+                      </a>
+                    </div>
+                  )
+                ) : (
+                  <div className="bg-white border border-gray-200 rounded-xl divide-y">
+                    {upcoming.map((l) => (
+                      <div
+                        key={l.id}
+                        className="p-4 flex items-center justify-between"
+                      >
+                        <div className="text-sm">
+                          <div className="font-medium text-gray-900">
+                            {l.studentName}
+                          </div>
+                          <div className="text-gray-600">
+                            {l.date} · {l.time} · {l.durationMins}m
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => cancelLesson(l.id)}
+                          className="text-sm text-red-600 hover:underline"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {user.userType === "student" && (
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-gray-900 mb-3">
+                  Upcoming lessons
+                </h2>
+                <div className="bg-white border border-gray-200 rounded-xl p-6 text-sm text-gray-700 flex items-center justify-between">
+                  <div>
+                    You don’t have any scheduled lessons yet.
+                    <a
+                      href="/find-instructors"
+                      className="text-red-600 hover:underline ml-1"
+                    >
+                      Find instructors
+                    </a>
+                    <span className="mx-1">or</span>
+                    <a href="/help" className="text-red-600 hover:underline">
+                      visit Help Center
+                    </a>
+                    .
+                  </div>
+                  <a
+                    href="/find-instructors"
+                    className="rounded-lg font-medium transition-colors bg-[#F03D3D] border border-[#F03D3D] text-white hover:opacity-90 px-3 py-2 text-sm"
+                  >
+                    Browse instructors
+                  </a>
+                </div>
+              </div>
+            )}
 
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex">
