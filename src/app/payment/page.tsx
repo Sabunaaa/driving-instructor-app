@@ -11,7 +11,7 @@ import Button from "@/components/ui/Button";
 export type PaymentMethod = {
   id: string;
   type: "card" | "paypal";
-  label: string; // e.g., Visa •••• 4242
+  label: string;
   last4?: string;
   brand?: string;
   isDefault?: boolean;
@@ -30,7 +30,8 @@ export default function PaymentPage() {
     type: "card" as const,
     name: "",
     number: "",
-    exp: "",
+    expMonth: "",
+    expYear: "",
     cvc: "",
   });
 
@@ -66,11 +67,11 @@ export default function PaymentPage() {
       label,
       last4,
       brand,
-      isDefault: methods.length === 0, // first becomes default
+      isDefault: methods.length === 0,
     };
     setMethods((m) => [newMethod, ...m]);
     setAdding(false);
-    setForm({ type: "card", name: "", number: "", exp: "", cvc: "" });
+    setForm({ type: "card", name: "", number: "", expMonth: "", expYear: "", cvc: "" });
   };
 
   const setDefault = (id: string) => {
@@ -81,7 +82,7 @@ export default function PaymentPage() {
     setMethods((m) => {
       const filtered = m.filter((pm) => pm.id !== id);
       if (!filtered.some((pm) => pm.isDefault) && filtered[0]) {
-        filtered[0].isDefault = true; // ensure someone is default if any left
+        filtered[0].isDefault = true;
       }
       return filtered;
     });
@@ -95,184 +96,254 @@ export default function PaymentPage() {
         <div className="flex gap-8">
           <AccountSidebar activeItem="Payment details" />
           <main className="flex-1" aria-label="Payment methods page">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                  <CreditCard size={20} className="text-red-600" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-semibold text-gray-900">
-                    Payment methods
-                  </h1>
-                  <p className="text-sm text-gray-500">
-                    Add and manage your payment options
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Methods list */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-              {methods.length === 0 ? (
-                <div className="text-center py-10">
-                  <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-                    <CreditCard size={20} className="text-red-600" />
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    No payment methods yet. Add one to book lessons instantly.
-                  </p>
-                  {!adding && (
-                    <Button
-                      onClick={() => setAdding(true)}
-                      aria-label="Add your first payment method"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Plus size={16} />
-                        <span>Add payment method</span>
-                      </div>
-                    </Button>
-                  )}
-                </div>
-              ) : (
-                <ul className="divide-y divide-gray-100">
+            {!adding ? (
+              /* Payment Methods List */
+              <div>
+                <h1 className="text-2xl font-semibold text-gray-900 mb-6">Payment Methods</h1>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {methods.map((pm) => (
-                    <li
+                    <div
                       key={pm.id}
-                      className="py-4 flex items-center justify-between"
+                      className="bg-white rounded-lg border border-gray-200 p-5"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center">
-                          <CreditCard size={16} className="text-gray-500" />
-                        </div>
-                        <div>
-                          <div className="text-gray-900 font-medium">
-                            {pm.label}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-16 h-12 bg-white border border-gray-200 rounded flex items-center justify-center">
+                          <div className="flex">
+                            <div className="w-4 h-4 rounded-full bg-red-500 opacity-80"></div>
+                            <div className="w-4 h-4 rounded-full bg-orange-400 opacity-80 -ml-2"></div>
                           </div>
-                          {pm.isDefault ? (
-                            <div className="text-xs text-green-600 flex items-center gap-1">
-                              <CheckCircle2 size={12} /> Default
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => setDefault(pm.id)}
-                              className="text-xs text-red-600 hover:underline"
-                            >
-                              Make default
-                            </button>
-                          )}
+                        </div>
+                        
+                        <div className="flex gap-4 text-sm">
+                          <button
+                            onClick={() => {/* Edit functionality */}}
+                            className="text-gray-600 hover:text-gray-900"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => removeMethod(pm.id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
-                      <button
-                        onClick={() => removeMethod(pm.id)}
-                        className="text-gray-500 hover:text-red-600"
-                        aria-label={`Remove ${pm.label}`}
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </li>
+                      
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          {pm.label}
+                        </p>
+                        <p className="text-sm text-gray-600">{form.name || "Jacob Hardman"}</p>
+                        
+                        {pm.isDefault && (
+                          <div className="pt-3">
+                            <span className="text-sm text-gray-700">Default Payment Method</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Add form */}
-            {adding && (
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Add a new card
-                </h2>
-                <form
-                  className="space-y-3"
-                  onSubmit={addMethod}
-                  aria-label="Add payment method form"
-                >
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-1">
-                      Name on card
-                    </label>
-                    <input
-                      value={form.name}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, name: e.target.value }))
-                      }
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                      placeholder="John Student"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-1">
-                      Card number
-                    </label>
-                    <input
-                      inputMode="numeric"
-                      value={form.number}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, number: e.target.value }))
-                      }
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                      placeholder="4242 4242 4242 4242"
-                      minLength={12}
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-3">
-                    <div className="flex-1">
-                      <label className="block text-sm text-gray-700 mb-1">
-                        Exp
-                      </label>
-                      <input
-                        value={form.exp}
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, exp: e.target.value }))
-                        }
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        placeholder="MM/YY"
-                        required
-                      />
-                    </div>
-                    <div className="w-28">
-                      <label className="block text-sm text-gray-700 mb-1">
-                        CVC
-                      </label>
-                      <input
-                        inputMode="numeric"
-                        value={form.cvc}
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, cvc: e.target.value }))
-                        }
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        placeholder="123"
-                        minLength={3}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <Button type="submit">Save method</Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setAdding(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {!adding && (
-              <Button
-                onClick={() => setAdding(true)}
-                className="md:hidden fixed bottom-6 right-6 shadow-lg"
-                aria-label="Add payment method (mobile)"
-              >
-                <div className="flex items-center gap-2">
-                  <Plus size={16} />
-                  <span>Add method</span>
                 </div>
-              </Button>
+
+                {/* Add Payment Method Button */}
+                <button
+                  onClick={() => setAdding(true)}
+                  className="mt-6 px-5 py-2.5 bg-gray-900 text-white text-sm rounded-lg font-medium hover:bg-gray-800 transition-colors"
+                >
+                  Add Payment Method
+                </button>
+              </div>
+            ) : (
+              /* Add Card Form */
+              <div className="bg-white rounded-xl border border-gray-200 p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Left side - Card visual */}
+                    <div className="flex items-center justify-center">
+                      <div className="w-full max-w-md aspect-[315/184] rounded-[30px] p-8 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #E42C66 0%, #F55B46 100%)' }}>
+                        {/* Background decorative ellipses */}
+                        <div className="absolute rounded-full bg-black opacity-10" style={{ width: '321px', height: '226px', left: '-100px', top: '120px' }}></div>
+                        <div className="absolute rounded-full bg-black opacity-[0.08]" style={{ width: '321px', height: '226px', right: '-100px', top: '-80px' }}></div>
+                    
+                    {/* Card content */}
+                    <div className="relative h-full flex flex-col justify-between text-white">
+                      {/* Top section */}
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-sm opacity-[0.54] font-medium mb-2">Name on card</p>
+                          <p className="text-2xl font-medium">{form.name || 'Cardholder Name'}</p>
+                        </div>
+                             {/* Mastercard logo */}
+                             <div className="w-[60px] h-[37px] relative">
+                               {/* eslint-disable-next-line @next/next/no-img-element */}
+                               <img 
+                                 src="/images/mastercard-logo.svg" 
+                                 alt="Mastercard" 
+                                 className="w-full h-full"
+                               />
+                             </div>
+                      </div>
+                      
+                      {/* Bottom section */}
+                      <div className="flex justify-between items-end">
+                        <p className="text-sm font-medium tracking-[0.035em] opacity-90">
+                          {form.number ? form.number.replace(/(.{4})/g, '$1 ').trim() : '0000 0000 0000 0000'}
+                        </p>
+                        <p className="text-sm font-medium tracking-[0.035em]">
+                          {form.expMonth && form.expYear ? `${form.expMonth}/${form.expYear}` : '09/25'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                  {/* Right side - Form */}
+                  <div className="space-y-6">
+                    {/* Name on card */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Name on card <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={form.name}
+                        onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                        placeholder="Sienna Hewitt"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+
+                          {/* Card number */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Card number <span className="text-red-500">*</span>
+                            </label>
+                            <div className="relative">
+                              {form.number && (
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                  {getCardBrandLogo(form.number)}
+                                </div>
+                              )}
+                              <input
+                                type="text"
+                                inputMode="numeric"
+                                value={form.number}
+                                onChange={(e) => setForm((f) => ({ ...f, number: e.target.value }))}
+                                placeholder="0000 0000 0000 0000"
+                                className={`w-full pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent ${
+                                  form.number ? 'pl-16' : 'pl-4'
+                                }`}
+                              />
+                            </div>
+                          </div>
+
+                    {/* Expiry and CVV */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Expiry <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <select
+                            value={form.expMonth}
+                            onChange={(e) => setForm((f) => ({ ...f, expMonth: e.target.value }))}
+                            className="px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white text-gray-900"
+                            style={{ width: '80px' }}
+                          >
+                            <option value="" disabled>MM</option>
+                            {Array.from({ length: 12 }, (_, i) => {
+                              const month = String(i + 1).padStart(2, '0');
+                              return <option key={month} value={month}>{month}</option>;
+                            })}
+                          </select>
+                          <select
+                            value={form.expYear}
+                            onChange={(e) => setForm((f) => ({ ...f, expYear: e.target.value }))}
+                            className="px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white text-gray-900"
+                            style={{ width: '80px' }}
+                          >
+                            <option value="" disabled>YY</option>
+                            {Array.from({ length: 15 }, (_, i) => {
+                              const year = new Date().getFullYear() + i;
+                              const shortYear = String(year).slice(-2);
+                              return <option key={year} value={shortYear}>{shortYear}</option>;
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          CVV <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={form.cvc}
+                          onChange={(e) => setForm((f) => ({ ...f, cvc: e.target.value }))}
+                          placeholder="•••"
+                          className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                          maxLength={4}
+                          style={{ width: '100px' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Billing contact */}
+                    <div className="pt-4">
+                      <h3 className="text-base font-semibold text-gray-900 mb-1">
+                        Billing contact
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Add a second billing contact email.
+                      </p>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email address <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="email"
+                            placeholder="accounts@untitledui.com"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                          />
+                          <button
+                            type="button"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M10 13V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M10 7H10.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="flex gap-3 pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setAdding(false)}
+                        className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addMethod(e as any);
+                        }}
+                        className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+                      >
+                        Save changes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
           </main>
         </div>
@@ -283,9 +354,30 @@ export default function PaymentPage() {
 
 function inferBrand(num: string) {
   const n = num.replace(/\s+/g, "");
-  if (/^4[0-9]{6,}$/.test(n)) return "Visa";
-  if (/^5[1-5][0-9]{5,}$/.test(n)) return "Mastercard";
-  if (/^3[47][0-9]{5,}$/.test(n)) return "Amex";
-  if (/^6(?:011|5[0-9]{2})[0-9]{3,}$/.test(n)) return "Discover";
+  if (/^4/.test(n)) return "Visa";
+  if (/^5[1-5]/.test(n) || /^2[2-7]/.test(n)) return "Mastercard";
+  if (/^3[47]/.test(n)) return "Amex";
+  if (/^6(?:011|5)/.test(n)) return "Discover";
   return "Card";
+}
+
+function getCardBrandLogo(num: string) {
+  const brand = inferBrand(num);
+  
+  if (brand === "Visa") {
+    return (
+      <div className="text-sm font-semibold text-gray-600">VISA</div>
+    );
+  }
+  
+  if (brand === "Mastercard") {
+    return (
+      <div className="flex">
+        <div className="w-4 h-4 rounded-full bg-red-500 opacity-80"></div>
+        <div className="w-4 h-4 rounded-full bg-orange-400 opacity-80 -ml-2"></div>
+      </div>
+    );
+  }
+  
+  return null;
 }

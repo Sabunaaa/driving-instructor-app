@@ -11,7 +11,7 @@ import {
   User,
   LogOut,
   Settings,
-  LayoutDashboard,
+  HelpCircle,
   Menu,
   X,
 } from "lucide-react";
@@ -21,7 +21,6 @@ const Navbar = () => {
   const router = useRouter();
   const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-  const [isHelpDropdownOpen, setIsHelpDropdownOpen] = React.useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
 
   // Close dropdown when clicking outside
@@ -30,19 +29,16 @@ const Navbar = () => {
       if (isDropdownOpen) {
         setIsDropdownOpen(false);
       }
-      if (isHelpDropdownOpen) {
-        setIsHelpDropdownOpen(false);
-      }
     };
 
-    if (isDropdownOpen || isHelpDropdownOpen) {
+    if (isDropdownOpen) {
       document.addEventListener("click", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [isDropdownOpen, isHelpDropdownOpen]);
+  }, [isDropdownOpen]);
 
   return (
     <nav className="w-full bg-white text-base sticky top-0 z-50 border-b border-gray-200/60 backdrop-blur supports-[backdrop-filter]:bg-white/95">
@@ -87,14 +83,14 @@ const Navbar = () => {
             </span>
           </div>
 
-          {/* Nav link: How it Works */}
+          {/* Nav link: How it Works / For Instructors */}
           <div className="flex items-center px-4 sm:px-6 py-2">
             <Link
-              href="/how-it-works"
+              href={user?.userType === "instructor" ? "/for-instructors" : "/how-it-works"}
               className="text-gray-700 font-medium hover:text-gray-900 hover:underline underline-offset-4 transition-colors"
               style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
             >
-              How it Works
+              {user?.userType === "instructor" ? "For Instructors" : "How it Works"}
             </Link>
           </div>
 
@@ -109,66 +105,15 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Dropdown: Help */}
-          <div className="flex items-center gap-2 px-6 py-2 relative">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsHelpDropdownOpen(!isHelpDropdownOpen);
-              }}
-              className="flex items-center gap-2"
+          {/* Nav link: Contact us */}
+          <div className="flex items-center px-4 sm:px-6 py-2">
+            <Link
+              href="/contact"
+              className="text-gray-700 font-medium hover:text-gray-900 hover:underline underline-offset-4 transition-colors"
+              style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
             >
-              <span
-                className="text-gray-700 font-medium"
-                style={{
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  fontWeight: 500,
-                  color: "#333D4C",
-                }}
-              >
-                Help
-              </span>
-              <div className="flex items-center pt-0.75">
-                <ChevronDown size={16} color="#333D4C" />
-              </div>
-            </button>
-
-            {/* Help Dropdown Menu */}
-            {isHelpDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsHelpDropdownOpen(false);
-                    router.push("/help");
-                  }}
-                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  Help Center
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsHelpDropdownOpen(false);
-                    router.push("/for-instructors");
-                  }}
-                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  For Instructors
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsHelpDropdownOpen(false);
-                    router.push("/contact");
-                  }}
-                  className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  Contact Us
-                </button>
-              </div>
-            )}
+              Contact us
+            </Link>
           </div>
         </div>
 
@@ -186,31 +131,33 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer min-w-[192px]"
               >
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                  {user?.avatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={user.avatarUrl}
-                      alt={`${user.name} avatar`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <User size={16} className="text-gray-600" />
-                  )}
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user.name}
-                  </p>
-                  <p className="text-xs text-gray-500 capitalize">
-                    {user.userType}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                    {user?.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={user.avatarUrl}
+                        alt={`${user.name} avatar`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User size={16} className="text-gray-600" />
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-gray-900">
+                      {user.name}
+                    </p>
+                    <p className="text-xs text-gray-500 capitalize">
+                      {user.userType}
+                    </p>
+                  </div>
                 </div>
                 <ChevronDown
                   size={16}
-                  className={`text-gray-400 transition-transform ${
+                  className={`text-gray-400 transition-transform flex-shrink-0 ${
                     isDropdownOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -227,8 +174,8 @@ const Navbar = () => {
                     }}
                     className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
-                    <LayoutDashboard size={16} className="text-gray-400" />
-                    Dashboard
+                    <User size={16} className="text-gray-400" />
+                    Profile
                   </button>
                   <button
                     type="button"
@@ -240,6 +187,17 @@ const Navbar = () => {
                   >
                     <Settings size={16} className="text-gray-400" />
                     Settings
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      router.push("/help");
+                    }}
+                    className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    <HelpCircle size={16} className="text-gray-400" />
+                    Help
                   </button>
                   <hr className="my-2 border-gray-200" />
                   <button
@@ -312,7 +270,6 @@ const Navbar = () => {
           onClick={() => {
             setIsMobileNavOpen((v) => !v);
             setIsDropdownOpen(false);
-            setIsHelpDropdownOpen(false);
           }}
           className="flex items-center justify-center p-2 rounded-md border border-gray-200 hover:bg-gray-50 transition-colors min-[1101px]:hidden"
         >
@@ -349,11 +306,11 @@ const Navbar = () => {
                 Blog
               </Link>
               <Link
-                href="/help"
+                href="/contact"
                 onClick={() => setIsMobileNavOpen(false)}
                 className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800"
               >
-                Help
+                Contact us
               </Link>
               <hr className="my-2 border-gray-200" />
               {user ? (
@@ -366,8 +323,8 @@ const Navbar = () => {
                     }}
                     className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800 flex items-center gap-2"
                   >
-                    <LayoutDashboard size={16} className="text-gray-500" />
-                    Dashboard
+                    <User size={16} className="text-gray-500" />
+                    Profile
                   </button>
                   <button
                     type="button"
@@ -379,6 +336,17 @@ const Navbar = () => {
                   >
                     <Settings size={16} className="text-gray-500" />
                     Settings
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileNavOpen(false);
+                      router.push("/help");
+                    }}
+                    className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800 flex items-center gap-2"
+                  >
+                    <HelpCircle size={16} className="text-gray-500" />
+                    Help
                   </button>
                   <button
                     type="button"

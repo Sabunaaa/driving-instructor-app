@@ -340,13 +340,7 @@ export default function ForInstructorsPage() {
                 <p className="text-sm text-gray-500 mt-1">Lessons taught</p>
               </div>
             </div>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FeatureCard
-                icon={Star}
-                title="Respond to reviews"
-                description="Engage with feedback to improve your profile."
-                href="/instructor/reviews"
-              />
+            <div className="mt-4">
               <FeatureCard
                 icon={Users}
                 title="Attract more students"

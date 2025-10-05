@@ -6,12 +6,11 @@ import { useRouter } from "next/navigation";
 import {
   User,
   Layers,
-  Star,
-  Heart,
   CreditCard,
   Settings,
   HelpCircle,
   LogOut,
+  LayoutDashboard,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -23,15 +22,18 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
   const { user, logout } = useAuth();
   const router = useRouter();
 
-  const menuItems = [
-    { icon: User, label: "My profile", href: "/profile" },
-    { icon: Layers, label: "Bookings", href: "/bookings" },
-    { icon: Star, label: "Reviews", href: "/reviews" },
-    { icon: Heart, label: "Favorites", href: "/favorites" },
-    { icon: CreditCard, label: "Payment details", href: "/payment" },
-    { icon: Settings, label: "Account settings", href: "/account-settings" },
-    { icon: HelpCircle, label: "Help center", href: "/help" },
+  const allMenuItems = [
+    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", showFor: ["student", "instructor"] },
+    { icon: Layers, label: "Bookings", href: "/bookings", showFor: ["student", "instructor"] },
+    { icon: CreditCard, label: "Payment details", href: "/payment", showFor: ["student", "instructor"] },
+    { icon: Settings, label: "Account settings", href: "/account-settings", showFor: ["student", "instructor"] },
+    { icon: HelpCircle, label: "Help center", href: "/help", showFor: ["student", "instructor"] },
   ];
+
+  // Filter menu items based on user type
+  const menuItems = allMenuItems.filter(item => 
+    item.showFor.includes(user?.userType || "student")
+  );
 
   return (
     <div className="flex flex-col gap-2" style={{ width: "266px" }}>

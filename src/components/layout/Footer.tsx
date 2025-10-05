@@ -26,32 +26,32 @@ const Footer: React.FC = () => {
 
           {/* Explore */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 uppercase/relaxed tracking-wide">
+            <h4 className="text-sm font-bold mb-3 uppercase/relaxed tracking-wide">
               Explore
             </h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-sm opacity-70">
               <li>
-                <Link href="/find-instructors" className="hover:underline">
+                <Link href="/find-instructors" className="hover:underline hover:opacity-100">
                   Find instructors
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="hover:underline">
+                <Link href="/how-it-works" className="hover:underline hover:opacity-100">
                   How it works
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="hover:underline">
+                <Link href="/blog" className="hover:underline hover:opacity-100">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/help" className="hover:underline">
+                <Link href="/help" className="hover:underline hover:opacity-100">
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:underline">
+                <Link href="/contact" className="hover:underline hover:opacity-100">
                   Contact
                 </Link>
               </li>
@@ -60,32 +60,32 @@ const Footer: React.FC = () => {
 
           {/* Account */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 uppercase/relaxed tracking-wide">
+            <h4 className="text-sm font-bold mb-3 uppercase/relaxed tracking-wide">
               Account
             </h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-sm opacity-70">
               <li>
-                <Link href="/signup" className="hover:underline">
+                <Link href="/signup" className="hover:underline hover:opacity-100">
                   Create account
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:underline">
+                <Link href="/login" className="hover:underline hover:opacity-100">
                   Log in
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:underline">
+                <Link href="/dashboard" className="hover:underline hover:opacity-100">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/profile" className="hover:underline">
-                  Profile
+                <Link href="/dashboard" className="hover:underline hover:opacity-100">
+                  Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/account-settings" className="hover:underline">
+                <Link href="/account-settings" className="hover:underline hover:opacity-100">
                   Account settings
                 </Link>
               </li>
@@ -94,18 +94,18 @@ const Footer: React.FC = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold mb-3 uppercase/relaxed tracking-wide">
+            <h4 className="text-sm font-bold mb-3 uppercase/relaxed tracking-wide">
               Contact us
             </h4>
-            <p className="text-sm/6 opacity-90 mb-3">
+            <p className="text-sm/6 opacity-70 mb-3">
               Questions or feedback? Drop us a line.
             </p>
-            <div className="space-y-2">
+            <div className="space-y-2 opacity-70">
               <div className="flex items-center gap-2">
                 <Mail size={16} className="text-white" />
                 <a
                   href="mailto:support@instru.app"
-                  className="text-sm underline decoration-white/60 hover:decoration-white"
+                  className="text-sm underline decoration-white/60 hover:decoration-white hover:opacity-100"
                 >
                   support@instru.app
                 </a>
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
                 <Phone size={16} className="text-white" />
                 <a
                   href="tel:+995555123456"
-                  className="text-sm underline decoration-white/60 hover:decoration-white"
+                  className="text-sm underline decoration-white/60 hover:decoration-white hover:opacity-100"
                 >
                   +995 555 123 456
                 </a>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 //@ts-ignore
 import {
@@ -15,33 +15,12 @@ import {
   EyeOff,
   CheckCircle,
   AlertCircle,
-  CreditCard,
-  Trash2,
-  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
 import ToggleSwitch from "@/components/ui/ToggleSwitch";
 import Button from "@/components/ui/Button";
 import SettingsField from "@/components/ui/SettingsField";
-
-export type PaymentMethod = {
-  id: string;
-  type: "card" | "paypal";
-  label: string; // e.g., Visa •••• 4242
-  last4?: string;
-  brand?: string;
-  isDefault?: boolean;
-};
-
-// Helper function to infer card brand
-const inferBrand = (number: string): string => {
-  const cleaned = number.replace(/\s+/g, '');
-  if (cleaned.startsWith('4')) return 'Visa';
-  if (cleaned.startsWith('5') || cleaned.startsWith('2')) return 'Mastercard';
-  if (cleaned.startsWith('3')) return 'Amex';
-  return 'Card';
-};
 
 const AccountSettings = () => {
   const { user, updateUser, updatePassword } = useAuth();
@@ -90,26 +69,10 @@ const AccountSettings = () => {
     | { type: "error"; message: string }
   >({ type: "idle" });
   const [deleteAccountChecked, setDeleteAccountChecked] = useState(false);
-  
-  // Payment methods state
-  const storageKey = useMemo(
-    () => (user ? `payment-methods-${user.id}` : "payment-methods-guest"),
-    [user]
-  );
-  const [methods, setMethods] = useState<PaymentMethod[]>([]);
-  const [adding, setAdding] = useState(false);
-  const [form, setForm] = useState({
-    type: "card" as const,
-    name: "",
-    number: "",
-    exp: "",
-    cvc: "",
-  });
 
   const tabs = [
     { icon: FileText, label: "Personal info", active: true },
     { icon: File, label: "Password and security", active: false },
-    { icon: CreditCard, label: "Payment settings", active: false },
   ];
 
   const profileTasks = [
@@ -117,21 +80,6 @@ const AccountSettings = () => {
     "Verified your email",
     "Add date of birth",
   ];
-
-  // Load payment methods
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) setMethods(JSON.parse(raw));
-    } catch {}
-  }, [storageKey]);
-
-  // Persist payment methods
-  useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(methods));
-    } catch {}
-  }, [methods, storageKey]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -153,40 +101,6 @@ const AccountSettings = () => {
       ...prev,
       [field]: !prev[field],
     }));
-  };
-
-  // Payment methods functions
-  const addMethod = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.number || form.number.length < 4) return;
-    const last4 = form.number.replace(/\s+/g, "").slice(-4);
-    const brand = inferBrand(form.number);
-    const label = `${brand} •••• ${last4}`;
-    const newMethod: PaymentMethod = {
-      id: `${Date.now()}`,
-      type: "card",
-      label,
-      last4,
-      brand,
-      isDefault: methods.length === 0, // first becomes default
-    };
-    setMethods((m) => [newMethod, ...m]);
-    setAdding(false);
-    setForm({ type: "card", name: "", number: "", exp: "", cvc: "" });
-  };
-
-  const setDefault = (id: string) => {
-    setMethods((m) => m.map((pm) => ({ ...pm, isDefault: pm.id === id })));
-  };
-
-  const removeMethod = (id: string) => {
-    setMethods((m) => {
-      const filtered = m.filter((pm) => pm.id !== id);
-      if (!filtered.some((pm) => pm.isDefault) && filtered[0]) {
-        filtered[0].isDefault = true; // ensure someone is default if any left
-      }
-      return filtered;
-    });
   };
 
 
@@ -887,191 +801,6 @@ const AccountSettings = () => {
                     </>
                   )}
 
-                  {/* Payment Settings Tab */}
-                  {activeTab === "Payment settings" && (
-                    <div className="space-y-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-                            <CreditCard size={20} className="text-red-600" />
-                          </div>
-                          <div>
-                            <h1 className="text-xl font-semibold text-gray-900">
-                              Payment methods
-                            </h1>
-                            <p className="text-sm text-gray-500">
-                              Add and manage your payment options
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Methods list */}
-                      <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-                        {methods.length === 0 ? (
-                          <div className="text-center py-10">
-                            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-                              <CreditCard size={20} className="text-red-600" />
-                            </div>
-                            <p className="text-gray-700 mb-4">
-                              No payment methods yet. Add one to book lessons instantly.
-                            </p>
-                            {!adding && (
-                              <Button
-                                onClick={() => setAdding(true)}
-                                aria-label="Add your first payment method"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <Plus size={16} />
-                                  <span>Add payment method</span>
-                                </div>
-                              </Button>
-                            )}
-                          </div>
-                        ) : (
-                          <ul className="divide-y divide-gray-100">
-                            {methods.map((pm) => (
-                              <li
-                                key={pm.id}
-                                className="py-4 flex items-center justify-between"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center">
-                                    <CreditCard size={16} className="text-gray-500" />
-                                  </div>
-                                  <div>
-                                    <div className="text-gray-900 font-medium">
-                                      {pm.label}
-                                    </div>
-                                    {pm.isDefault ? (
-                                      <div className="text-xs text-green-600 flex items-center gap-1">
-                                        <CheckCircle2 size={12} /> Default
-                                      </div>
-                                    ) : (
-                                      <button
-                                        onClick={() => setDefault(pm.id)}
-                                        className="text-xs text-red-600 hover:underline"
-                                      >
-                                        Make default
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                                <button
-                                  onClick={() => removeMethod(pm.id)}
-                                  className="text-gray-500 hover:text-red-600"
-                                  aria-label={`Remove ${pm.label}`}
-                                >
-                                  <Trash2 size={18} />
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-
-                      {/* Add form */}
-                      {adding && (
-                        <div className="bg-white border border-gray-200 rounded-xl p-6">
-                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Add a new card
-                          </h2>
-                          <form
-                            className="space-y-3"
-                            onSubmit={addMethod}
-                            aria-label="Add payment method form"
-                          >
-                            <div>
-                              <label className="block text-sm text-gray-700 mb-1">
-                                Name on card
-                              </label>
-                              <input
-                                value={form.name}
-                                onChange={(e) =>
-                                  setForm((f) => ({ ...f, name: e.target.value }))
-                                }
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                placeholder="John Student"
-                                required
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm text-gray-700 mb-1">
-                                Card number
-                              </label>
-                              <input
-                                inputMode="numeric"
-                                value={form.number}
-                                onChange={(e) =>
-                                  setForm((f) => ({ ...f, number: e.target.value }))
-                                }
-                                className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                placeholder="4242 4242 4242 4242"
-                                minLength={12}
-                                required
-                              />
-                            </div>
-                            <div className="flex gap-3">
-                              <div className="flex-1">
-                                <label className="block text-sm text-gray-700 mb-1">
-                                  Exp
-                                </label>
-                                <input
-                                  value={form.exp}
-                                  onChange={(e) =>
-                                    setForm((f) => ({ ...f, exp: e.target.value }))
-                                  }
-                                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                  placeholder="MM/YY"
-                                  required
-                                />
-                              </div>
-                              <div className="w-28">
-                                <label className="block text-sm text-gray-700 mb-1">
-                                  CVC
-                                </label>
-                                <input
-                                  inputMode="numeric"
-                                  value={form.cvc}
-                                  onChange={(e) =>
-                                    setForm((f) => ({ ...f, cvc: e.target.value }))
-                                  }
-                                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                  placeholder="123"
-                                  minLength={3}
-                                  required
-                                />
-                              </div>
-                            </div>
-                            <div className="flex gap-3">
-                              <Button type="submit">Save method</Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => setAdding(false)}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </form>
-                        </div>
-                      )}
-
-                      {!adding && methods.length > 0 && (
-                        <Button
-                          onClick={() => setAdding(true)}
-                          className="w-full sm:w-auto"
-                          aria-label="Add another payment method"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Plus size={16} />
-                            <span>Add another method</span>
-                          </div>
-                        </Button>
-                      )}
-                    </div>
-                  )}
                 </div>
               </main>
             </>
