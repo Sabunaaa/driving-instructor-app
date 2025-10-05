@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-// @ts-ignore
 import {
   ChevronDown,
   Languages,

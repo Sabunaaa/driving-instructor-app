@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-// @ts-ignore
 import { CreditCard, Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
@@ -45,14 +44,18 @@ export default function PaymentPage() {
     try {
       const raw = localStorage.getItem(storageKey);
       if (raw) setMethods(JSON.parse(raw));
-    } catch {}
+    } catch (error) {
+      console.error("Failed to load payment methods from localStorage:", error);
+    }
   }, [storageKey]);
 
   // Persist
   useEffect(() => {
     try {
       localStorage.setItem(storageKey, JSON.stringify(methods));
-    } catch {}
+    } catch (error) {
+      console.error("Failed to save payment methods to localStorage:", error);
+    }
   }, [methods, storageKey]);
 
   const addMethod = (e: React.FormEvent) => {
