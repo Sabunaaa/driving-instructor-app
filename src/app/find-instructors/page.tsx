@@ -229,7 +229,7 @@ const FindInstructorsPage = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
-      <div className="mx-auto px-4 sm:px-6 2xl:px-[120px] 3xl:px-[120px] py-6 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
+      <div className="mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-6 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-8">
           <span className="text-sm font-medium text-gray-600">Homepage</span>

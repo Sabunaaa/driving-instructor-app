@@ -70,7 +70,7 @@ export default function ForInstructorsPage() {
         />
 
         {/* Quick stats */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+        <div className="max-w-[1296px] 2xl:max-w-none 3xl:max-w-none mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
           {[
             { label: "Active students monthly", value: "500+" },
             { label: "Avg earnings", value: "$50/hr" },
@@ -88,7 +88,7 @@ export default function ForInstructorsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-6 items-start">
+      <div className="max-w-[1296px] 2xl:max-w-none 3xl:max-w-none mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-6 items-start">
         {/* Sticky in-page nav */}
         <nav className="hidden lg:block sticky top-20 self-start">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">

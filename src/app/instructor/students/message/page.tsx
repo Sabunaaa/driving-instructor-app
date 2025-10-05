@@ -82,7 +82,7 @@ function StudentMessageInner() {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA]">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-[120px] py-8 max-w-3xl">
+      <div className="mx-auto w-full px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-8 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         <div className="mb-4">
           <button
             onClick={() => router.back()}

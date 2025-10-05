@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 //@ts-ignore
 import {
@@ -13,18 +13,35 @@ import {
   ChevronDown,
   Eye,
   EyeOff,
-  Monitor,
-  Smartphone,
-  MoreVertical,
-  LogOut,
   CheckCircle,
   AlertCircle,
+  CreditCard,
+  Trash2,
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
 import ToggleSwitch from "@/components/ui/ToggleSwitch";
 import Button from "@/components/ui/Button";
 import SettingsField from "@/components/ui/SettingsField";
+
+export type PaymentMethod = {
+  id: string;
+  type: "card" | "paypal";
+  label: string; // e.g., Visa •••• 4242
+  last4?: string;
+  brand?: string;
+  isDefault?: boolean;
+};
+
+// Helper function to infer card brand
+const inferBrand = (number: string): string => {
+  const cleaned = number.replace(/\s+/g, '');
+  if (cleaned.startsWith('4')) return 'Visa';
+  if (cleaned.startsWith('5') || cleaned.startsWith('2')) return 'Mastercard';
+  if (cleaned.startsWith('3')) return 'Amex';
+  return 'Card';
+};
 
 const AccountSettings = () => {
   const { user, updateUser, updatePassword } = useAuth();
@@ -73,18 +90,26 @@ const AccountSettings = () => {
     | { type: "error"; message: string }
   >({ type: "idle" });
   const [deleteAccountChecked, setDeleteAccountChecked] = useState(false);
-  const [notifications, setNotifications] = useState({
-    newRentalAlerts: { email: true, phone: false },
-    rentalStatusUpdates: { email: true, phone: false },
-    finderRecommendations: { email: false, phone: false },
-    featuredNews: { email: false, phone: true },
-    finderExtras: { email: true, phone: true },
+  
+  // Payment methods state
+  const storageKey = useMemo(
+    () => (user ? `payment-methods-${user.id}` : "payment-methods-guest"),
+    [user]
+  );
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [form, setForm] = useState({
+    type: "card" as const,
+    name: "",
+    number: "",
+    exp: "",
+    cvc: "",
   });
 
   const tabs = [
     { icon: FileText, label: "Personal info", active: true },
     { icon: File, label: "Password and security", active: false },
-    { icon: Archive, label: "Notification settings", active: false },
+    { icon: CreditCard, label: "Payment settings", active: false },
   ];
 
   const profileTasks = [
@@ -92,6 +117,21 @@ const AccountSettings = () => {
     "Verified your email",
     "Add date of birth",
   ];
+
+  // Load payment methods
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) setMethods(JSON.parse(raw));
+    } catch {}
+  }, [storageKey]);
+
+  // Persist payment methods
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(methods));
+    } catch {}
+  }, [methods, storageKey]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -115,37 +155,40 @@ const AccountSettings = () => {
     }));
   };
 
-  const handleNotificationToggle = (
-    category: keyof typeof notifications,
-    type: "email" | "phone"
-  ) => {
-    setNotifications((prev) => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [type]: !prev[category][type],
-      },
-    }));
+  // Payment methods functions
+  const addMethod = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.number || form.number.length < 4) return;
+    const last4 = form.number.replace(/\s+/g, "").slice(-4);
+    const brand = inferBrand(form.number);
+    const label = `${brand} •••• ${last4}`;
+    const newMethod: PaymentMethod = {
+      id: `${Date.now()}`,
+      type: "card",
+      label,
+      last4,
+      brand,
+      isDefault: methods.length === 0, // first becomes default
+    };
+    setMethods((m) => [newMethod, ...m]);
+    setAdding(false);
+    setForm({ type: "card", name: "", number: "", exp: "", cvc: "" });
   };
 
-  const devices = [
-    {
-      type: "computer",
-      name: "Mac – New York, USA",
-      browser: "Chrome",
-      status: "Active now",
-      isActive: true,
-      icon: Monitor,
-    },
-    {
-      type: "smartphone",
-      name: "iPhone 15 – New York, USA",
-      browser: "Finder App",
-      status: "20 hours ago",
-      isActive: false,
-      icon: Smartphone,
-    },
-  ];
+  const setDefault = (id: string) => {
+    setMethods((m) => m.map((pm) => ({ ...pm, isDefault: pm.id === id })));
+  };
+
+  const removeMethod = (id: string) => {
+    setMethods((m) => {
+      const filtered = m.filter((pm) => pm.id !== id);
+      if (!filtered.some((pm) => pm.isDefault) && filtered[0]) {
+        filtered[0].isDefault = true; // ensure someone is default if any left
+      }
+      return filtered;
+    });
+  };
+
 
   // Keep form in sync if user is updated elsewhere (e.g., avatar change)
   React.useEffect(() => {
@@ -244,7 +287,7 @@ const AccountSettings = () => {
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       {/* Dashboard Layout */}
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-[120px] py-8 max-w-7xl 2xl:max-w-none">
+      <div className="mx-auto w-full px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-8 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Loading state while redirecting or fetching user */}
           {!user ? (
@@ -604,12 +647,6 @@ const AccountSettings = () => {
                     <>
                       {/* Password Settings */}
                       <div className="space-y-6">
-                        <p
-                          className="text-gray-600"
-                          style={{ fontFamily: "Inter", fontWeight: 400 }}
-                        >
-                          Your current email address is m.williams@example.com
-                        </p>
 
                         {/* Alerts */}
                         {pwdStatus.type !== "idle" && (
@@ -679,7 +716,6 @@ const AccountSettings = () => {
                               </button>
                             </div>
                           </div>
-                          <div></div>
                         </div>
 
                         {/* New Password Fields */}
@@ -798,92 +834,6 @@ const AccountSettings = () => {
                         </div>
                       </div>
 
-                      {/* Device History */}
-                      <div className="space-y-6">
-                        <h2
-                          className="text-2xl font-semibold text-gray-900"
-                          style={{ fontFamily: "Inter", fontWeight: 600 }}
-                        >
-                          Device history
-                        </h2>
-
-                        <div className="grid grid-cols-1 xs:grid-cols-2 gap-6">
-                          {devices.map((device, index) => {
-                            const DeviceIcon = device.icon;
-                            return (
-                              <div
-                                key={index}
-                                className="border border-gray-200 rounded-lg p-6 relative"
-                              >
-                                <div className="flex flex-col gap-2">
-                                  <DeviceIcon
-                                    size={28}
-                                    className="text-gray-400"
-                                  />
-                                  <h3
-                                    className="font-semibold text-gray-900"
-                                    style={{
-                                      fontFamily: "Inter",
-                                      fontWeight: 600,
-                                    }}
-                                  >
-                                    {device.name}
-                                  </h3>
-                                  <div className="flex items-center gap-2">
-                                    <span
-                                      className="text-sm text-gray-600"
-                                      style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: 400,
-                                      }}
-                                    >
-                                      {device.browser}
-                                    </span>
-                                    {device.isActive && (
-                                      <>
-                                        <span className="text-sm text-gray-600">
-                                          ·
-                                        </span>
-                                        <span className="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">
-                                          {device.status}
-                                        </span>
-                                      </>
-                                    )}
-                                    {!device.isActive && (
-                                      <>
-                                        <span className="text-sm text-gray-600">
-                                          ·
-                                        </span>
-                                        <span className="text-sm text-gray-600">
-                                          {device.status}
-                                        </span>
-                                      </>
-                                    )}
-                                  </div>
-                                </div>
-                                <button className="absolute top-4 right-4 p-3 hover:bg-gray-100 rounded-lg transition-colors">
-                                  <MoreVertical
-                                    size={16}
-                                    className="text-gray-600"
-                                  />
-                                </button>
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                        {/* Sign out all sessions */}
-                        <button className="flex items-center gap-2 px-0 py-2 text-gray-600 hover:text-gray-800 transition-colors">
-                          <LogOut size={16} />
-                          <span
-                            className="font-medium text-sm"
-                            style={{ fontFamily: "Inter", fontWeight: 500 }}
-                          >
-                            Sign out of all sessions
-                          </span>
-                        </button>
-                      </div>
-
                       {/* Delete Account */}
                       <div className="space-y-6">
                         <h2
@@ -937,321 +887,189 @@ const AccountSettings = () => {
                     </>
                   )}
 
-                  {/* Notification Settings Tab */}
-                  {activeTab === "Notification settings" && (
-                    <div className="space-y-8">
-                      {/* New rental alerts */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3
-                            className="text-gray-900 font-semibold text-base mb-2"
-                            style={{ fontFamily: "Inter", fontWeight: 600 }}
-                          >
-                            New rental alerts
-                          </h3>
-                          <p
-                            className="text-gray-600 text-sm"
-                            style={{ fontFamily: "Inter", fontWeight: 400 }}
-                          >
-                            New rentals that match your Favorites
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center gap-14">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Email
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={notifications.newRentalAlerts.email}
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "newRentalAlerts",
-                                    "email"
-                                  )
-                                }
-                              />
-                            </div>
+                  {/* Payment Settings Tab */}
+                  {activeTab === "Payment settings" && (
+                    <div className="space-y-6">
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                            <CreditCard size={20} className="text-red-600" />
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Phone
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={notifications.newRentalAlerts.phone}
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "newRentalAlerts",
-                                    "phone"
-                                  )
-                                }
-                              />
-                            </div>
+                          <div>
+                            <h1 className="text-xl font-semibold text-gray-900">
+                              Payment methods
+                            </h1>
+                            <p className="text-sm text-gray-500">
+                              Add and manage your payment options
+                            </p>
                           </div>
                         </div>
                       </div>
 
-                      {/* Divider */}
-                      <hr className="border-gray-200" />
-
-                      {/* Rental status updates */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3
-                            className="text-gray-900 font-semibold text-base mb-2"
-                            style={{ fontFamily: "Inter", fontWeight: 600 }}
-                          >
-                            Rental status updates
-                          </h3>
-                          <p
-                            className="text-gray-600 text-sm"
-                            style={{ fontFamily: "Inter", fontWeight: 400 }}
-                          >
-                            Updates like price changes and off-market status on
-                            your Favorites
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center gap-14">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Email
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={
-                                  notifications.rentalStatusUpdates.email
-                                }
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "rentalStatusUpdates",
-                                    "email"
-                                  )
-                                }
-                              />
+                      {/* Methods list */}
+                      <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
+                        {methods.length === 0 ? (
+                          <div className="text-center py-10">
+                            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                              <CreditCard size={20} className="text-red-600" />
                             </div>
+                            <p className="text-gray-700 mb-4">
+                              No payment methods yet. Add one to book lessons instantly.
+                            </p>
+                            {!adding && (
+                              <Button
+                                onClick={() => setAdding(true)}
+                                aria-label="Add your first payment method"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <Plus size={16} />
+                                  <span>Add payment method</span>
+                                </div>
+                              </Button>
+                            )}
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Phone
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={
-                                  notifications.rentalStatusUpdates.phone
-                                }
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "rentalStatusUpdates",
-                                    "phone"
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
+                        ) : (
+                          <ul className="divide-y divide-gray-100">
+                            {methods.map((pm) => (
+                              <li
+                                key={pm.id}
+                                className="py-4 flex items-center justify-between"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-md bg-gray-100 flex items-center justify-center">
+                                    <CreditCard size={16} className="text-gray-500" />
+                                  </div>
+                                  <div>
+                                    <div className="text-gray-900 font-medium">
+                                      {pm.label}
+                                    </div>
+                                    {pm.isDefault ? (
+                                      <div className="text-xs text-green-600 flex items-center gap-1">
+                                        <CheckCircle2 size={12} /> Default
+                                      </div>
+                                    ) : (
+                                      <button
+                                        onClick={() => setDefault(pm.id)}
+                                        className="text-xs text-red-600 hover:underline"
+                                      >
+                                        Make default
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => removeMethod(pm.id)}
+                                  className="text-gray-500 hover:text-red-600"
+                                  aria-label={`Remove ${pm.label}`}
+                                >
+                                  <Trash2 size={18} />
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
 
-                      {/* Divider */}
-                      <hr className="border-gray-200" />
+                      {/* Add form */}
+                      {adding && (
+                        <div className="bg-white border border-gray-200 rounded-xl p-6">
+                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            Add a new card
+                          </h2>
+                          <form
+                            className="space-y-3"
+                            onSubmit={addMethod}
+                            aria-label="Add payment method form"
+                          >
+                            <div>
+                              <label className="block text-sm text-gray-700 mb-1">
+                                Name on card
+                              </label>
+                              <input
+                                value={form.name}
+                                onChange={(e) =>
+                                  setForm((f) => ({ ...f, name: e.target.value }))
+                                }
+                                className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                placeholder="John Student"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm text-gray-700 mb-1">
+                                Card number
+                              </label>
+                              <input
+                                inputMode="numeric"
+                                value={form.number}
+                                onChange={(e) =>
+                                  setForm((f) => ({ ...f, number: e.target.value }))
+                                }
+                                className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                placeholder="4242 4242 4242 4242"
+                                minLength={12}
+                                required
+                              />
+                            </div>
+                            <div className="flex gap-3">
+                              <div className="flex-1">
+                                <label className="block text-sm text-gray-700 mb-1">
+                                  Exp
+                                </label>
+                                <input
+                                  value={form.exp}
+                                  onChange={(e) =>
+                                    setForm((f) => ({ ...f, exp: e.target.value }))
+                                  }
+                                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                  placeholder="MM/YY"
+                                  required
+                                />
+                              </div>
+                              <div className="w-28">
+                                <label className="block text-sm text-gray-700 mb-1">
+                                  CVC
+                                </label>
+                                <input
+                                  inputMode="numeric"
+                                  value={form.cvc}
+                                  onChange={(e) =>
+                                    setForm((f) => ({ ...f, cvc: e.target.value }))
+                                  }
+                                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                                  placeholder="123"
+                                  minLength={3}
+                                  required
+                                />
+                              </div>
+                            </div>
+                            <div className="flex gap-3">
+                              <Button type="submit">Save method</Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setAdding(false)}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </form>
+                        </div>
+                      )}
 
-                      {/* Finder recommendations */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3
-                            className="text-gray-900 font-semibold text-base mb-2"
-                            style={{ fontFamily: "Inter", fontWeight: 600 }}
-                          >
-                            Finder recommendations
-                          </h3>
-                          <p
-                            className="text-gray-600 text-sm"
-                            style={{ fontFamily: "Inter", fontWeight: 400 }}
-                          >
-                            Rentals we think you'll like. These recommendations
-                            may be slightly outside your search criteria
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center gap-14">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Email
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={
-                                  notifications.finderRecommendations.email
-                                }
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "finderRecommendations",
-                                    "email"
-                                  )
-                                }
-                              />
-                            </div>
+                      {!adding && methods.length > 0 && (
+                        <Button
+                          onClick={() => setAdding(true)}
+                          className="w-full sm:w-auto"
+                          aria-label="Add another payment method"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Plus size={16} />
+                            <span>Add another method</span>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Phone
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={
-                                  notifications.finderRecommendations.phone
-                                }
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "finderRecommendations",
-                                    "phone"
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Divider */}
-                      <hr className="border-gray-200" />
-
-                      {/* Featured news */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3
-                            className="text-gray-900 font-semibold text-base mb-2"
-                            style={{ fontFamily: "Inter", fontWeight: 600 }}
-                          >
-                            Featured news
-                          </h3>
-                          <p
-                            className="text-gray-600 text-sm"
-                            style={{ fontFamily: "Inter", fontWeight: 400 }}
-                          >
-                            News and tips you may be interested in
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center gap-14">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Email
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={notifications.featuredNews.email}
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "featuredNews",
-                                    "email"
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Phone
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={notifications.featuredNews.phone}
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "featuredNews",
-                                    "phone"
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Divider */}
-                      <hr className="border-gray-200" />
-
-                      {/* Finder extras */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3
-                            className="text-gray-900 font-semibold text-base mb-2"
-                            style={{ fontFamily: "Inter", fontWeight: 600 }}
-                          >
-                            Finder extras
-                          </h3>
-                          <p
-                            className="text-gray-600 text-sm"
-                            style={{ fontFamily: "Inter", fontWeight: 400 }}
-                          >
-                            Occasional notifications about new features to make
-                            finding the perfect rental easy
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-center gap-14">
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Email
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={notifications.finderExtras.email}
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "finderExtras",
-                                    "email"
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span
-                              className="text-gray-600 text-sm"
-                              style={{ fontFamily: "Inter", fontWeight: 400 }}
-                            >
-                              Phone
-                            </span>
-                            <div style={{ marginTop: "5px" }}>
-                              <ToggleSwitch
-                                checked={notifications.finderExtras.phone}
-                                onChange={() =>
-                                  handleNotificationToggle(
-                                    "finderExtras",
-                                    "phone"
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>

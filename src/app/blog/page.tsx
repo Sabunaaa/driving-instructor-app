@@ -38,7 +38,7 @@ export default function BlogPage() {
 
       <div
         id="articles"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-[1fr_360px] xl:gap-12"
+        className="max-w-[1296px] 2xl:max-w-none 3xl:max-w-none mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] grid gap-10 lg:grid-cols-[1fr_360px] xl:gap-12"
       >
         {/* Left: content */}
         <div className="space-y-8">

@@ -29,7 +29,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       {/* Contact Section */}
-      <div className="max-w-[1296px] mx-auto px-4 py-28">
+      <div className="max-w-[1296px] 2xl:max-w-none 3xl:max-w-none mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-28">
         <div className="flex gap-[134px] items-start">
           {/* Left Side - Contact Info */}
           <div className="w-[526px]">

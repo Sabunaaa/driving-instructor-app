@@ -118,7 +118,7 @@ export default async function InstructorProfile({
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
-      <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 2xl:px-[120px] py-8 max-w-7xl 2xl:max-w-none">
+      <div className="mx-auto w-full px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-8 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         {/* Header / Hero */}
         <section className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8">
           <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">

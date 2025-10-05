@@ -33,7 +33,7 @@ export default function Home() {
       />
       {/* Benefits - below hero */}
       <BenefitsGrid
-        className="mt-12 px-6 sm:px-8"
+        className="mt-12 px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px]"
         items={[
           {
             icon: (
@@ -159,7 +159,7 @@ export default function Home() {
       />
       {/* Feature Cards full-width section */}
       <section className="mt-10 w-full">
-        <div className="grid grid-cols-2 gap-6 sm:gap-8 px-6 sm:px-8 w-full items-stretch">
+        <div className="grid grid-cols-2 gap-6 sm:gap-8 px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] w-full items-stretch">
           <FeatureCard
             icon={Car}
             title="Certified Instructors"

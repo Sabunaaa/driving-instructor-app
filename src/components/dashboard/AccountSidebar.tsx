@@ -25,7 +25,7 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
 
   const menuItems = [
     { icon: User, label: "My profile", href: "/profile" },
-    { icon: Layers, label: "My listings", href: "/listings" },
+    { icon: Layers, label: "Bookings", href: "/bookings" },
     { icon: Star, label: "Reviews", href: "/reviews" },
     { icon: Heart, label: "Favorites", href: "/favorites" },
     { icon: CreditCard, label: "Payment details", href: "/payment" },

@@ -46,7 +46,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full bg-white text-base sticky top-0 z-50 border-b border-gray-200/60 backdrop-blur supports-[backdrop-filter]:bg-white/95">
-      <div className="relative w-full mx-auto flex items-center justify-between gap-3 px-4 md:px-6 lg:px-8 2xl:px-[120px] 3xl:px-[120px] py-2.5 flex-wrap max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
+      <div className="relative w-full mx-auto flex items-center justify-between gap-3 px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-2.5 flex-wrap max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         {/* Logo (click to go home) */}
         <Link
           href="/"
