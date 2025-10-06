@@ -31,7 +31,7 @@ const BusinessSettingsPage = () => {
       title: "Schedule",
       description: "View and manage lesson schedules",
       color: "bg-green-500",
-      href: "/business-settings/schedule",
+      href: "/dashboard", // route removed; point to dashboard
     },
     {
       icon: DollarSign,
