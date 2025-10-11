@@ -1,18 +1,9 @@
+"use client";
+
 import React from "react";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-// @ts-ignore
-import {
-  Star,
-  MapPin,
-  ShieldCheck,
-  BadgeCheck,
-  Clock,
-  Calendar,
-  MessageSquare,
-  CheckCircle2,
-} from "lucide-react";
-import Button from "@/components/ui/Button";
+import { notFound, useParams } from "next/navigation";
+import { MapPin, Mail, Star, BadgeCheck } from "lucide-react";
+import Calendar from "@/components/ui/Calendar";
 
 const MOCK_INSTRUCTORS = [
   {
@@ -88,207 +79,259 @@ const MOCK_INSTRUCTORS = [
   },
 ];
 
-function RatingStars({ value }: { value: number }) {
-  const filled = Math.round(value);
-  return (
-    <div className="flex items-center gap-1" aria-label={`${value} out of 5`}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          size={16}
-          className={
-            i < filled ? "text-yellow-500 fill-current" : "text-gray-300"
-          }
-        />
-      ))}
-      <span className="text-sm text-gray-900 ml-1">{value.toFixed(1)}</span>
-    </div>
-  );
-}
-
-export default async function InstructorProfile({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+export default function InstructorProfile() {
+  const params = useParams();
+  const id = params?.id as string;
   const numId = Number(id);
   const instructor = MOCK_INSTRUCTORS.find((i) => i.id === numId);
+  
+  // Calendar state
+  const [calendarEvents] = React.useState<any[]>([]);
+  const [availability] = React.useState<Record<string, boolean>>({});
+  
   if (!instructor) return notFound();
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       <div className="mx-auto w-full px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-8 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
-        {/* Header / Hero */}
-        <section className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8">
-          <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={instructor.avatar}
-              alt={`${instructor.name} photo`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-1 space-y-2">
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">
-              {instructor.name}
-            </h1>
-            <p className="text-gray-600">{instructor.headline}</p>
-            <div className="flex items-center gap-4 flex-wrap">
-              <RatingStars value={instructor.rating} />
-              <span className="text-sm text-gray-500">
-                ({instructor.reviews} reviews)
-              </span>
-              <span className="inline-flex items-center gap-1 text-sm text-gray-700">
-                <MapPin size={16} className="text-gray-500" /> {instructor.city}
-              </span>
-              <span className="inline-flex items-center gap-1 text-sm text-gray-700">
-                <ShieldCheck size={16} className="text-gray-500" /> Verified
-              </span>
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Left Sidebar */}
+          <aside className="lg:w-80 flex-shrink-0 space-y-6">
+            {/* Profile Card */}
+            <div className="bg-white rounded-xl border border-gray-200">
+              {/* Profile Image */}
+              <div className="pt-4 px-4">
+                <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={instructor.avatar}
+                    alt={instructor.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              
+              {/* Profile Info */}
+              <div className="p-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h1 className="text-xl font-semibold text-gray-900">
+                      {instructor.name}
+                    </h1>
+                    <BadgeCheck size={20} className="text-blue-600 fill-white" />
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">{instructor.headline}</p>
+                  
+                  {/* Rating & Reviews */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, i) => {
+                        const filled = Math.round(instructor.rating);
+                        return (
+                          <Star
+                            key={i}
+                            size={16}
+                            className={
+                              i < filled
+                                ? "text-yellow-500 fill-yellow-500"
+                                : "text-gray-300 fill-gray-300"
+                            }
+                          />
+                        );
+                      })}
+                    </div>
+                    <span className="text-sm font-semibold text-gray-900">
+                      {instructor.rating.toFixed(1)}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      ({instructor.reviews} reviews)
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2 md:gap-3">
-            <Button className="rounded-full">Book Now</Button>
-            <Link
-              href={`/instructors/${instructor.id}/message`}
-              className="inline-flex items-center gap-2 rounded-full border border-[#F03D3D] text-[#F03D3D] hover:bg-[#F03D3D]/5 px-4 py-2.5 text-sm"
-              title="Message Instructor"
-            >
-              <MessageSquare size={16} />
-              Message
-            </Link>
-          </div>
-        </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-          {/* Main column */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* About */}
-            <section className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                About
-              </h2>
-              <p className="text-gray-700 leading-relaxed">{instructor.bio}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {instructor.certifications.map((cert, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-800 text-sm"
-                  >
-                    <BadgeCheck size={16} /> {cert}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-3 text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Languages:</span>{" "}
-                {instructor.languages.join(", ")}
-              </div>
-            </section>
+            {/* About Instructor Card */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-base font-semibold text-gray-900 mb-4">About Instructor</h2>
+              
+              <div className="space-y-4">
+                {/* Years of Experience */}
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Years of Experience</p>
+                  <p className="text-sm font-medium text-gray-900">8+ years teaching</p>
+                </div>
 
-            {/* Availability & Booking */}
-            <section className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                Availability & Booking
-              </h2>
-              <div className="flex items-center gap-2 text-gray-700 mb-4">
-                <Calendar size={18} /> Next available:{" "}
-                <span className="font-medium">{instructor.nextAvailable}</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-4 rounded-lg border border-gray-200">
-                  <div className="text-sm text-gray-500 mb-1">Private</div>
-                  <div className="text-lg font-semibold text-gray-900">
-                    ${instructor.pricing.private}/hr
-                  </div>
+                {/* Total Students */}
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Total Students Taught</p>
+                  <p className="text-sm font-medium text-gray-900">250+ students</p>
                 </div>
-                <div className="p-4 rounded-lg border border-gray-200">
-                  <div className="text-sm text-gray-500 mb-1">Group</div>
-                  <div className="text-lg font-semibold text-gray-900">
-                    ${instructor.pricing.group}/hr
-                  </div>
-                </div>
-                <div className="p-4 rounded-lg border border-gray-200">
-                  <div className="text-sm text-gray-500 mb-1">Online</div>
-                  <div className="text-lg font-semibold text-gray-900">
-                    ${instructor.pricing.online}/hr
-                  </div>
+
+                {/* Teaching Vehicle */}
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Teaching Vehicle</p>
+                  <p className="text-sm font-medium text-gray-900">2023 Toyota Camry (Automatic)</p>
                 </div>
               </div>
-              <div className="mt-4">
-                <Button>Request Session</Button>
+            </div>
+
+            {/* Location Card */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-base font-semibold text-gray-900 mb-3">Location</h2>
+              
+              {/* Google Map */}
+              <div className="w-full h-64 rounded-lg overflow-hidden border border-gray-200">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d95780.15033489928!2d-0.17575639999999998!3d51.5073509!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%2C%20UK!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Instructor Location"
+                ></iframe>
               </div>
-            </section>
+              
+              {/* Location Text */}
+              <div className="mt-3 flex items-start gap-2">
+                <MapPin size={16} className="text-gray-500 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">{instructor.city}</span>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1">
+            {/* Calendar */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
+              <div className="flex">
+                <div className="flex-1">
+                  <Calendar
+                    events={calendarEvents}
+                    editable={false}
+                    availability={availability}
+                  />
+                </div>
+                <div className="w-56 p-4 border-l border-gray-200 bg-gray-50 flex flex-col">
+                  <div className="flex-1">
+                    <div className="space-y-6">
+                      {/* Booking Header */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Book a Lesson</h3>
+                        <p className="text-sm text-gray-600 mb-4">
+                          Choose an available time slot from the calendar to schedule your driving lesson.
+                        </p>
+                      </div>
+
+                      {/* Legend */}
+                      <div className="space-y-3">
+                        <h4 className="text-sm font-semibold text-gray-900">Legend:</h4>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-green-500 rounded"></div>
+                            <span className="text-sm text-gray-700">Available</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-blue-100 border-2 border-blue-300 rounded"></div>
+                            <span className="text-sm text-gray-700">Booked</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-white border border-gray-200 rounded"></div>
+                            <span className="text-sm text-gray-700">Unavailable</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Booking Button - Fixed at bottom */}
+                  <div className="pt-4 border-t border-gray-200">
+                    <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Reviews */}
             <section className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                Reviews
-              </h2>
+              {/* Write a Review */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Write a Review</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-1 block">
+                      Your Rating
+                    </label>
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          className="hover:scale-110 transition-transform"
+                        >
+                          <Star
+                            size={24}
+                            className="text-gray-300 hover:text-yellow-500 hover:fill-yellow-500"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-1 block">
+                      Your Review
+                    </label>
+                    <textarea
+                      rows={4}
+                      placeholder="Share your experience with this instructor..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent resize-none"
+                    ></textarea>
+                  </div>
+                  <button className="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Submit Review
+                  </button>
+                </div>
+              </div>
+
+              {/* Existing Reviews */}
               <div className="space-y-4">
-                {instructor.recentReviews.map((r, idx) => (
+                <h3 className="text-base font-semibold text-gray-900 mb-3">
+                  Student Reviews ({instructor.reviews})
+                </h3>
+                
+                {instructor.recentReviews.map((review, idx) => (
                   <div
                     key={idx}
-                    className="border-b last:border-b-0 pb-4 last:pb-0"
+                    className="pb-4 border-b border-gray-200 last:border-b-0 last:pb-0"
                   >
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 size={16} className="text-green-600" />
-                      <span className="text-sm font-medium text-gray-900">
-                        {r.name}
-                      </span>
-                      <RatingStars value={r.rating} />
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{review.name}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              size={14}
+                              className={
+                                i < review.rating
+                                  ? "text-yellow-500 fill-yellow-500"
+                                  : "text-gray-300 fill-gray-300"
+                              }
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-500">2 weeks ago</span>
                     </div>
-                    <p className="text-gray-700 mt-1">{r.comment}</p>
+                    <p className="text-sm text-gray-700 leading-relaxed">{review.comment}</p>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 text-sm">
-                <Link href="#" className="text-gray-700 underline">
-                  See more reviews
-                </Link>
-              </div>
             </section>
-          </div>
-
-          {/* Sidebar */}
-          <aside className="space-y-8">
-            {/* Skills & Services */}
-            <section className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">
-                Skills & Services
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {instructor.skills.map((s, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-sm"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </section>
-
-            {/* Contact & Messaging */}
-            <section
-              id="contact"
-              className="bg-white rounded-xl border border-gray-200 p-6"
-            >
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">
-                Contact
-              </h2>
-              <p className="text-sm text-gray-600 mb-3">
-                Typically responds in{" "}
-                <span className="font-medium text-gray-800">2 hours</span>
-              </p>
-              <Link
-                href={`/instructors/${instructor.id}/message`}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#F03D3D] border border-[#F03D3D] text-white hover:opacity-90 px-4 py-2.5 text-sm"
-              >
-                <MessageSquare size={16} className="text-white" />
-                Message Instructor
-              </Link>
-            </section>
-          </aside>
+          </main>
         </div>
       </div>
     </div>
