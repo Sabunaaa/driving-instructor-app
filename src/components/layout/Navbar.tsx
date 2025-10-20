@@ -40,7 +40,7 @@ const Navbar = () => {
   }, [isDropdownOpen]);
 
   return (
-    <nav className="w-full bg-white text-base sticky top-0 z-50 border-b border-gray-200/60 backdrop-blur supports-[backdrop-filter]:bg-white/95">
+    <nav className="w-full bg-white text-base sticky top-0 z-50 border-b border-gray-200">
       <div className="relative w-full mx-auto flex items-center justify-between gap-3 px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-2.5 flex-wrap max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         {/* Logo (click to go home) */}
         <Link
@@ -55,7 +55,7 @@ const Navbar = () => {
             </div>
           </div>
           <span
-            className="text-gray-900 font-semibold hover:underline underline-offset-4"
+            className="text-gray-900 font-semibold"
             style={{ fontSize: "24px", lineHeight: "32px", fontWeight: 600 }}
           >
             DriveConnect
@@ -70,12 +70,11 @@ const Navbar = () => {
             onClick={() => router.push("/find-instructors")}
           >
             <span
-              className="text-gray-700 font-medium"
+              className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
               style={{
                 fontSize: "16px",
                 lineHeight: "24px",
                 fontWeight: 500,
-                color: "#333D4C",
               }}
             >
               Find Instructors
@@ -86,7 +85,7 @@ const Navbar = () => {
           <div className="flex items-center px-4 sm:px-6 py-2">
             <Link
               href={user?.userType === "instructor" ? "/for-instructors" : "/how-it-works"}
-              className="text-gray-700 font-medium hover:text-gray-900 hover:underline underline-offset-4 transition-colors"
+              className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
               style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
             >
               {user?.userType === "instructor" ? "For Instructors" : "How it Works"}
@@ -97,7 +96,7 @@ const Navbar = () => {
           <div className="flex items-center px-4 sm:px-6 py-2">
             <Link
               href="/blog"
-              className="text-gray-700 font-medium hover:text-gray-900 hover:underline underline-offset-4 transition-colors"
+              className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
               style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
             >
               Blog
@@ -108,7 +107,7 @@ const Navbar = () => {
           <div className="flex items-center px-4 sm:px-6 py-2">
             <Link
               href="/contact"
-              className="text-gray-700 font-medium hover:text-gray-900 hover:underline underline-offset-4 transition-colors"
+              className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
               style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
             >
               Contact us

@@ -230,15 +230,6 @@ const FindInstructorsPage = () => {
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       <div className="mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-6 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-8">
-          <span className="text-sm font-medium text-gray-600">Homepage</span>
-          <ChevronRight size={14} className="text-gray-600" />
-          <span className="text-sm font-medium text-gray-900">
-            Find Instructors
-          </span>
-        </div>
-
         {/* Main Content */}
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
           {/* Mobile Filters Toggle */}

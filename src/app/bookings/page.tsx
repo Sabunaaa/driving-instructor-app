@@ -12,75 +12,6 @@ export default function BookingsPage() {
   const { user } = useAuth();
   const router = useRouter();
 
-  // Mock booking requests for demonstration - moved before early return
-  const [pendingBookings, setPendingBookings] = React.useState([
-    {
-      id: 1,
-      studentName: "Michael Thompson",
-      studentAvatar: null,
-      date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Tomorrow
-      time: "14:00",
-      duration: "2 hours",
-      lessonType: "Advanced Driving",
-      message: "I need practice with city driving and traffic situations. Looking for a 2-hour intensive session.",
-      status: "pending",
-      urgency: "normal",
-      studentLevel: "Intermediate"
-    },
-    {
-      id: 2,
-      studentName: "Sarah Johnson",
-      studentAvatar: null,
-      date: new Date(new Date().getTime() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Day after tomorrow
-      time: "10:00",
-      duration: "1 hour",
-      lessonType: "Parallel Parking",
-      message: "I have my driving test next week and really need help with parallel parking. Just one hour should be enough.",
-      status: "pending",
-      urgency: "high",
-      studentLevel: "Beginner"
-    },
-    {
-      id: 3,
-      studentName: "David Martinez",
-      studentAvatar: null,
-      date: new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 days from now
-      time: "16:00",
-      duration: "1.5 hours",
-      lessonType: "Highway Driving",
-      message: "Need confidence building for highway merging and lane changes. 1.5 hours would be perfect.",
-      status: "pending",
-      urgency: "normal",
-      studentLevel: "Intermediate"
-    },
-    {
-      id: 4,
-      studentName: "Emily Rodriguez",
-      studentAvatar: null,
-      date: new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Tomorrow
-      time: "09:00",
-      duration: "1 hour",
-      lessonType: "Basic Driving",
-      message: "First time driver, need basic introduction to vehicle controls and safety.",
-      status: "pending",
-      urgency: "normal",
-      studentLevel: "Beginner"
-    },
-    {
-      id: 5,
-      studentName: "Alex Chen",
-      studentAvatar: null,
-      date: new Date(new Date().getTime() + 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 4 days from now
-      time: "18:00",
-      duration: "1 hour",
-      lessonType: "Night Driving",
-      message: "Need practice with night driving conditions and headlight usage.",
-      status: "pending",
-      urgency: "high",
-      studentLevel: "Experienced"
-    }
-  ]);
-
   // Calendar events state - with some pre-existing events for testing
   const [calendarEvents, setCalendarEvents] = React.useState<any[]>([
     {
@@ -124,54 +55,6 @@ export default function BookingsPage() {
     const names = fullName.split(' ');
     if (names.length < 2) return fullName;
     return `${names[0]} ${names[names.length - 1][0]}.`;
-  };
-
-  const handleAcceptBooking = (bookingId: number) => {
-    const booking = pendingBookings.find(b => b.id === bookingId);
-    if (booking) {
-      // Create separate hourly calendar events from booking
-      const durationHours = parseFloat(booking.duration.replace(' hours', '').replace(' hour', ''));
-      const startHour = parseInt(booking.time.split(':')[0]);
-      const startMinutes = parseInt(booking.time.split(':')[1]);
-      
-       const newEvents: any[] = [];
-       for (let i = 0; i < durationHours; i++) {
-         const currentHour = startHour + i;
-         const eventStartTime = `${currentHour.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
-         const eventEndTime = `${(currentHour + 1).toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`;
-         
-         newEvents.push({
-           id: `booking-${bookingId}-${i}`,
-           type: 'regular' as const,
-           date: new Date(booking.date),
-           startTime: eventStartTime,
-           endTime: eventEndTime,
-           title: formatStudentName(booking.studentName)
-         });
-       }
-      
-      setCalendarEvents(prev => [...prev, ...newEvents]);
-      setPendingBookings(prev => prev.filter(booking => booking.id !== bookingId));
-      alert(`Booking accepted! ${formatStudentName(booking.studentName)} has been added to your schedule.`);
-    }
-  };
-
-  const calculateEndTime = (startTime: string, duration: string) => {
-    const [hours, minutes] = startTime.split(':').map(Number);
-    const durationHours = parseFloat(duration.replace(' hours', '').replace(' hour', ''));
-    const endHours = hours + Math.floor(durationHours);
-    const endMinutes = minutes + (durationHours % 1) * 60;
-    
-    const finalHours = endHours + Math.floor(endMinutes / 60);
-    const finalMinutes = endMinutes % 60;
-    
-    return `${finalHours.toString().padStart(2, '0')}:${finalMinutes.toString().padStart(2, '0')}`;
-  };
-
-  const handleRejectBooking = (bookingId: number) => {
-    setPendingBookings(prev => prev.filter(booking => booking.id !== bookingId));
-    // TODO: Send rejection notification to student
-    alert(`Booking rejected. The student will be notified.`);
   };
 
   const handleDateClick = (date: Date, hour?: number) => {
@@ -250,73 +133,6 @@ export default function BookingsPage() {
           editable={true}
         />
       </div>
-
-      {/* Booking Requests */}
-      {pendingBookings.length > 0 && (
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">New Requests</h2>
-            <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-              {pendingBookings.length} pending
-            </span>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {pendingBookings.map((booking) => (
-              <div key={booking.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
-                {/* Student Info & Urgency */}
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <User size={16} className="text-blue-600" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 text-sm truncate">{booking.studentName}</h3>
-                    <p className="text-xs text-gray-500">{booking.studentLevel} Driver</p>
-                  </div>
-                  {booking.urgency === 'high' && (
-                    <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
-                      Urgent
-                    </span>
-                  )}
-                </div>
-
-                {/* Lesson Details */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <CalendarIcon size={14} className="text-gray-400" />
-                    <span>{new Date(booking.date).toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <Clock size={14} className="text-gray-400" />
-                    <span>{booking.time} - {calculateEndTime(booking.time, booking.duration)}</span>
-                  </div>
-                </div>
-                
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleAcceptBooking(booking.id)}
-                    className="flex-1 px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-xs font-medium"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => handleRejectBooking(booking.id)}
-                    className="flex-1 px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-xs font-medium"
-                  >
-                    Decline
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
     </>
   );
 
