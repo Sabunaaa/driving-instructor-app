@@ -107,10 +107,10 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
   return (
     <div className="min-h-screen bg-white">
       {/* Back Navigation & Header */}
-      <div className="bg-gradient-to-b from-gray-50 to-white sticky top-0 z-10 border-b border-gray-200">
+      <div className="bg-gradient-to-b from-gray-50 to-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 py-6">
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-sm mb-6">
+          <div className="flex items-center justify-center gap-2 text-sm mb-6">
             <a href="/blog" className="text-purple-600 hover:text-purple-700 flex items-center gap-1 font-medium">
               <ArrowLeft className="w-4 h-4" />
               Blog
@@ -120,10 +120,10 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
           </div>
 
           {/* Title & Metadata */}
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 text-center">
             {articleData.title}
           </h1>
-          <p className="text-xl text-gray-600 mb-6">
+          <p className="text-xl text-gray-600 mb-6 text-center">
             {articleData.subtitle}
           </p>
 
@@ -171,124 +171,131 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
       </div>
 
       {/* Featured Image */}
-      <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
-        <div className="w-full aspect-video bg-gradient-to-br from-purple-200 to-blue-200 rounded-xl overflow-hidden" />
+      <div className="w-full mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-12 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
+        <div className="w-full aspect-video bg-gradient-to-br from-purple-200 to-blue-200 rounded-xl overflow-hidden max-h-[800px]" />
       </div>
 
-      {/* Newsletter Subscribe Sidebar - Positioned here */}
-      <div className="max-w-4xl mx-auto px-6 lg:px-8 py-8 bg-gradient-to-b from-blue-50 to-purple-50 rounded-xl mb-12">
-        <h3 className="text-lg font-bold text-gray-900 mb-3">Unlock exclusive content</h3>
-        <p className="text-gray-600 mb-6 text-sm">
-          Subscribe now for best practices, research reports, and more.
-        </p>
-        <form onSubmit={handleSubscribe} className="space-y-3">
-          <div>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Business email"
-              required
-              className="w-full px-4 py-3 text-sm rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-200"
-              aria-label="Email address"
-            />
-          </div>
-          <div>
-            <select
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="w-full px-4 py-3 text-sm rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-200"
-              aria-label="Country"
-            >
-              <option>United States</option>
-              <option>United Kingdom</option>
-              <option>Canada</option>
-              <option>Australia</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-3 text-sm bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Subscribe
-          </button>
-        </form>
-      </div>
-
-      {/* Article Content */}
-      <article className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
-        <div className="prose prose-lg max-w-none">
-          {articleData.content.map((section, idx) => {
-            switch (section.type) {
-              case 'heading':
-                return (
-                  <h2 key={idx} className="text-3xl font-bold text-gray-900 mt-12 mb-6 first:mt-0">
-                    {section.content}
-                  </h2>
-                );
-              case 'paragraph':
-                return (
-                  <p key={idx} className="text-lg text-gray-700 mb-6 leading-relaxed">
-                    {section.content}
-                  </p>
-                );
-              case 'list':
-                return (
-                  <ul key={idx} className="list-disc list-inside space-y-3 mb-6 text-lg text-gray-700">
-                    {section.items?.map((item, i) => (
-                      <li key={i} className="ml-4">{item}</li>
-                    ))}
-                  </ul>
-                );
-              case 'image':
-                return (
-                  <div key={idx} className="w-full aspect-video bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl my-12" />
-                );
-              case 'blockquote':
-                return (
-                  <blockquote key={idx} className="border-l-4 border-purple-600 pl-6 py-4 my-8 bg-gray-50 rounded-r-lg">
-                    <p className="text-xl text-gray-700 italic">{section.content}</p>
-                  </blockquote>
-                );
-              default:
-                return null;
-            }
-          })}
-        </div>
-      </article>
-
-      {/* Authors Section */}
-      <section className="max-w-4xl mx-auto px-6 lg:px-8 py-12 border-t border-gray-200">
-        <h3 className="text-lg font-bold text-gray-900 mb-8">Authors</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {articleData.authors.map((author) => (
-            <div key={author.name} className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-300 to-blue-300 rounded-full flex-shrink-0" />
-              <div>
-                <h4 className="font-bold text-gray-900">{author.name}</h4>
-                <p className="text-sm text-gray-600">{author.title}</p>
-                <a href={author.profileUrl} className="text-sm text-purple-600 hover:text-purple-700 font-medium mt-1 inline-block">
-                  View profile →
-                </a>
-              </div>
+      {/* Main Layout: Subscription Sidebar + Article Content */}
+      <div className="w-full mx-auto px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-12 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Sidebar: Newsletter Subscribe */}
+          <aside className="lg:col-span-3">
+            <div className="sticky top-24 bg-gradient-to-b from-blue-50 to-purple-50 rounded-xl p-8 border border-blue-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Unlock exclusive content</h3>
+              <p className="text-gray-600 mb-8 text-base leading-relaxed">
+                Subscribe now for best practices, research reports, and more.
+              </p>
+              <form onSubmit={handleSubscribe} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Business email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    className="w-full px-4 py-3 text-base rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-200"
+                    aria-label="Email address"
+                  />
+                </div>
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="marketing-consent"
+                    defaultChecked
+                    className="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer mt-0.5 flex-shrink-0"
+                    aria-label="Marketing consent"
+                  />
+                  <label htmlFor="marketing-consent" className="text-xs text-gray-600 leading-relaxed cursor-pointer">
+                    I'd like to receive marketing communications regarding Webflow's products, services, and events. I understand I can unsubscribe at any time.
+                  </label>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full px-4 py-4 text-base bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  Subscribe
+                </button>
+              </form>
             </div>
-          ))}
-        </div>
-      </section>
+          </aside>
 
-      {/* Meta Information */}
-      <section className="max-w-4xl mx-auto px-6 lg:px-8 py-8 border-t border-gray-200 bg-gray-50 rounded-lg">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-          <div>
-            <p className="text-sm font-medium text-gray-600">Last Updated</p>
-            <p className="font-semibold text-gray-900">{articleData.publishedDate}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-600">Category</p>
-            <p className="font-semibold text-purple-600">{articleData.category}</p>
-          </div>
+          {/* Right Content: Article */}
+          <main className="lg:col-span-9">
+            <article className="prose prose-lg max-w-none">
+              {articleData.content.map((section, idx) => {
+                switch (section.type) {
+                  case 'heading':
+                    return (
+                      <h2 key={idx} className="text-3xl font-bold text-gray-900 mt-12 mb-6 first:mt-0">
+                        {section.content}
+                      </h2>
+                    );
+                  case 'paragraph':
+                    return (
+                      <p key={idx} className="text-lg text-gray-700 mb-6 leading-relaxed">
+                        {section.content}
+                      </p>
+                    );
+                  case 'list':
+                    return (
+                      <ul key={idx} className="list-disc list-inside space-y-3 mb-6 text-lg text-gray-700">
+                        {section.items?.map((item, i) => (
+                          <li key={i} className="ml-4">{item}</li>
+                        ))}
+                      </ul>
+                    );
+                  case 'image':
+                    return (
+                      <div key={idx} className="w-full aspect-video bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl my-12" />
+                    );
+                  case 'blockquote':
+                    return (
+                      <blockquote key={idx} className="border-l-4 border-purple-600 pl-6 py-4 my-8 bg-gray-50 rounded-r-lg">
+                        <p className="text-xl text-gray-700 italic">{section.content}</p>
+                      </blockquote>
+                    );
+                  default:
+                    return null;
+                }
+              })}
+            </article>
+
+            {/* Authors Section */}
+            <section className="py-12 border-t border-gray-200 mt-12">
+              <h3 className="text-lg font-bold text-gray-900 mb-8">Authors</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {articleData.authors.map((author) => (
+                  <div key={author.name} className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-300 to-blue-300 rounded-full flex-shrink-0" />
+                    <div>
+                      <h4 className="font-bold text-gray-900">{author.name}</h4>
+                      <p className="text-sm text-gray-600">{author.title}</p>
+                      <a href={author.profileUrl} className="text-sm text-purple-600 hover:text-purple-700 font-medium mt-1 inline-block">
+                        View profile →
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Meta Information */}
+            <section className="py-8 border-t border-gray-200 bg-gray-50 rounded-lg px-6">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Last Updated</p>
+                  <p className="font-semibold text-gray-900">{articleData.publishedDate}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Category</p>
+                  <p className="font-semibold text-purple-600">{articleData.category}</p>
+                </div>
+              </div>
+            </section>
+          </main>
         </div>
-      </section>
+      </div>
 
       {/* Related Articles Carousel */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-gray-200">
@@ -299,61 +306,47 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
           <button
             onClick={prevSlide}
             disabled={currentSlide === 0}
-            className="absolute -left-16 top-0 p-2 text-gray-400 hover:text-gray-900 disabled:opacity-50 transition-colors"
+            className="absolute -left-16 top-0 p-2 text-gray-400 hover:text-gray-900 disabled:opacity-50 transition-colors z-10"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <button
             onClick={nextSlide}
-            disabled={currentSlide >= relatedArticles.length - 1}
-            className="absolute -right-16 top-0 p-2 text-gray-400 hover:text-gray-900 disabled:opacity-50 transition-colors"
+            disabled={currentSlide >= relatedArticles.length - 3}
+            className="absolute -right-16 top-0 p-2 text-gray-400 hover:text-gray-900 disabled:opacity-50 transition-colors z-10"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
 
-          {/* Carousel */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedArticles.map((article) => (
-              <a
-                key={article.id}
-                href={article.url}
-                className="group cursor-pointer"
-              >
-                <div className="relative overflow-hidden rounded-xl bg-gray-100 mb-4 aspect-[4/3]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-blue-100 group-hover:scale-105 transition-transform duration-300" />
-                </div>
-                <span className="text-sm font-medium text-purple-600 mb-2 block">{article.category}</span>
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2 mb-2">
-                  {article.title}
-                </h3>
-                <p className="text-sm text-gray-600">By {article.author}</p>
-              </a>
-            ))}
+          {/* Carousel - 3 items visible */}
+          <div className="overflow-hidden">
+            <div 
+              className="flex gap-6 transition-transform duration-300 ease-in-out"
+              style={{ transform: `translateX(-${currentSlide * 328}px)` }}
+            >
+              {relatedArticles.map((article) => (
+                <a
+                  key={article.id}
+                  href={article.url}
+                  className="group cursor-pointer flex-shrink-0 w-80"
+                >
+                  <div className="relative overflow-hidden rounded-xl bg-gray-100 mb-4 aspect-[4/3]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-blue-100 group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <span className="text-sm font-medium text-purple-600 mb-2 block">{article.category}</span>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-purple-600 transition-colors line-clamp-2 mb-2">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">By {article.author}</p>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-gray-900 py-16 mt-16">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-            Get started for free
-          </h2>
-          <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
-            Try our platform for as long as you like with our free Starter plan. Purchase a paid plan to unlock additional features.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors">
-              Get started — it's free
-            </button>
-            <button className="px-8 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
-              Watch demo
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

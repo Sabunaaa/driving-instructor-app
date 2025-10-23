@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useMultiStepForm } from "@/hooks";
 import StepIndicator from "@/components/instructor/StepIndicator";
 import Step1PersonalDetails from "@/components/instructor/Step1PersonalDetails";
 import Step2VehicleInfo from "@/components/instructor/Step2VehicleInfo";
@@ -39,8 +40,7 @@ export interface InstructorSignupData {
 }
 
 const InstructorSignupPage = () => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<InstructorSignupData>({
+  const initialFormData: InstructorSignupData = {
     firstName: "",
     lastName: "",
     dateOfBirth: "",
@@ -62,30 +62,25 @@ const InstructorSignupPage = () => {
     backgroundCheckConsent: false,
     acceptTerms: false,
     acceptPrivacy: false,
-  });
-
-  const handleStepChange = (step: number) => {
-    setCurrentStep(step);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleNextStep = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+  const { 
+    currentStep, 
+    handleNextStep, 
+    handlePreviousStep, 
+    handleStepChange, 
+    handleFormDataChange,
+    resetForm,
+    isFirstStep,
+    isLastStep,
+  } = useMultiStepForm(initialFormData, 4);
 
-  const handlePreviousStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+  const [formData, setFormData] = React.useState<InstructorSignupData>(initialFormData);
 
-  const handleFormDataChange = (newData: Partial<InstructorSignupData>) => {
-    setFormData((prev) => ({ ...prev, ...newData }));
-  };
+  // Update the hook's form data when local state changes
+  React.useEffect(() => {
+    handleFormDataChange(formData);
+  }, [formData, handleFormDataChange]);
 
   const handleSubmit = () => {
     console.log("Final submission:", formData);

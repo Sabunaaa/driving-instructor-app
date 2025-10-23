@@ -11,7 +11,7 @@ interface StatCardProps {
   iconColor: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({
+const StatCardComponent: React.FC<StatCardProps> = ({
   label,
   value,
   icon: Icon,
@@ -32,5 +32,18 @@ const StatCard: React.FC<StatCardProps> = ({
     </div>
   );
 };
+
+// Memoized component to prevent unnecessary re-renders
+const StatCard = React.memo(
+  StatCardComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.label === nextProps.label &&
+      prevProps.value === nextProps.value &&
+      prevProps.iconBgColor === nextProps.iconBgColor &&
+      prevProps.iconColor === nextProps.iconColor
+    );
+  }
+);
 
 export default StatCard;
