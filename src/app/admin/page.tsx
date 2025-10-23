@@ -1,24 +1,72 @@
 "use client";
 
 import React from "react";
+import AdminLayout from "@/components/admin/AdminLayout";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import PageHeader from "@/components/admin/PageHeader";
+import StatsGrid from "@/components/admin/StatsGrid";
+import StatCard from "@/components/admin/StatCard";
+import { Users, UserCheck, Calendar, CreditCard } from "lucide-react";
+
+interface Stat {
+  label: string;
+  value: string | number;
+  icon: typeof Users;
+  iconBgColor: string;
+  iconColor: string;
+}
 
 const AdminPage = () => {
+  const stats: Stat[] = [
+    {
+      label: "Total Users",
+      value: "1,234",
+      icon: Users,
+      iconBgColor: "bg-blue-50",
+      iconColor: "text-blue-600",
+    },
+    {
+      label: "Active Instructors",
+      value: "456",
+      icon: UserCheck,
+      iconBgColor: "bg-green-50",
+      iconColor: "text-green-600",
+    },
+    {
+      label: "Total Bookings",
+      value: "789",
+      icon: Calendar,
+      iconBgColor: "bg-purple-50",
+      iconColor: "text-purple-600",
+    },
+    {
+      label: "Revenue",
+      value: "$12.5K",
+      icon: CreditCard,
+      iconBgColor: "bg-orange-50",
+      iconColor: "text-orange-600",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA]">
-      <div className="mx-auto w-full px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] py-8 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Manage your platform, users, and content.
-          </p>
-        </div>
-
-        {/* Content will go here */}
-      </div>
-    </div>
+    <AdminLayout sidebar={<AdminSidebar activeItem="Analytics" />}>
+      <PageHeader
+        title="Analytics"
+        description="View platform performance and key metrics."
+      />
+      <StatsGrid>
+        {stats.map((stat, index) => (
+          <StatCard
+            key={index}
+            label={stat.label}
+            value={stat.value}
+            icon={stat.icon}
+            iconBgColor={stat.iconBgColor}
+            iconColor={stat.iconColor}
+          />
+        ))}
+      </StatsGrid>
+    </AdminLayout>
   );
 };
 
