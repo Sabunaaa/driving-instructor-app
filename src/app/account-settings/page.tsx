@@ -8,7 +8,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useForm } from "@/hooks";
 import { personalInfoValidation, passwordChangeValidation } from "@/utils/validation/schemas";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
-import { ProfileCompletion } from "@/components/account/ProfileCompletion";
 import { AvatarUpload } from "@/components/account/AvatarUpload";
 import { SettingsTabs } from "@/components/account/SettingsTabs";
 import { PersonalInfoForm } from "@/components/account/PersonalInfoForm";
@@ -114,12 +113,6 @@ const AccountSettings = () => {
     { icon: File, label: "Password and security" },
   ];
 
-  const profileTasks = [
-    "Add the languages ​​you speak",
-    "Verified your email",
-    "Add date of birth",
-  ];
-
   if (!user) {
     return (
       <div className="min-h-[60vh] w-full flex items-center justify-center">
@@ -152,8 +145,6 @@ const AccountSettings = () => {
               {/* Personal Info Tab */}
               {activeTab === "Personal info" && (
                 <>
-                  <ProfileCompletion completionPercentage={65} tasks={profileTasks} />
-
                   <AvatarUpload
                     avatarUrl={user?.avatarUrl}
                     onAvatarChange={(dataUrl) => updateUser({ avatarUrl: dataUrl })}

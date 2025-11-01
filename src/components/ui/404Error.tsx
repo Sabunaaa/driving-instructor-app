@@ -2,8 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Error404 = () => {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col items-center justify-center py-20 gap-6">
       {/* Image */}
@@ -14,7 +17,6 @@ const Error404 = () => {
           width={500}
           height={500}
           className="object-contain w-[400px] h-auto"
-          quality={100}
           priority
         />
       </div>
@@ -33,7 +35,7 @@ const Error404 = () => {
         Error 404...
       </h1>
 
-      {/* Back to Home Button */}
+      {/* Go Back Button */}
       <button
         className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-[#F03D3D] text-white rounded-lg font-medium hover:opacity-90 transition-colors"
         style={{
@@ -42,9 +44,9 @@ const Error404 = () => {
           lineHeight: "20px",
           fontWeight: 500,
         }}
-        onClick={() => (window.location.href = "/")}
+        onClick={() => router.back()}
       >
-        <span>Back to Home</span>
+        <span>Go Back</span>
       </button>
     </div>
   );

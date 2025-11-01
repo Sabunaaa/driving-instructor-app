@@ -3,6 +3,9 @@
 import { HTTP_STATUS, ERROR_MESSAGES, API_CONFIG, STORAGE_KEYS } from './constants';
 import { CacheManager } from '@/lib/cache';
 import { LIMITS } from '@/config/constants';
+import { csrfProtection } from '@/utils/csrf';
+import { logger } from '@/utils/secureLogger';
+import { sanitizeObject } from '@/utils/sanitize';
 
 // Error response interface
 interface ErrorResponse {
@@ -65,6 +68,11 @@ class APIService {
     // Load auth token from storage
     if (typeof window !== 'undefined') {
       this.authToken = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+      
+      // Initialize CSRF protection
+      csrfProtection.initialize().catch((err) => {
+        logger.error('Failed to initialize CSRF protection', err);
+      });
     }
   }
 
@@ -121,7 +129,7 @@ class APIService {
   }
 
   /**
-   * Build headers with authentication
+   * Build headers with authentication and CSRF protection
    */
   private buildHeaders(headers?: Record<string, string>): Record<string, string> {
     const defaultHeaders: Record<string, string> = {
@@ -132,7 +140,10 @@ class APIService {
       defaultHeaders['Authorization'] = `Bearer ${this.authToken}`;
     }
 
-    return { ...defaultHeaders, ...headers };
+    // Add CSRF token for state-changing operations
+    const csrfHeaders = csrfProtection.addTokenToHeaders(defaultHeaders);
+
+    return { ...csrfHeaders, ...headers };
   }
 
   /**

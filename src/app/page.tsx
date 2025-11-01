@@ -1,197 +1,175 @@
-import HeroSplit from "@/components/ui/HeroSplit";
-import FeatureCard from "@/components/ui/FeatureCard";
-import BenefitsGrid from "@/components/ui/BenefitsGrid";
-// @ts-ignore
-import {
-  Car,
-  Calendar,
-  ShieldCheck,
-  CreditCard,
-  Clock,
-  BarChart3,
-} from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, CheckCircle, Car } from "lucide-react";
+
+const HeroSection = () => (
+  <section className="px-6 py-20 md:py-32 max-w-6xl mx-auto">
+    <div className="text-center">
+      <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+        Find Your Perfect Driving Instructor
+      </h1>
+      <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        Connect with experienced, certified driving instructors in your area. Book lessons that fit your schedule and learn at your own pace.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Link
+          href="/find-instructors"
+          className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+        >
+          Find Instructors
+          <ArrowRight className="ml-2 w-5 h-5" />
+        </Link>
+        <Link
+          href="/for-instructors"
+          className="inline-flex items-center justify-center px-8 py-3 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition"
+        >
+          Become an Instructor
+        </Link>
+      </div>
+    </div>
+  </section>
+);
+
+const AnimatedCarsBanner = () => {
+  const cars = Array.from({ length: 40 });
+
+  return (
+    <section className="bg-gray-50 py-2 overflow-hidden border-t border-gray-200">
+      <style>{`
+        @keyframes scroll-left {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .cars-banner {
+          animation: scroll-left 75s linear infinite;
+          width: max-content;
+          will-change: transform;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+        }
+      `}</style>
+      <div className="cars-banner">
+        {cars.map((_, i) => (
+          <div key={i} className="flex-shrink-0 inline-flex" style={{ marginRight: '60px' }}>
+            <Car className="w-12 h-12 text-blue-600" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+interface StatItemProps {
+  value: string;
+  label: string;
+}
+
+const StatItem = ({ value, label }: StatItemProps) => (
+  <div className="text-center">
+    <div className="text-4xl font-bold text-blue-600 mb-2">{value}</div>
+    <p className="text-gray-600">{label}</p>
+  </div>
+);
+
+const StatsSection = () => (
+  <section className="bg-white py-12 md:py-16 border-t border-gray-200">
+    <div className="max-w-6xl mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <StatItem value="500+" label="Certified Instructors" />
+        <StatItem value="4.8★" label="Average Rating" />
+        <StatItem value="10k+" label="Lessons Completed" />
+      </div>
+    </div>
+  </section>
+);
+
+interface FeatureItemProps {
+  title: string;
+  description: string;
+}
+
+const FeatureItem = ({ title, description }: FeatureItemProps) => (
+  <div className="p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition">
+    <CheckCircle className="w-6 h-6 text-blue-600 mb-3" />
+    <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+    <p className="text-gray-600">{description}</p>
+  </div>
+);
+
+const FeaturesSection = () => {
+  const features: FeatureItemProps[] = [
+    {
+      title: "Verified Instructors",
+      description: "All instructors are certified and background-checked for your safety.",
+    },
+    {
+      title: "Flexible Scheduling",
+      description: "Book lessons at times that work for you, no rigid schedules.",
+    },
+    {
+      title: "Transparent Pricing",
+      description: "Clear, upfront rates with no hidden fees or surprises.",
+    },
+    {
+      title: "Real-Time Booking",
+      description: "See availability instantly and confirm lessons in seconds.",
+    },
+    {
+      title: "Progress Tracking",
+      description: "Monitor your improvement with detailed lesson feedback.",
+    },
+    {
+      title: "Local Instructors",
+      description: "Find experienced drivers in your area who know local roads.",
+    },
+  ];
+
+  return (
+    <section className="py-20 md:py-32 px-6 max-w-6xl mx-auto">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-16">
+        Why Choose Us?
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features.map((feature, idx) => (
+          <FeatureItem key={idx} {...feature} />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const CTASection = () => (
+  <section className="bg-blue-600 py-16 md:py-20 px-6">
+    <div className="max-w-4xl mx-auto text-center">
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        Ready to Start Learning?
+      </h2>
+      <p className="text-blue-100 mb-8 text-lg">
+        Join thousands of students who have found their perfect driving instructor.
+      </p>
+      <Link
+        href="/find-instructors"
+        className="inline-flex items-center justify-center px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition"
+      >
+        Explore Instructors Now
+        <ArrowRight className="ml-2 w-5 h-5" />
+      </Link>
+    </div>
+  </section>
+);
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      <HeroSplit
-        eyebrow="Trusted local instructors"
-        title={
-          <>
-            Your road to confident
-            <br /> driving begins here
-          </>
-        }
-        subtitle="Book lessons with highly-rated instructors in your area. Flexible schedules, friendly teaching, real results."
-        ctaHref="/contact"
-        ctaLabel="Get in touch"
-        rating={5}
-        leftBgClassName="bg-gradient-to-br from-red-400 to-red-300"
-        rightImageSrc="/images/404/instructor.png"
-        rightImageAlt="Smiling driving instructor next to a training car"
-        compact
-      />
-      {/* Benefits - below hero */}
-      <BenefitsGrid
-        className="mt-12 px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px]"
-        items={[
-          {
-            icon: (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              >
-                <rect x="3" y="4" width="18" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="22" x2="16" y2="22"></line>
-              </svg>
-            ),
-            label:
-              "Flexible schedule – choose the days and times you want to work",
-          },
-          {
-            icon: (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            ),
-            label: "Paid Training + DMV licensing provided",
-          },
-          {
-            icon: (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              >
-                <path d="M10 21v-6a4 4 0 0 1 8 0v6"></path>
-                <path d="M2 9l10-5 10 5"></path>
-                <path d="M2 9v6h20V9"></path>
-              </svg>
-            ),
-            label: "Time off benefits",
-          },
-          {
-            icon: (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              >
-                <rect x="3" y="11" width="18" height="8" rx="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-            ),
-            label: "Teach in a company vehicle",
-          },
-          {
-            icon: (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <path d="M12 8v8" />
-                <path d="M8 12h8" />
-              </svg>
-            ),
-            label:
-              "Health, dental, and vision insurance plans for full‑time driving instructors",
-          },
-          {
-            icon: (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="28"
-                height="28"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M9 12l2 2 4-4"></path>
-              </svg>
-            ),
-            label: "Ongoing training and mentorship support",
-          },
-        ]}
-      />
-      {/* Feature Cards full-width section */}
-      <section className="mt-10 w-full">
-        <div className="grid grid-cols-2 gap-6 sm:gap-8 px-12 md:px-16 lg:px-24 2xl:px-[220px] 3xl:px-[260px] w-full items-stretch">
-          <FeatureCard
-            icon={Car}
-            title="Certified Instructors"
-            description="Learn with vetted, friendly pros who tailor lessons to your pace."
-          />
-          <FeatureCard
-            icon={Calendar}
-            title="Flexible Scheduling"
-            description="Book, reschedule, and plan lessons around your calendar."
-          />
-          <FeatureCard
-            icon={ShieldCheck}
-            title="Safety First"
-            description="Dual-control vehicles and safety-focused instruction every time."
-          />
-          <FeatureCard
-            icon={CreditCard}
-            title="Transparent Pricing"
-            description="Clear, upfront rates with no hidden fees—know exactly what you pay."
-          />
-          <FeatureCard
-            icon={Clock}
-            title="Real-Time Availability"
-            description="See open slots instantly and lock in times that work for you."
-          />
-          <FeatureCard
-            icon={BarChart3}
-            title="Pass-Rate Insights"
-            description="Data-backed progress tracking to help you pass with confidence."
-          />
-        </div>
-      </section>
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white">
+      <HeroSection />
+      <AnimatedCarsBanner />
+      <StatsSection />
+      <FeaturesSection />
+      <CTASection />
     </div>
   );
 }

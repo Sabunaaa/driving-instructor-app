@@ -62,40 +62,6 @@ export default function BookingsPage() {
     // TODO: Show bookings for specific date/time or open booking modal
   };
 
-  const handleEventClick = (event: any) => {
-    console.log('Event clicked:', event);
-    console.log('Current calendar events:', calendarEvents);
-    
-    // Show cancel confirmation for bookings
-    if (event.id.startsWith('booking-') || event.id.startsWith('existing-')) {
-      const confirmCancel = window.confirm(
-        `Cancel lesson with ${event.title}?\n\nTime: ${event.startTime}-${event.endTime}\nThis will remove only this specific hour from your schedule.`
-      );
-      
-      if (confirmCancel) {
-        handleCancelBooking(event.id);
-      }
-    }
-  };
-
-  const handleCancelBooking = (eventId: string) => {
-    console.log('Canceling event with ID:', eventId);
-    console.log('Events before cancellation:', calendarEvents);
-    
-    // Remove the specific event from calendar
-    setCalendarEvents(prev => {
-      const filtered = prev.filter(event => event.id !== eventId);
-      console.log('Events after cancellation:', filtered);
-      return filtered;
-    });
-    
-    // Extract student name from the event for confirmation
-    const canceledEvent = calendarEvents.find(event => event.id === eventId);
-    if (canceledEvent) {
-      alert(`Lesson with ${canceledEvent.title} (${canceledEvent.startTime}-${canceledEvent.endTime}) has been cancelled.`);
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
@@ -129,7 +95,6 @@ export default function BookingsPage() {
         <Calendar
           events={calendarEvents}
           onDateClick={handleDateClick}
-          onEventClick={handleEventClick}
           editable={true}
         />
       </div>
@@ -156,7 +121,6 @@ export default function BookingsPage() {
           <Calendar
             events={studentCalendarEvents}
             onDateClick={handleDateClick}
-            onEventClick={handleEventClick}
             editable={false}
           />
         </div>

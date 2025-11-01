@@ -2,12 +2,12 @@
 
 import React from "react";
 
-interface BudgetSliderProps {
+interface BudgetProps {
   budgetRange: [number, number];
   onBudgetChange: (range: [number, number]) => void;
 }
 
-export const BudgetSlider: React.FC<BudgetSliderProps> = ({
+export const Budget: React.FC<BudgetProps> = ({
   budgetRange,
   onBudgetChange,
 }) => {
@@ -70,7 +70,7 @@ export const BudgetSlider: React.FC<BudgetSliderProps> = ({
       {/* Min and Max Input Fields */}
       <div className="flex gap-3">
         {/* Min Input */}
-        <div className="flex-1">
+        <div className="w-16">
           <label className="block text-xs font-medium text-gray-600 mb-2">
             Min (₾)
           </label>
@@ -86,7 +86,7 @@ export const BudgetSlider: React.FC<BudgetSliderProps> = ({
         </div>
 
         {/* Max Input */}
-        <div className="flex-1">
+        <div className="w-16">
           <label className="block text-xs font-medium text-gray-600 mb-2">
             Max (₾)
           </label>
@@ -102,10 +102,6 @@ export const BudgetSlider: React.FC<BudgetSliderProps> = ({
         </div>
       </div>
 
-      {/* Display Current Range */}
-      <div className="text-center text-sm font-medium text-gray-800">
-        ₾ {budgetRange[0]} - ₾ {budgetRange[1]}
-      </div>
     </div>
   );
 };
