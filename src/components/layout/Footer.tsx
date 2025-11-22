@@ -2,13 +2,20 @@
 
 import Link from "next/link";
 import React from "react";
+import { usePathname } from "next/navigation";
 import { Mail, Phone } from "lucide-react";
 
 const Footer: React.FC = () => {
+  const pathname = usePathname();
   const year = new Date().getFullYear();
 
+  // Hide footer on test pages and new designs
+  if (pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/for-instructors/signup-test")) {
+    return null;
+  }
+
   return (
-    <footer className="mt-16 bg-black text-white">
+    <footer className="bg-black text-white">
       <div className="mx-auto px-6 2xl:px-[120px] 3xl:px-[120px] py-10 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}

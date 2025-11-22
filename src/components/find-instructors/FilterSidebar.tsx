@@ -67,7 +67,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <aside
-      className={`w-full lg:w-[266px] space-y-10 ${
+      className={`w-full lg:w-56 space-y-10 ${
         isMobileOpen ? "block" : "hidden"
       } lg:block`}
       aria-label="Filters"
@@ -84,10 +84,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
               onClick={() =>
                 setIsLocationDropdownOpen(!isLocationDropdownOpen)
               }
-              className="flex items-center gap-3 px-4 py-2.5 border border-gray-300 rounded-lg bg-white w-48 text-left hover:bg-gray-50"
+              className="flex items-center gap-3 px-4 py-2.5 border border-gray-300 rounded-lg bg-white w-full text-left hover:bg-gray-50"
             >
-              <span className="flex-1 text-sm text-gray-900">
-                {selectedLocation}
+              <span className={`flex-1 text-sm ${selectedLocation ? 'text-gray-900' : 'text-gray-500'}`}>
+                {selectedLocation || 'Choose a location'}
               </span>
               <ChevronDown
                 size={16}

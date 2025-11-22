@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 // @ts-ignore
-import { Shield, Award, Star } from "lucide-react";
+import { BadgeCheck, Award, Star, Mail, MapPin } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 interface Instructor {
@@ -32,64 +32,101 @@ export const InstructorGrid: React.FC<InstructorGridProps> = ({
         <Link
           key={instructor.id}
           href={`/instructors/${instructor.id}`}
-          className="block"
+          className="block group"
         >
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow flex flex-col h-full cursor-pointer">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex flex-col h-full cursor-pointer">
             {/* Body */}
             <div className="flex gap-4 pb-6 border-b border-gray-200">
-              {/* Avatar */}
-              <div className="w-[100px] h-[110px] rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+              {/* Avatar with gradient and pagination dots */}
+              <div className="w-[100px] h-[110px] rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 relative">
                 <img
                   src="/images/404/profile.jpg"
                   alt={`${instructor.name} avatar`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+                
+                {/* Pagination dots */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                  {[1, 2, 3, 4].map((n, idx) => (
+                    <div
+                      key={n}
+                      className={
+                        `w-1 h-1 rounded-full transition-all duration-300 ` +
+                        (idx === 0
+                          ? "w-3 bg-white shadow-sm"
+                          : "bg-white/70 hover:bg-white")
+                      }
+                    >
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Info */}
-              <div className="flex-1 space-y-3 min-w-0">
-                {/* Name + Rating */}
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-lg font-semibold text-[#111827] truncate">
+              <div className="flex-1 space-y-2 min-w-0">
+                {/* Name with verification badge */}
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate"
+                    style={{ fontFamily: "Inter", fontWeight: 600, fontSize: "14px" }}>
                     {instructor.name}
                   </h3>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <Star
-                      size={14}
-                      className="text-[#FC9231] fill-current"
-                    />
-                    <span className="text-sm text-[#111827]">
-                      {instructor.rating}
-                    </span>
-                    <span className="text-xs text-[#6C727F]">
-                      ({instructor.reviews})
-                    </span>
-                  </div>
+                  {instructor.verified && (
+                    <BadgeCheck size={16} className="text-blue-600 fill-white flex-shrink-0" />
+                  )}
                 </div>
 
-                {/* Profession */}
-                <p className="text-sm font-semibold text-[#111827] truncate">
-                  {instructor.specialties}
-                </p>
+                {/* Location */}
+                <div className="flex items-center gap-1 text-gray-500">
+                  <MapPin size={12} />
+                  <span className="text-xs">{instructor.location}</span>
+                </div>
 
-                {/* Badge + Expertise */}
-                <div className="flex flex-wrap items-center gap-2">
+                {/* Rating */}
+                <div className="flex items-center gap-1">
+                  <Star size={14} className="text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs text-gray-900 font-medium" style={{ fontFamily: "Inter", fontWeight: 500 }}>
+                    {instructor.rating}
+                  </span>
+                  <span className="text-xs text-gray-500" style={{ fontFamily: "Inter", fontWeight: 400, fontSize: "10px" }}>
+                    ({instructor.reviews})
+                  </span>
+                </div>
+
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-1.5">
                   {instructor.verified && (
-                    <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3D7A81] rounded text-white text-xs font-medium">
-                      <Shield size={12} className="text-white" />
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full text-[10px] font-medium">
+                      <BadgeCheck size={10} className="text-blue-600" />
                       <span>Verified</span>
                     </div>
                   )}
-                  <div className="flex items-center gap-1">
-                    <Award size={14} className="text-[#333D4C]" />
-                    <span className="text-sm text-[#333D4C]">
-                      8+ years experience
-                    </span>
-                  </div>
+                  {instructor.badges.includes("Top Instructor") && (
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-[10px] font-medium">
+                      <Award size={10} />
+                      <span>Top instructor</span>
+                    </div>
+                  )}
+                  {instructor.badges
+                    .filter((b) => b !== "Top Instructor" && b !== "Verified")
+                    .map((badge, idx) => (
+                      <div
+                        key={idx}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-[10px] font-medium"
+                      >
+                        <span>{badge}</span>
+                      </div>
+                    ))}
                 </div>
 
+                {/* Profession */}
+                <p className="text-xs font-medium text-gray-900 truncate" style={{ fontFamily: "Inter", fontWeight: 500 }}>
+                  {instructor.specialties}
+                </p>
+
                 {/* Bio */}
-                <p className="text-sm text-[#4E5562] line-clamp-2 leading-relaxed">
+                <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed"
+                  style={{ fontFamily: "Inter", fontWeight: 400, color: "#4E5562" }}>
                   {instructor.bio}
                 </p>
               </div>
@@ -112,8 +149,13 @@ export const InstructorGrid: React.FC<InstructorGridProps> = ({
               </div>
 
               {/* Button */}
-              <Button size="md" className="flex-shrink-0">
-                Book a lesson
+              <Button 
+                size="md" 
+                className="flex items-center gap-1 flex-shrink-0 bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700"
+                style={{ fontFamily: "Inter", fontWeight: 500 }}
+              >
+                <Mail size={14} className="text-white" />
+                <span>Book Now</span>
               </Button>
             </div>
           </div>

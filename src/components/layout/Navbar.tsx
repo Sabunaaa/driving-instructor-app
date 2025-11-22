@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { NavLogo } from "@/components/navbar-components/NavLogo";
@@ -11,9 +12,15 @@ import { MobileMenu } from "@/components/navbar-components/MobileMenu";
 import { LanguageSwitcher } from "@/components/navbar-components/LanguageSwitcher";
 
 const Navbar = () => {
+  const pathname = usePathname();
   const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
+
+  // Hide navbar on test pages
+  if (pathname === "/main" || pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/find-instructors-test") || pathname?.startsWith("/for-instructors-test") || pathname?.startsWith("/for-instructors/signup-test")) {
+    return null;
+  }
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
