@@ -3,13 +3,10 @@ import TrustStrip from "@/components/home/TrustStrip";
 import BentoFeatures from "@/components/home/BentoFeatures";
 import LearningRoadmap from "@/components/home/LearningRoadmap";
 import InstructorShowcase from "@/components/home/InstructorShowcase";
-import NavbarTest from "@/components/layout/NavbarTest";
-import FooterModern from "@/components/layout/FooterModern";
 
 export default function MainPage() {
   return (
     <div className="min-h-screen bg-white">
-      <NavbarTest />
       <HeroModern />
       <TrustStrip />
       <BentoFeatures />
@@ -25,8 +22,6 @@ export default function MainPage() {
           Find Your Instructor Now
         </button>
       </section>
-
-      <FooterModern />
     </div>
   );
 }

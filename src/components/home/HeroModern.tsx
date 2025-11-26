@@ -37,7 +37,7 @@ const HeroModern = () => {
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input 
                   type="text" 
-                  placeholder="Enter your postcode" 
+                  placeholder="Enter your city (e.g. Tbilisi)" 
                   className="w-full h-12 pl-12 pr-4 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#F03D3D]/20"
                 />
               </div>
@@ -63,7 +63,7 @@ const HeroModern = () => {
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full bg-gray-700" />
                 <div>
-                  <h3 className="text-xl font-bold">Sarah Jenkins</h3>
+                  <h3 className="text-xl font-bold">Nino Kalandadze</h3>
                   <p className="text-[#F03D3D]">Top Rated Instructor</p>
                 </div>
                 <div className="ml-auto flex gap-1">

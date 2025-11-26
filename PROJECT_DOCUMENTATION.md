@@ -33,6 +33,10 @@
 
 ## 🚀 Getting Started
 
+### Prerequisites
+- Node.js >= 20.19.4
+- npm >= 10.8.2
+
 ### 1. Installation
 ```bash
 cd /home/saba/instru

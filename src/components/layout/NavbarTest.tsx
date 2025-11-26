@@ -30,10 +30,10 @@ const NavbarTest = () => {
   }, [pathname]);
 
   const navLinks = [
-    { href: "/main", label: "Home" },
+    { href: "/", label: "Home" },
     { href: "/find-instructors-test", label: "Find Instructors" },
     { href: "/for-instructors-test", label: "For Instructors" },
-    { href: "/how-it-works", label: "How it Works" },
+    { href: "/blog-test", label: "Blog" },
   ];
 
   return (
@@ -48,7 +48,7 @@ const NavbarTest = () => {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           
           {/* Logo */}
-          <Link href="/main" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-[#F03D3D] rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition duration-300">
               <span className="text-white font-bold text-lg">D</span>
             </div>

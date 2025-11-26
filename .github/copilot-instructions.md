@@ -1,7 +1,7 @@
 # GitHub Copilot Instructions - Driving Instructor App
 
 > **Last Updated:** October 24, 2025  
-> **Project:** Driving Instructor App (Next.js 15.5.0, React 19, TypeScript)
+> **Project:** Driving Instructor App (Next.js 15.5.0, React 19, TypeScript, Node.js >= 20.19.4)
 
 ## 🎯 Project Architecture Overview
 

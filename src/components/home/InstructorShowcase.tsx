@@ -26,17 +26,17 @@ const InstructorShowcase = () => {
                 </div>
               </div>
               
-              <h3 className="text-xl font-bold mb-1">David Mitchell</h3>
+              <h3 className="text-xl font-bold mb-1">Giorgi Beridze</h3>
               <p className="text-sm text-gray-400 mb-4">Specializes in Nervous Students</p>
               
               <div className="flex flex-wrap gap-2 mb-6">
                 <span className="px-3 py-1 rounded-full bg-gray-700 text-xs text-gray-300">Manual</span>
-                <span className="px-3 py-1 rounded-full bg-gray-700 text-xs text-gray-300">English & Spanish</span>
+                <span className="px-3 py-1 rounded-full bg-gray-700 text-xs text-gray-300">Georgian & English</span>
               </div>
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                 <div>
-                  <span className="text-lg font-bold">£35</span>
+                  <span className="text-lg font-bold">₾35</span>
                   <span className="text-sm text-gray-500">/hr</span>
                 </div>
                 <button className="text-sm font-medium text-[#F03D3D] group-hover:text-white transition">

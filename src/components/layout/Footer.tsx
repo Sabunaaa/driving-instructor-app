@@ -1,99 +1,90 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
 import { usePathname } from "next/navigation";
-import { Mail, Phone } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
-const Footer: React.FC = () => {
+const Footer = () => {
   const pathname = usePathname();
-  const year = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
-  // Hide footer on test pages and new designs
-  if (pathname === "/" || pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/for-instructors/signup-test")) {
+  // Hide footer on specific pages
+  if (pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/for-instructors/signup")) {
     return null;
   }
 
   return (
-    <footer className="bg-black text-white">
-      <div className="mx-auto px-6 2xl:px-[120px] 3xl:px-[120px] py-10 max-w-[1296px] 2xl:max-w-none 3xl:max-w-none">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="space-y-3">
-            <Link href="/" className="inline-block">
-              <span className="text-xl font-semibold tracking-tight">
-                Instru
-              </span>
+    <footer className="bg-[#0F172A] text-white pt-20 pb-10">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          {/* Brand Column */}
+          <div className="space-y-6">
+            <Link href="/" className="text-2xl font-bold tracking-tighter">
+              Drive<span className="text-[#F03D3D]">Forward</span>
             </Link>
-            <p className="text-sm/6 opacity-90 max-w-xs">
-              Learn to drive with confidence. Find trusted instructors near you
-              and book lessons online.
+            <p className="text-gray-400 leading-relaxed">
+              Empowering the next generation of drivers with confidence, safety, and skill. Join Georgia's fastest-growing driving community.
             </p>
+            <div className="flex gap-4">
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#F03D3D] transition-colors">
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#F03D3D] transition-colors">
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#F03D3D] transition-colors">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#F03D3D] transition-colors">
+                <Linkedin className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
-          {/* Explore */}
+          {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-bold mb-3 uppercase/relaxed tracking-wide">
-              Explore
-            </h4>
-            <ul className="space-y-2 text-sm opacity-70">
+            <h3 className="font-bold text-lg mb-6">Quick Links</h3>
+            <ul className="space-y-4">
               <li>
-                <Link href="/find-instructors" className="hover:underline hover:opacity-100">
-                  Find instructors
+                <Link href="/find-instructors" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  Find Instructors
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="hover:underline hover:opacity-100">
-                  How it works
+                <Link href="/for-instructors" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  For Instructors
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="hover:underline hover:opacity-100">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/help" className="hover:underline hover:opacity-100">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:underline hover:opacity-100">
-                  Contact
+                <Link href="/about" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  About Us
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Account */}
+          {/* For Instructors */}
           <div>
-            <h4 className="text-sm font-bold mb-3 uppercase/relaxed tracking-wide">
-              Account
-            </h4>
-            <ul className="space-y-2 text-sm opacity-70">
+            <h3 className="font-bold text-lg mb-6">For Instructors</h3>
+            <ul className="space-y-4">
               <li>
-                <Link href="/signup" className="hover:underline hover:opacity-100">
-                  Create account
+                <Link href="/for-instructors" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  Join the Network
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:underline hover:opacity-100">
-                  Log in
+                <Link href="/for-instructors/benefits" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  Instructor Benefits
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:underline hover:opacity-100">
-                  Dashboard
+                <Link href="/for-instructors/success-stories" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  Success Stories
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:underline hover:opacity-100">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/account-settings" className="hover:underline hover:opacity-100">
-                  Account settings
+                <Link href="/login" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  Instructor Portal
                 </Link>
               </li>
             </ul>
@@ -101,53 +92,32 @@ const Footer: React.FC = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-bold mb-3 uppercase/relaxed tracking-wide">
-              Contact us
-            </h4>
-            <p className="text-sm/6 opacity-70 mb-3">
-              Questions or feedback? Drop us a line.
-            </p>
-            <div className="space-y-2 opacity-70">
-              <div className="flex items-center gap-2">
-                <Mail size={16} className="text-white" />
-                <a
-                  href="mailto:support@instru.app"
-                  className="text-sm underline decoration-white/60 hover:decoration-white hover:opacity-100"
-                >
-                  support@instru.app
-                </a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone size={16} className="text-white" />
-                <a
-                  href="tel:+995555123456"
-                  className="text-sm underline decoration-white/60 hover:decoration-white hover:opacity-100"
-                >
-                  +995 555 123 456
-                </a>
-              </div>
-            </div>
+            <h3 className="font-bold text-lg mb-6">Contact Us</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 text-gray-400">
+                <MapPin className="w-5 h-5 text-[#F03D3D] shrink-0" />
+                <span>26 May Square, Tbilisi, Georgia 0171</span>
+              </li>
+              <li className="flex items-center gap-3 text-gray-400">
+                <Phone className="w-5 h-5 text-[#F03D3D] shrink-0" />
+                <span>+995 32 2 123 456</span>
+              </li>
+              <li className="flex items-center gap-3 text-gray-400">
+                <Mail className="w-5 h-5 text-[#F03D3D] shrink-0" />
+                <span>support@driveforward.ge</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="h-px w-full bg-white/20 my-8" />
-
-        {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p className="text-sm opacity-90">
-            © {year} Instru. All rights reserved.
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-sm">
+            © {currentYear} DriveForward Inc. All rights reserved.
           </p>
-          <div className="flex gap-4 text-sm opacity-90">
-            <Link href="/help" className="hover:underline">
-              Support
-            </Link>
-            <Link href="/help" className="hover:underline">
-              FAQ
-            </Link>
-            <Link href="/contact" className="hover:underline">
-              Contact
-            </Link>
+          <div className="flex gap-6 text-sm text-gray-500">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
           </div>
         </div>
       </div>

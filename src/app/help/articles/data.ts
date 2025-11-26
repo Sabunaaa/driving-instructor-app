@@ -145,7 +145,7 @@ const categoryArticles: HelpArticle[] = [
       "Confirm details via chat or email.",
       "Contact support for conflicts.",
     ],
-    cta: { label: "Contact Support", href: "/contact" },
+    cta: { label: "Contact Support", href: "mailto:support@instru.app" },
   }),
   make(C.booking, "Canceling lessons", {
     title: "Canceling Lessons",
@@ -190,7 +190,7 @@ const categoryArticles: HelpArticle[] = [
       "Contact support if a transaction fails.",
       "Review billing history for discrepancies.",
     ],
-    cta: { label: "Contact Support", href: "/contact" },
+    cta: { label: "Contact Support", href: "mailto:support@instru.app" },
   }),
   make(C.payments, "Refund policy", {
     title: "Refund Policy",
@@ -200,7 +200,7 @@ const categoryArticles: HelpArticle[] = [
       "50% refund within 24 hours; no refund for no-shows.",
       "Process takes 3-5 business days.",
     ],
-    cta: { label: "Request Refund", href: "/contact" },
+    cta: { label: "Request Refund", href: "mailto:support@instru.app" },
   }),
   make(C.payments, "Invoice questions", {
     title: "Invoice Inquiries",
@@ -232,7 +232,7 @@ const categoryArticles: HelpArticle[] = [
       "Follow instructor directions during practice.",
       "Report unsafe conditions immediately.",
     ],
-    cta: { label: "Report Issue", href: "/contact" },
+    cta: { label: "Report Issue", href: "mailto:support@instru.app" },
   }),
   make(C.safety, "Account security", {
     title: "Securing Your Account",
@@ -252,7 +252,7 @@ const categoryArticles: HelpArticle[] = [
       "Describe the issue and submit evidence (e.g., photos).",
       "Expect a response within 48 hours.",
     ],
-    cta: { label: "Report Now", href: "/contact" },
+    cta: { label: "Report Now", href: "mailto:support@instru.app" },
   }),
 
   // Technical Support
@@ -264,7 +264,7 @@ const categoryArticles: HelpArticle[] = [
       "Update to the latest version.",
       "Contact support for persistent issues.",
     ],
-    cta: { label: "Contact Support", href: "/contact" },
+    cta: { label: "Contact Support", href: "mailto:support@instru.app" },
   }),
   make(C.technical, "App not working", {
     title: "App Troubleshooting",
@@ -342,7 +342,7 @@ const popularExtras: HelpArticle[] = [
       "50% refund within 24 hours; no refund for no-shows.",
       "Process takes 3-5 business days.",
     ],
-    cta: { label: "Request Refund", href: "/contact" },
+    cta: { label: "Request Refund", href: "mailto:support@instru.app" },
   },
   {
     slug: toSlug("How to become an instructor"),
@@ -354,7 +354,7 @@ const popularExtras: HelpArticle[] = [
       "Submit certification and vehicle details.",
       "Complete background check (takes 5-7 days).",
     ],
-    cta: { label: "Apply Now", href: "/contact" },
+    cta: { label: "Apply Now", href: "mailto:support@instru.app" },
   },
   {
     slug: toSlug("Payment and billing FAQ"),
@@ -366,7 +366,7 @@ const popularExtras: HelpArticle[] = [
       "Q: When do I get paid? A: Weekly for instructors.",
       "Q: What if a payment fails? A: Contact support.",
     ],
-    cta: { label: "View All FAQs", href: "/contact" },
+    cta: { label: "View All FAQs", href: "/help" },
   },
   {
     slug: toSlug("Safety guidelines for students"),
@@ -378,7 +378,7 @@ const popularExtras: HelpArticle[] = [
       "Follow instructor directions during practice.",
       "Report unsafe conditions immediately.",
     ],
-    cta: { label: "Report Issue", href: "/contact" },
+    cta: { label: "Report Issue", href: "mailto:support@instru.app" },
   },
 ];
 

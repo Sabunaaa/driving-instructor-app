@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
-const FooterModern = () => {
+const Footer = () => {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  // Hide footer on specific pages
+  if (pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/for-instructors/signup")) {
+    return null;
+  }
 
   return (
     <footer className="bg-[#0F172A] text-white pt-20 pb-10">
@@ -44,13 +51,8 @@ const FooterModern = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
-                  How It Works
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
-                  Blog & Resources
+                <Link href="/for-instructors" className="text-gray-400 hover:text-[#F03D3D] transition-colors">
+                  For Instructors
                 </Link>
               </li>
               <li>
@@ -94,11 +96,11 @@ const FooterModern = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-gray-400">
                 <MapPin className="w-5 h-5 text-[#F03D3D] shrink-0" />
-                <span>123 Driving Lane, Tbilisi, Georgia 0100</span>
+                <span>26 May Square, Tbilisi, Georgia 0171</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <Phone className="w-5 h-5 text-[#F03D3D] shrink-0" />
-                <span>+995 555 123 456</span>
+                <span>+995 32 2 123 456</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <Mail className="w-5 h-5 text-[#F03D3D] shrink-0" />
@@ -123,4 +125,4 @@ const FooterModern = () => {
   );
 };
 
-export default FooterModern;
+export default Footer;

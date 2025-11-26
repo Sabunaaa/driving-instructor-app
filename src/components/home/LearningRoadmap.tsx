@@ -4,7 +4,7 @@ const steps = [
   {
     id: "01",
     title: "Search & Filter",
-    desc: "Enter your postcode and filter by transmission (manual/auto), price, and rating.",
+    desc: "Enter your city and filter by transmission (manual/auto), price, and rating.",
   },
   {
     id: "02",

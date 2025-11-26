@@ -44,7 +44,7 @@ const BentoFeatures = () => {
                 Every instructor undergoes a rigorous 15-point verification process including:
               </p>
               <ul className="space-y-4 text-gray-300 flex-1">
-                {['DBS Checked', 'DVSA Approved', 'Identity Verified', 'Vehicle Insured', 'Reviews Audited'].map((item, i) => (
+                {['Background Checked', 'Certified Instructor', 'Identity Verified', 'Vehicle Insured', 'Reviews Audited'].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#F03D3D]" />
                     {item}
@@ -65,7 +65,7 @@ const BentoFeatures = () => {
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover:border-[#F03D3D]/30 transition group">
             <Map className="w-10 h-10 text-orange-500 mb-4 group-hover:scale-110 transition" />
             <h3 className="text-xl font-bold mb-2">Local Experts</h3>
-            <p className="text-gray-600 text-sm">Instructors who know the test routes in your specific area.</p>
+            <p className="text-gray-600 text-sm">Instructors who know the test routes in Tbilisi, Batumi, and Kutaisi.</p>
           </div>
 
         </div>

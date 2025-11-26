@@ -30,15 +30,15 @@ export const NavLinks: React.FC<NavLinksProps> = ({ userType, onLinkClick }) => 
         </span>
       </div>
 
-      {/* How it Works / For Instructors Link */}
+      {/* For Instructors Link */}
       <div className="flex items-center px-4 sm:px-6 py-2">
         <Link
-          href={userType === "instructor" ? "/for-instructors" : "/how-it-works"}
+          href="/for-instructors"
           className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
           style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
           onClick={onLinkClick}
         >
-          {userType === "instructor" ? "For Instructors" : "How it Works"}
+          For Instructors
         </Link>
       </div>
 
@@ -51,18 +51,6 @@ export const NavLinks: React.FC<NavLinksProps> = ({ userType, onLinkClick }) => 
           onClick={onLinkClick}
         >
           Blog
-        </Link>
-      </div>
-
-      {/* Contact us Link */}
-      <div className="flex items-center px-4 sm:px-6 py-2">
-        <Link
-          href="/contact"
-          className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
-          style={{ fontSize: "16px", lineHeight: "24px", fontWeight: 500 }}
-          onClick={onLinkClick}
-        >
-          Contact us
         </Link>
       </div>
     </div>

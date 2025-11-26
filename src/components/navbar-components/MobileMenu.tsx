@@ -38,11 +38,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           Find Instructors
         </Link>
         <Link
-          href={user?.userType === "instructor" ? "/for-instructors" : "/how-it-works"}
+          href="/for-instructors"
           onClick={onClose}
           className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800"
         >
-          {user?.userType === "instructor" ? "For Instructors" : "How it Works"}
+          For Instructors
         </Link>
         <Link
           href="/blog"
@@ -50,13 +50,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800"
         >
           Blog
-        </Link>
-        <Link
-          href="/contact"
-          onClick={onClose}
-          className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800"
-        >
-          Contact us
         </Link>
         <hr className="my-2 border-gray-200" />
 
