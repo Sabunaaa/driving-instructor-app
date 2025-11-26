@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
   const year = new Date().getFullYear();
 
   // Hide footer on test pages and new designs
-  if (pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/for-instructors/signup-test")) {
+  if (pathname === "/" || pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/for-instructors/signup-test")) {
     return null;
   }
 

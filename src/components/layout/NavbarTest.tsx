@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard, LogIn } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard, LogIn, Languages } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Button from "@/components/ui/Button";
 
@@ -74,6 +74,12 @@ const NavbarTest = () => {
 
           {/* Desktop Auth/User */}
           <div className="hidden md:flex items-center gap-4">
+            <button 
+              className="p-2 text-gray-600 hover:text-[#F03D3D] transition-colors rounded-full hover:bg-gray-50"
+              aria-label="Change language"
+            >
+              <Languages className="w-5 h-5" />
+            </button>
             {user ? (
               <div className="relative">
                 <button 
@@ -153,6 +159,13 @@ const NavbarTest = () => {
               </Link>
             ))}
             
+            <div className="h-px bg-gray-100 my-2" />
+            
+            <button className="flex items-center justify-center gap-2 text-lg font-medium text-gray-600 hover:text-[#F03D3D] mx-auto">
+               <Languages className="w-5 h-5" />
+               <span>Language</span>
+            </button>
+
             <div className="h-px bg-gray-100 my-2" />
             
             {user ? (

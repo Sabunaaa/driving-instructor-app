@@ -18,7 +18,7 @@ const Navbar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
 
   // Hide navbar on test pages
-  if (pathname === "/main" || pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/find-instructors-test") || pathname?.startsWith("/for-instructors-test") || pathname?.startsWith("/for-instructors/signup-test")) {
+  if (pathname === "/" || pathname === "/main" || pathname === "/main1" || pathname === "/dashboard1" || pathname === "/minigame" || pathname?.startsWith("/find-instructors-test") || pathname?.startsWith("/for-instructors-test") || pathname?.startsWith("/for-instructors/signup-test")) {
     return null;
   }
 
