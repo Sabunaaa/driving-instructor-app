@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const InstructorShowcase = () => {
   return (
-    <section className="py-24 px-6 bg-[#0F172A] text-white overflow-hidden">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative py-24 px-6 bg-[#0F172A] text-white overflow-hidden">
+      <div className="relative max-w-7xl mx-auto z-10">
         <div className="flex justify-between items-end mb-12">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our Top Instructors</h2>
