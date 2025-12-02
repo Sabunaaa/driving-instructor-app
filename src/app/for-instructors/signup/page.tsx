@@ -12,10 +12,10 @@ import { ArrowRight, ArrowLeft, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-const SignupTestPage = () => {
+const SignupPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  
   const initialFormData = {
     firstName: "",
     lastName: "",
@@ -84,7 +84,7 @@ const SignupTestPage = () => {
         }
       }
       if (!formData.address) newErrors.address = "Address is required";
-
+      
       // Name validation (no numbers)
       const nameRegex = /^[a-zA-Z\u10A0-\u10FF\s]*$/;
       if (formData.firstName && !nameRegex.test(formData.firstName)) {
@@ -117,7 +117,7 @@ const SignupTestPage = () => {
       if (!formData.vehicleRegistration) newErrors.vehicleRegistration = "Registration is required";
       if (!formData.vehicleYear) newErrors.vehicleYear = "Year is required";
       if (!formData.transmission) newErrors.transmission = "Transmission is required";
-
+      
       // Registration Regex (XX-123-XX)
       const regRegex = /^[A-Z]{2}-\d{3}-[A-Z]{2}$/;
       if (formData.vehicleRegistration && !regRegex.test(formData.vehicleRegistration)) {
@@ -178,7 +178,7 @@ const SignupTestPage = () => {
       <div className="min-h-screen bg-[#0F172A] flex items-center justify-center relative overflow-hidden p-6">
         <div className="absolute top-0 right-0 w-full h-full bg-[#F03D3D]/10 skew-x-12 transform origin-top-right pointer-events-none" />
         <div className="relative z-10 w-full max-w-2xl">
-           <ModernSuccess />
+          <ModernSuccess />
         </div>
       </div>
     );
@@ -196,10 +196,10 @@ const SignupTestPage = () => {
           </Link>
           
           <h1 className="text-4xl font-bold leading-tight mb-6">
-            Join Georgia's fastest growing instructor network.
+            Join Georgia&apos;s fastest growing instructor network.
           </h1>
           <p className="text-gray-400 text-lg">
-            Complete your application in minutes and start receiving students as soon as you're verified.
+            Complete your application in minutes and start receiving students as soon as you&apos;re verified.
           </p>
         </div>
 
@@ -249,9 +249,9 @@ const SignupTestPage = () => {
 
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Instructor Application</h2>
           <p className="text-gray-500 mb-8">Please fill in your details accurately.</p>
-
+          
           <ModernStepIndicator currentStep={currentStep} steps={steps} />
-
+          
           <div className="bg-white min-h-[400px]">
             {renderStep()}
           </div>
@@ -260,29 +260,29 @@ const SignupTestPage = () => {
             <button
               onClick={handlePreviousStep}
               disabled={isFirstStep}
-                className={`
-                  flex items-center px-6 py-3 rounded-xl font-medium transition
-                  ${isFirstStep 
-                    ? "text-gray-300 cursor-not-allowed" 
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}
-                `}
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back
-              </button>
+              className={`
+                flex items-center px-6 py-3 rounded-xl font-medium transition
+                ${isFirstStep 
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}
+              `}
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back
+            </button>
 
-              <button
-                onClick={isLastStep ? onSubmit : onNext}
-                className="flex items-center px-8 py-3 bg-[#F03D3D] text-white rounded-xl font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/20"
-              >
-                {isLastStep ? "Submit Application" : "Continue"}
-                {!isLastStep && <ArrowRight className="w-5 h-5 ml-2" />}
-              </button>
-            </div>
+            <button
+              onClick={isLastStep ? onSubmit : onNext}
+              className="flex items-center px-8 py-3 bg-[#F03D3D] text-white rounded-xl font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/20"
+            >
+              {isLastStep ? "Submit Application" : "Continue"}
+              {!isLastStep && <ArrowRight className="w-5 h-5 ml-2" />}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default SignupTestPage;
+export default SignupPage;

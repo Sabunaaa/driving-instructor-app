@@ -17,7 +17,7 @@ const ModernSuccess = () => {
       </p>
       
       <Link 
-        href="/main" 
+        href="/" 
         className="inline-flex items-center px-8 py-4 bg-[#F03D3D] text-white rounded-xl font-bold hover:bg-red-600 transition shadow-lg shadow-red-500/20 group text-lg"
       >
         Return to Home

@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Shield, Check, Edit2 } from "lucide-react";
+import { Check, Edit2 } from "lucide-react";
 
 interface Step4Props {
   data: any;
@@ -89,7 +89,7 @@ const ModernStep4 = ({ data, updateData, onEditStep, errors = {} }: Step4Props) 
               className={`mt-1 w-4 h-4 text-[#F03D3D] rounded focus:ring-[#F03D3D] ${errors.termsAccepted ? "border-red-500" : "border-gray-300"}`}
             />
             <label htmlFor="terms" className={`text-sm cursor-pointer select-none ${errors.termsAccepted ? "text-red-600" : "text-gray-600"}`}>
-              I accept the <a href="#" className="text-[#F03D3D] hover:underline">Terms and Conditions</a> and agree to abide by the platform's rules.
+              I accept the <a href="#" className="text-[#F03D3D] hover:underline">Terms and Conditions</a> and agree to abide by the platform&apos;s rules.
             </label>
           </div>
           {errors.termsAccepted && <p className="text-xs text-red-500 font-medium mt-1 ml-7">{errors.termsAccepted}</p>}

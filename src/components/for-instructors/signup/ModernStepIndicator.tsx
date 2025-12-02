@@ -23,7 +23,7 @@ const ModernStepIndicator = ({ currentStep, steps }: StepIndicatorProps) => {
         {steps.map((step) => {
           const isCompleted = step.number < currentStep;
           const isCurrent = step.number === currentStep;
-
+          
           return (
             <div key={step.number} className="relative flex flex-col items-center gap-2">
               <div 

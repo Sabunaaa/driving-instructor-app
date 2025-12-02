@@ -1,6 +1,6 @@
 "use client";
 
-import { Car, Calendar, Settings, Users, Camera } from "lucide-react";
+import { Calendar, Camera } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -12,11 +12,7 @@ interface Step2Props {
 
 const ModernStep2 = ({ data, updateData, errors = {} }: Step2Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    updateData({ [e.target.name]: e.target.value });
-  };
-
+  
   const handleRegistrationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.toUpperCase();
     let raw = val.replace(/-/g, '');
@@ -61,28 +57,8 @@ const ModernStep2 = ({ data, updateData, errors = {} }: Step2Props) => {
       }
     }
     
-    // Handle backspace/deletion correctly by trimming trailing hyphens if user is deleting
-    // Actually, the reconstruction above might add hyphens even if we just deleted one.
-    // But since we process `raw` (stripped), if the user deletes a char, `raw` shrinks, and `result` shrinks.
-    // The only edge case is if `result` ends in `-` and the user wants to delete it.
-    // If `raw` hasn't changed length (e.g. they deleted the hyphen), `raw` is same.
-    // So we need to check if the new length is shorter than old length?
-    // Let's stick to the constructive approach. If they delete the hyphen, `raw` is same, so it comes back.
-    // They have to delete the character *before* the hyphen to shrink `raw`.
-    // This is a common behavior in strict masks.
-    
-    // Fix: Don't add trailing hyphen if we are at the end of input?
-    // No, "automatically write -" implies it should appear as soon as the group is full.
-    
-    // One small fix: if result ends in '-' but we have no more chars, and the user pressed backspace?
-    // We can't easily detect backspace here without `onKeyDown`.
-    // But let's see how it feels.
-    
     // Truncate if it exceeds format
     if (result.length > 9) result = result.substring(0, 9);
-    
-    // Remove trailing hyphen if it's the last char? 
-    // No, user might be about to type next char.
     
     updateData({ vehicleRegistration: result });
   };
@@ -241,8 +217,8 @@ const ModernStep2 = ({ data, updateData, errors = {} }: Step2Props) => {
             {data.vehiclePhotos.map((file: File, index: number) => (
               <div key={index} className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
                 <img 
-                  src={URL.createObjectURL(file)} 
-                  alt={`Vehicle photo ${index + 1}`} 
+                  src={URL.createObjectURL(file)}
+                  alt={`Vehicle photo ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
                 <button

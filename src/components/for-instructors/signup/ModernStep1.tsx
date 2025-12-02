@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Calendar, MapPin, Mail, Phone, Briefcase } from "lucide-react";
+import { User, Calendar, MapPin, Mail, Phone } from "lucide-react";
 
 interface Step1Props {
   data: any;
@@ -47,7 +47,7 @@ const ModernStep1 = ({ data, updateData, errors = {} }: Step1Props) => {
     if (truncatedValue.length > 3) formattedValue += " " + truncatedValue.slice(3, 5);
     if (truncatedValue.length > 5) formattedValue += " " + truncatedValue.slice(5, 7);
     if (truncatedValue.length > 7) formattedValue += " " + truncatedValue.slice(7, 9);
-
+    
     updateData({ [e.target.name]: formattedValue });
   };
 
@@ -56,8 +56,6 @@ const ModernStep1 = ({ data, updateData, errors = {} }: Step1Props) => {
     if (value) {
       const year = parseInt(value.split('-')[0]);
       if (year > 2026) {
-        // If year is greater than 2026, don't update or set to max?
-        // Let's just not update to prevent entering invalid year
         return; 
       }
     }

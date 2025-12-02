@@ -27,18 +27,16 @@ const FileUploadBox = ({
   error?: string;
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files);
-      // If multiple, append to existing files (if any)
-      // But here we just pass the new selection to the parent handler which decides how to merge
       onFileSelect(newFiles);
     }
   };
 
   const fileList = Array.isArray(files) ? files : (files ? [files] : []);
-
+  
   return (
     <div>
       <div 
@@ -106,7 +104,6 @@ const ModernStep3 = ({ data, updateData, errors = {} }: Step3Props) => {
           multiple={true}
           error={errors.instructorLicense}
           onFileSelect={(files) => {
-            // If we already have files, append. If not, just set.
             const current = Array.isArray(data.instructorLicense) ? data.instructorLicense : [];
             updateData({ instructorLicense: [...current, ...files] });
           }}
