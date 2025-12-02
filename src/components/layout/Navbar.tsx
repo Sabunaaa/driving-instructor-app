@@ -29,15 +29,10 @@ const Navbar = () => {
     setIsUserMenuOpen(false);
   }, [pathname]);
 
-  // Hide navbar on signup page
-  if (pathname?.startsWith("/for-instructors/signup")) {
-    return null;
-  }
-
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/find-instructors-test", label: "Find Instructors" },
-    { href: "/for-instructors-test", label: "For Instructors" },
+    { href: "/find-instructors", label: "Find Instructors" },
+    { href: "/for-instructors", label: "For Instructors" },
     { href: "/blog-test", label: "Blog" },
   ];
 
@@ -46,7 +41,7 @@ const Navbar = () => {
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled || isMobileMenuOpen
-            ? "bg-white/90 backdrop-blur-md border-b border-gray-200 py-3 shadow-sm" 
+            ? "bg-white/90 backdrop-blur-md py-3 shadow-sm" 
             : "bg-transparent py-5"
         }`}
       >

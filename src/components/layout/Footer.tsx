@@ -14,7 +14,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className="relative bg-[#0F172A] text-white pt-20 pb-10 overflow-hidden">
+    <footer className="relative bg-[#0F172A] text-white pt-20 pb-10 transform-gpu will-change-[transform]">
       <div className="relative max-w-7xl mx-auto px-6 z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}

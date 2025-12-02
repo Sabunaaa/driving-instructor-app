@@ -1,232 +1,126 @@
 "use client";
 
-import React from "react";
-// @ts-ignore
-import {
-  MapPin,
-  Calendar,
-  GeorgianLari,
-  Star,
-  ChevronDown,
-} from "lucide-react";
-import { Budget } from "./Budget";
+import { FilterOptions } from "@/hooks/useInstructorFilters";
+import { Filter } from "lucide-react";
 
 interface FilterSidebarProps {
-  selectedLocation: string;
-  onLocationChange: (location: string) => void;
-  selectedSpecialty: string;
-  onSpecialtyChange: (specialty: string) => void;
-  budgetRange: [number, number];
-  onBudgetChange: (range: [number, number]) => void;
-  selectedWeekdays: string[];
-  onWeekdaysChange: (days: string[]) => void;
-  selectedRatings: string[];
-  onRatingsChange: (ratings: string[]) => void;
-  isMobileOpen: boolean;
-  locationOptions: string[];
-  specialtyOptions: string[];
-  weekdayOptions: string[];
+  filters: FilterOptions;
+  updateFilter: (key: keyof FilterOptions, value: any) => void;
+  toggleWeekday: (day: string) => void;
+  resetFilters: () => void;
+  hasActiveFilters: () => boolean;
 }
 
-export const FilterSidebar: React.FC<FilterSidebarProps> = ({
-  selectedLocation,
-  onLocationChange,
-  selectedSpecialty,
-  onSpecialtyChange,
-  budgetRange,
-  onBudgetChange,
-  selectedWeekdays,
-  onWeekdaysChange,
-  selectedRatings,
-  onRatingsChange,
-  isMobileOpen,
-  locationOptions,
-  specialtyOptions,
-  weekdayOptions,
-}) => {
-  const [isLocationDropdownOpen, setIsLocationDropdownOpen] =
-    React.useState(false);
-
-  React.useEffect(() => {
-    const handleClickOutside = () => {
-      if (isLocationDropdownOpen) {
-        setIsLocationDropdownOpen(false);
-      }
-    };
-
-    if (isLocationDropdownOpen && typeof document !== "undefined") {
-      document.addEventListener("click", handleClickOutside);
-    }
-
-    return () => {
-      if (typeof document !== "undefined") {
-        document.removeEventListener("click", handleClickOutside);
-      }
-    };
-  }, [isLocationDropdownOpen]);
-
+const FilterSidebar = ({ filters, updateFilter, toggleWeekday, resetFilters, hasActiveFilters }: FilterSidebarProps) => {
   return (
-    <aside
-      className={`w-full lg:w-56 space-y-10 ${
-        isMobileOpen ? "block" : "hidden"
-      } lg:block`}
-      aria-label="Filters"
-    >
-      {/* Location and Radius */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <MapPin size={16} className="text-gray-500" />
-          <h3 className="text-base font-semibold text-gray-900">Location</h3>
+    <div className="space-y-8">
+      <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div className="flex items-center gap-2 text-gray-900">
+            <Filter className="w-5 h-5" />
+            <h3 className="font-bold text-lg">Filters</h3>
         </div>
-        <div className="space-y-4">
-          <div className="relative">
-            <button
-              onClick={() =>
-                setIsLocationDropdownOpen(!isLocationDropdownOpen)
-              }
-              className="flex items-center gap-3 px-4 py-2.5 border border-gray-300 rounded-lg bg-white w-full text-left hover:bg-gray-50"
-            >
-              <span className={`flex-1 text-sm ${selectedLocation ? 'text-gray-900' : 'text-gray-500'}`}>
-                {selectedLocation || 'Choose a location'}
-              </span>
-              <ChevronDown
-                size={16}
-                className={`text-gray-500 transition-transform ${
-                  isLocationDropdownOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+        {hasActiveFilters() && (
+          <button 
+            onClick={resetFilters}
+            className="text-xs font-medium text-[#F03D3D] hover:text-[#d62f2f] bg-red-50 px-2 py-1 rounded-md transition-colors"
+          >
+            Reset All
+          </button>
+        )}
+      </div>
 
-            {isLocationDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
-                {locationOptions.map((location) => (
-                  <button
-                    key={location}
-                    onClick={() => {
-                      onLocationChange(location);
-                      setIsLocationDropdownOpen(false);
-                    }}
-                    className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg ${
-                      selectedLocation === location
-                        ? "bg-gray-100 text-gray-900 font-medium"
-                        : "text-gray-700"
-                    }`}
-                  >
-                    {location}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+      {/* Transmission Type */}
+      <div className="space-y-3">
+        <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Transmission</h4>
+        <div className="grid grid-cols-2 gap-3">
+          {['Manual', 'Automatic'].map((type) => {
+            const isSelected = filters.transmissionType === type;
+            return (
+                <label 
+                    key={type} 
+                    className={`
+                        relative flex items-center justify-center px-4 py-3 rounded-xl border-2 cursor-pointer transition-all
+                        ${isSelected 
+                            ? 'border-[#F03D3D] bg-red-50/50 text-[#F03D3D]' 
+                            : 'border-gray-100 bg-white text-gray-600 hover:border-gray-200 hover:bg-gray-50'
+                        }
+                    `}
+                >
+                    <input 
+                        type="radio" 
+                        name="transmission"
+                        checked={isSelected}
+                        onChange={() => updateFilter('transmissionType', type)}
+                        className="sr-only"
+                    />
+                    <span className="text-sm font-bold">{type}</span>
+                    {isSelected && <div className="absolute top-1 right-1 w-2 h-2 bg-[#F03D3D] rounded-full" />}
+                </label>
+            );
+          })}
         </div>
       </div>
 
-      {/* Specialties */}
+      {/* Price Range */}
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900">
-          გადაცემათა კოლოფი
-        </h3>
-        <div className="space-y-4">
-          {specialtyOptions.map((specialty) => (
-            <label
-              key={specialty}
-              className="flex items-center gap-3 cursor-pointer"
-            >
-              <input
-                type="radio"
-                name="specialty"
-                className="h-4 w-4 accent-gray-900 border-gray-900"
-                value={specialty}
-                checked={selectedSpecialty === specialty}
-                onChange={() => onSpecialtyChange(specialty)}
-              />
-              <span className="text-sm text-gray-700">{specialty}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Budget */}
-      <div className="space-y-4">
-        <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
-          <GeorgianLari size={16} className="text-gray-600" />
-          Budget
-        </h3>
-        <Budget
-          budgetRange={budgetRange}
-          onBudgetChange={onBudgetChange}
-        />
-      </div>
-
-      {/* Available Days */}
-      <div className="space-y-4">
-        <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900">
-          <Calendar size={16} className="text-gray-600" />
-          Available Days
-        </h3>
-        <div className="space-y-4">
-          {weekdayOptions.map((weekday) => (
-            <div key={weekday} className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id={weekday}
-                checked={selectedWeekdays.includes(weekday)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    onWeekdaysChange([...selectedWeekdays, weekday]);
-                  } else {
-                    onWeekdaysChange(
-                      selectedWeekdays.filter((w) => w !== weekday)
-                    );
-                  }
-                }}
-                className="w-5 h-5 rounded border-gray-900 accent-gray-900"
-              />
-              <label
-                htmlFor={weekday}
-                className="text-sm text-gray-900 cursor-pointer"
-              >
-                {weekday}
-              </label>
+        <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Hourly Rate (₾)</h4>
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+            <div className="flex items-center gap-3">
+                <div className="flex-1">
+                    <label className="text-xs text-gray-400 mb-1 block">Min Price</label>
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₾</span>
+                        <input 
+                            type="number" 
+                            value={filters.budget[0]}
+                            onChange={(e) => updateFilter('budget', [Number(e.target.value), filters.budget[1]])}
+                            className="w-full pl-6 pr-2 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:border-[#F03D3D] focus:ring-1 focus:ring-[#F03D3D]"
+                        />
+                    </div>
+                </div>
+                <div className="w-2 h-[2px] bg-gray-300 mt-4" />
+                <div className="flex-1">
+                    <label className="text-xs text-gray-400 mb-1 block">Max Price</label>
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₾</span>
+                        <input 
+                            type="number" 
+                            value={filters.budget[1]}
+                            onChange={(e) => updateFilter('budget', [filters.budget[0], Number(e.target.value)])}
+                            className="w-full pl-6 pr-2 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:border-[#F03D3D] focus:ring-1 focus:ring-[#F03D3D]"
+                        />
+                    </div>
+                </div>
             </div>
-          ))}
         </div>
       </div>
 
-      {/* Average Rating */}
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900">
-          Average rating
-        </h3>
-        <div className="space-y-4">
-          {["5", "4", "3", "2-1"].map((rating) => (
-            <div key={rating} className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id={rating}
-                checked={selectedRatings.includes(rating)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    onRatingsChange([...selectedRatings, rating]);
-                  } else {
-                    onRatingsChange(
-                      selectedRatings.filter((r) => r !== rating)
-                    );
-                  }
-                }}
-                className="w-5 h-5 rounded border-gray-900 accent-gray-900"
-              />
-              <label
-                htmlFor={rating}
-                className="flex items-center gap-1 text-sm text-gray-900 cursor-pointer"
-              >
-                {rating}{" "}
-                <Star size={12} className="text-orange-400 fill-current" />
-              </label>
-            </div>
-          ))}
+      {/* Availability */}
+      <div className="space-y-3">
+        <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Availability</h4>
+        <div className="flex flex-wrap gap-2">
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
+            const isSelected = filters.weekdays.includes(day);
+            return (
+                <button
+                key={day}
+                onClick={() => toggleWeekday(day)}
+                className={`
+                    w-10 h-10 rounded-full text-xs font-bold transition-all flex items-center justify-center border
+                    ${isSelected
+                        ? 'bg-[#F03D3D] border-[#F03D3D] text-white shadow-md shadow-red-500/20'
+                        : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300 hover:bg-gray-50'
+                    }
+                `}
+                >
+                {day.charAt(0)}
+                </button>
+            );
+          })}
         </div>
       </div>
-    </aside>
+    </div>
   );
 };
+
+export default FilterSidebar;
