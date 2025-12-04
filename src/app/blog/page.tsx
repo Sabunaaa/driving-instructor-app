@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
+import { logger } from '@/utils/secureLogger';
 
 type Category = 'All' | 'Inside Webflow' | 'Engineering' | 'Design' | 'Strategy' | 'Inspiration' | 'Development';
 
@@ -165,12 +166,12 @@ export default function BlogPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
+    logger.debug('Searching for', { query: searchQuery });
   };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Subscribing email:', email);
+    logger.debug('Subscribing email', { email });
     setEmail('');
   };
 

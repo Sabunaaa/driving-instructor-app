@@ -33,7 +33,9 @@ export function saveLessonsForInstructor(userId: string, lessons: Lesson[]) {
         )
       )
     );
-  } catch {}
+  } catch {
+    // Ignore localStorage errors (e.g., storage full, private browsing)
+  }
 }
 
 export function addLesson(

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { InstructorSignupData } from "@/app/for-instructors/signup/page";
+import { InstructorSignupData } from "@/types/instructor";
 import { CheckCircle, AlertCircle } from "lucide-react";
 
 interface Step4Props {

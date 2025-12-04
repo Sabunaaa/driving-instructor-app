@@ -48,7 +48,8 @@ export default function SettingsField({
   inputClassName,
   disabled,
 }: SettingsFieldProps) {
-  const fieldId = id || name || React.useId();
+  const generatedId = React.useId();
+  const fieldId = id || name || generatedId;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const baseInputClasses =

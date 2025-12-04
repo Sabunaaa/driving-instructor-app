@@ -14,7 +14,9 @@ export interface ValidationRules {
   minLength?: number | { value: number; message: string };
   maxLength?: number | { value: number; message: string };
   pattern?: RegExp | { value: RegExp; message: string };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   custom?: (value: any) => string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   validate?: (value: any) => Promise<string | null>;
 }
 
@@ -37,6 +39,7 @@ export const useForm = <T extends Record<string, any>>(
   });
 
   const validateField = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (name: keyof T, value: any): Promise<string | null> => {
       const rules = validators?.[name];
       if (!rules) return null;
@@ -94,7 +97,7 @@ export const useForm = <T extends Record<string, any>>(
 
   const handleChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      const { name, value, type } = e.target as any;
+      const { name, value, type } = e.target;
       const fieldValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
 
       setState(prev => ({
@@ -115,7 +118,7 @@ export const useForm = <T extends Record<string, any>>(
   );
 
   const handleBlur = useCallback(
-    async (e: React.FocusEvent<any>) => {
+    async (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name } = e.target;
       setState(prev => ({
         ...prev,
@@ -132,6 +135,7 @@ export const useForm = <T extends Record<string, any>>(
   );
 
   const setFieldValue = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (name: keyof T, value: any) => {
       setState(prev => ({
         ...prev,
@@ -177,10 +181,11 @@ export const useForm = <T extends Record<string, any>>(
       try {
         await onSubmit(state.values);
         setState(prev => ({ ...prev, isDirty: false }));
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'An error occurred';
         setState(prev => ({
           ...prev,
-          errors: { general: error.message || 'An error occurred' } as any,
+          errors: { ...prev.errors, general: errorMessage } as Partial<Record<keyof T, string>>,
         }));
       } finally {
         setState(prev => ({ ...prev, isSubmitting: false }));

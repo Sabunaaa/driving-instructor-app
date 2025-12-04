@@ -50,7 +50,6 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
             style={{ width: "64px", height: "64px" }}
           >
             {user?.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={user.avatarUrl}
                 alt={`${user.name}'s avatar`}

@@ -72,7 +72,7 @@ const BlogGrid = () => {
 					{articles.map((article, index) => (
 						<div
 							key={article.id}
-							className={`group relative rounded-3xl overflow-hidden bg-gray-800/50 border border-gray-700 hover:border-[#F03D3D]/50 transition-all duration-300 ${
+							className={`group relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800 shadow-lg hover:border-[#F03D3D]/50 transition-all duration-300 ${
 								article.size === "large" ? "md:col-span-2" : ""
 							}`}
 						>
@@ -81,7 +81,7 @@ const BlogGrid = () => {
 								className={`absolute inset-0 ${article.image} opacity-20 group-hover:opacity-30 transition-opacity`}
 							/>
 
-							<div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/50 to-transparent" />
+							<div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
 
 							<div className="absolute bottom-0 left-0 p-8 w-full">
 								<div className="flex items-center gap-4 mb-4 text-sm text-gray-300">

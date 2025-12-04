@@ -48,14 +48,18 @@ export default function HelpChatPage() {
             timestamp: Date.now(),
           },
         ]);
-    } catch {}
+    } catch {
+      // Ignore localStorage errors (e.g., private browsing)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
   useEffect(() => {
     try {
       localStorage.setItem(storageKey, JSON.stringify(messages));
-    } catch {}
+    } catch {
+      // Ignore localStorage errors (e.g., storage full, private browsing)
+    }
   }, [messages, storageKey]);
 
   // Track whether user is at bottom to avoid jumping when reading history

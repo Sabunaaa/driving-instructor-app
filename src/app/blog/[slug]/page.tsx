@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Share2, X, Facebook, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, X, Facebook, Linkedin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { logger } from '@/utils/secureLogger';
 
 interface ArticleContent {
   title: string;
@@ -93,7 +94,7 @@ export default function BlogArticlePage({ params }: { params: Promise<{ slug: st
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Subscribing:', email, country);
+    logger.debug('Subscribing', { email, country });
   };
 
   const nextSlide = () => {

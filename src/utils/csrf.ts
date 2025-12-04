@@ -4,6 +4,7 @@
  */
 
 import { randomBytes, createHash } from 'crypto';
+import { logger } from './secureLogger';
 
 const CSRF_TOKEN_LENGTH = 32;
 const CSRF_TOKEN_HEADER = 'X-CSRF-Token';
@@ -76,8 +77,8 @@ export class CSRFProtection {
       if (typeof window !== 'undefined' && this.token) {
         sessionStorage.setItem(CSRF_TOKEN_COOKIE, this.token);
       }
-    } catch (error) {
-      console.error('Failed to initialize CSRF token');
+    } catch (_error) {
+      logger.warn('Failed to initialize CSRF token');
     }
   }
 

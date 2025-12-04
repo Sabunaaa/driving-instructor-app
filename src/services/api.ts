@@ -340,7 +340,7 @@ class APIService {
     if (options?.cache !== false) {
       const cached = this.cache.get<T>(endpoint);
       if (cached) {
-        console.log(`[API] Cache hit for GET ${endpoint}`);
+        logger.debug('Cache hit', { endpoint });
         return cached;
       }
     }
@@ -451,10 +451,10 @@ class APIService {
   invalidateCache(endpoint?: string): void {
     if (endpoint) {
       this.cache.delete(endpoint);
-      console.log(`[API] Cache invalidated for ${endpoint}`);
+      logger.debug('Cache invalidated', { endpoint });
     } else {
       this.cache.clear();
-      console.log('[API] Cache cleared');
+      logger.debug('Cache cleared');
     }
   }
 
@@ -479,14 +479,14 @@ export const api = new APIService();
 // Setup default interceptors
 // Error interceptor for logging
 api.addErrorInterceptor(async (error) => {
-  console.error('API Error:', error);
+  logger.error('API Error', { error });
   throw error;
 });
 
 // Request interceptor for logging (optional)
 api.addRequestInterceptor((config) => {
   if (process.env.NODE_ENV === 'development') {
-    console.log('API Request:', config);
+    logger.debug('API Request', { config });
   }
   return config;
 });

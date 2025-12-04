@@ -2,6 +2,7 @@
 
 import React, { ReactNode, ReactElement, ErrorInfo } from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
+import { logger } from '@/utils/secureLogger';
 
 interface Props {
   children: ReactNode;
@@ -44,10 +45,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error to console in development
+    // Log error using secure logger
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error caught by ErrorBoundary:', error);
-      console.error('Error Info:', errorInfo);
+      logger.error('Error caught by ErrorBoundary', { error: error.message, stack: error.stack });
+      logger.error('Error Info', { componentStack: errorInfo.componentStack });
     }
 
     // Update state with error details

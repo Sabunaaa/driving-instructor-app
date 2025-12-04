@@ -82,7 +82,8 @@ export function middleware(request: NextRequest) {
   }
 
   // Rate limiting check (basic implementation - consider Redis for production)
-  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   const pathname = request.nextUrl.pathname;
 
   // Skip rate limiting for static assets

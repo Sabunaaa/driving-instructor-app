@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { InstructorSignupData } from "@/app/for-instructors/signup/page";
+import { InstructorSignupData } from "@/types/instructor";
 
 interface Step1Props {
   data: InstructorSignupData;

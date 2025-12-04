@@ -179,7 +179,6 @@ export default function PaymentPage() {
                         </div>
                              {/* Mastercard logo */}
                              <div className="w-[60px] h-[37px] relative">
-                               {/* eslint-disable-next-line @next/next/no-img-element */}
                                <img 
                                  src="/images/mastercard-logo.svg" 
                                  alt="Mastercard" 

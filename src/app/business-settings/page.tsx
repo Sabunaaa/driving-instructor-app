@@ -7,6 +7,7 @@ import AccountSidebar from "@/components/dashboard/AccountSidebar";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import CalendarComponent from "@/components/ui/Calendar";
 import { Calendar, DollarSign } from "lucide-react";
+import { logger } from "@/utils/secureLogger";
 
 const BusinessSettingsPage = () => {
   const { user } = useAuth();
@@ -69,7 +70,7 @@ const BusinessSettingsPage = () => {
   // Save schedule
   const handleSaveSchedule = () => {
     // TODO: Save availability to backend/database
-    console.log('Saving availability:', availability);
+    logger.debug('Saving availability', { availability });
     alert('Schedule saved successfully!');
   };
 
@@ -83,7 +84,7 @@ const BusinessSettingsPage = () => {
   // Save rates
   const handleSaveRates = () => {
     // TODO: Save rates to backend/database
-    console.log('Saving rates:', rates);
+    logger.debug('Saving rates', { rates });
     alert('Rates saved successfully!');
   };
 

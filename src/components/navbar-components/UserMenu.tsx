@@ -29,7 +29,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
             {user?.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={user.avatarUrl}
                 alt={`${user.name} avatar`}

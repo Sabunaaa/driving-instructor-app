@@ -66,7 +66,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const setStoredPassword = (userId: string, pwd: string) => {
     try {
       localStorage.setItem(getPasswordKey(userId), pwd);
-    } catch {}
+    } catch {
+      // Ignore localStorage errors (e.g., storage full, private browsing)
+    }
   };
 
   // Check for existing session on mount

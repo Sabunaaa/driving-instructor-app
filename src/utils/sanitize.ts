@@ -120,8 +120,8 @@ export function sanitizeFilePath(filePath: string): string {
   }
   
   return sanitized
-    .replace(/[\/\\]{2,}/g, '/') // Replace multiple slashes
-    .replace(/^[\/\\]/, '') // Remove leading slash
+    .replace(/[/\\]{2,}/g, '/') // Replace multiple slashes
+    .replace(/^[/\\]/, '') // Remove leading slash
     .replace(/[<>:"|?*]/g, ''); // Remove invalid characters
 }
 
@@ -131,7 +131,7 @@ export function sanitizeFilePath(filePath: string): string {
 export function sanitizeFilename(filename: string): string {
   // Remove path separators and special characters
   return filename
-    .replace(/[\/\\]/g, '')
+    .replace(/[/\\]/g, '')
     .replace(/[<>:"|?*]/g, '')
     .replace(/\s+/g, '_')
     .substring(0, 255); // Max filename length

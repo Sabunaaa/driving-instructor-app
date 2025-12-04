@@ -97,10 +97,9 @@ const categoryArticles: HelpArticle[] = [
     description: "Tools and tips for driving instructors on DriveConnect.",
     bullets: [
       "Access training materials and certification guides.",
-      "Join our community forum for tips.",
       "Earn badges for high ratings or lesson completions.",
     ],
-    cta: { label: "Visit Forum", href: "/forum" },
+    cta: { label: "Instructor Dashboard", href: "/dashboard" },
   }),
   make(C.instructors, "Managing students", {
     title: "Managing Your Students",

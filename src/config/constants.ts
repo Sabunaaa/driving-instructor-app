@@ -71,9 +71,9 @@ export const REGEX_PATTERNS = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   PHONE: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
   PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-  URL: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+  URL: /^(https?:\/\/)?[\da-z.-]+\.[a-z.]{2,6}([/\w .-]*)*\/?$/,
   POSTAL_CODE: /^[0-9]{5}(-[0-9]{4})?$/,
-  PHONE_SIMPLE: /^[0-9\s\-\+\(\)]+$/,
+  PHONE_SIMPLE: /^[0-9\s+()-]+$/,
   ALPHANUMERIC: /^[a-zA-Z0-9]+$/,
 } as const;
 
@@ -292,7 +292,6 @@ export const ROUTES = {
   LESSONS: '/lessons',
   BOOKINGS: '/bookings',
   BLOG: '/blog',
-  FORUM: '/forum',
   HELP: '/help',
   ADMIN_DASHBOARD: '/admin',
   CONTACT: '/contact',

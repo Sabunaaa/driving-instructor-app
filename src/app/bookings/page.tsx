@@ -7,6 +7,7 @@ import { Calendar as CalendarIcon, Clock, User, CheckCircle, XCircle, AlertCircl
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
 import Calendar from "@/components/ui/Calendar";
+import { logger } from "@/utils/secureLogger";
 
 export default function BookingsPage() {
   const { user } = useAuth();
@@ -58,7 +59,7 @@ export default function BookingsPage() {
   };
 
   const handleDateClick = (date: Date, hour?: number) => {
-    console.log('Date clicked:', date, 'Hour:', hour);
+    logger.debug('Date clicked', { date, hour });
     // TODO: Show bookings for specific date/time or open booking modal
   };
 

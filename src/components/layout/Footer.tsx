@@ -9,7 +9,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   // Hide footer on specific pages
-  if (pathname === "/main1" || pathname === "/dashboard1" || pathname?.startsWith("/for-instructors/signup")) {
+  if (pathname === "/main1" || pathname?.startsWith("/for-instructors/signup")) {
     return null;
   }
 

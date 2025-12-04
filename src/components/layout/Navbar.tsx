@@ -3,16 +3,27 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard, LogIn, Languages } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard, Languages, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNotifications } from "@/hooks";
 import Button from "@/components/ui/Button";
+import NotificationsDropdown from "@/components/navbar-components/NotificationsDropdown";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
+
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    removeNotification,
+  } = useNotifications(user?.userType);
 
   // Handle scroll effect
   useEffect(() => {
@@ -27,6 +38,7 @@ const Navbar = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsUserMenuOpen(false);
+    setIsNotificationsOpen(false);
   }, [pathname]);
 
   const navLinks = [
@@ -74,16 +86,35 @@ const Navbar = () => {
 
           {/* Desktop Auth/User */}
           <div className="hidden md:flex items-center gap-4">
-            <button 
-              className="p-2 text-gray-600 hover:text-[#F03D3D] transition-colors rounded-full hover:bg-gray-50"
-              aria-label="Change language"
-            >
-              <Languages className="w-5 h-5" />
-            </button>
             {user ? (
-              <div className="relative">
+              <div className="flex items-center gap-2">
                 <button 
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="p-2 text-gray-600 hover:text-[#F03D3D] transition-colors rounded-full hover:bg-gray-50"
+                  aria-label="Change language"
+                >
+                  <Languages className="w-5 h-5" />
+                </button>
+                
+                <NotificationsDropdown
+                  isOpen={isNotificationsOpen}
+                  onClose={() => setIsNotificationsOpen(false)}
+                  onToggle={() => {
+                    setIsNotificationsOpen(!isNotificationsOpen);
+                    setIsUserMenuOpen(false);
+                  }}
+                  notifications={notifications}
+                  unreadCount={unreadCount}
+                  onMarkAsRead={markAsRead}
+                  onMarkAllAsRead={markAllAsRead}
+                  onRemove={removeNotification}
+                />
+                
+                <div className="relative">
+                  <button 
+                    onClick={() => {
+                      setIsUserMenuOpen(!isUserMenuOpen);
+                      setIsNotificationsOpen(false);
+                    }}
                   className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full border border-gray-200 hover:border-gray-300 bg-white transition"
                 >
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600">
@@ -121,8 +152,15 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
+              </div>
             ) : (
               <>
+                <button 
+                  className="p-2 text-gray-600 hover:text-[#F03D3D] transition-colors rounded-full hover:bg-gray-50"
+                  aria-label="Change language"
+                >
+                  <Languages className="w-5 h-5" />
+                </button>
                 <Link href="/login" className="text-sm font-bold text-gray-900 hover:text-[#F03D3D] transition">
                   Log In
                 </Link>
@@ -170,6 +208,18 @@ const Navbar = () => {
             
             {user ? (
               <>
+                <Link 
+                  href="/dashboard" 
+                  className="flex items-center justify-center gap-2 text-lg font-medium text-gray-600 hover:text-[#F03D3D]"
+                >
+                  <Bell className="w-5 h-5" />
+                  <span>Notifications</span>
+                  {unreadCount > 0 && (
+                    <span className="px-2 py-0.5 bg-[#F03D3D] text-white text-xs font-bold rounded-full">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Link>
                 <Link href="/dashboard" className="text-lg font-medium text-gray-600">Dashboard</Link>
                 <Link href="/account-settings" className="text-lg font-medium text-gray-600">Settings</Link>
                 <button onClick={logout} className="text-lg font-bold text-red-600">Log Out</button>
