@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useRouter } from "next/navigation";
-// @ts-ignore
 import { Calendar as CalendarIcon, Clock, User, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
@@ -52,7 +51,7 @@ export default function BookingsPage() {
     );
   }
 
-  const formatStudentName = (fullName: string) => {
+  const _formatStudentName = (fullName: string) => {
     const names = fullName.split(' ');
     if (names.length < 2) return fullName;
     return `${names[0]} ${names[names.length - 1][0]}.`;

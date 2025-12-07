@@ -63,7 +63,7 @@ const AccountSettings = () => {
         });
         setSaveStatus("success");
         setTimeout(() => setSaveStatus("idle"), 2500);
-      } catch (e) {
+      } catch (_e) {
         setSaveStatus("error");
         setTimeout(() => setSaveStatus("idle"), 2500);
       }

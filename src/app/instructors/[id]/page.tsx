@@ -1,5 +1,6 @@
 import InstructorProfileHeader from "@/components/instructor-profile/InstructorProfileHeader";
 import BookingSidebar from "@/components/instructor-profile/BookingSidebar";
+import LocationCard from "@/components/instructor-profile/LocationCard";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -23,13 +24,13 @@ const MOCK_INSTRUCTOR = {
 
 export default function InstructorProfilePage({ params }: { params: { id: string } }) {
   return (
-    <div className="min-h-screen bg-gray-50/50 py-12">
+    <div className="min-h-screen bg-gray-50/50 pt-28 pb-12">
       <div className="max-w-7xl mx-auto px-6">
         {/* Breadcrumb / Back */}
-        <div className="mb-8">
+        <div className="mb-4">
           <Link 
             href="/find-instructors" 
-            className="inline-flex items-center text-gray-500 hover:text-[#F03D3D] transition-colors font-medium"
+            className="inline-flex items-center text-sm text-gray-500 hover:text-[#F03D3D] transition-colors font-medium"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
             Back to Instructors
@@ -51,11 +52,13 @@ export default function InstructorProfilePage({ params }: { params: { id: string
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6 sticky top-24 h-fit">
             <BookingSidebar 
               price={MOCK_INSTRUCTOR.price} 
-              lessonDuration={MOCK_INSTRUCTOR.lessonDuration} 
+              lessonDuration={MOCK_INSTRUCTOR.lessonDuration}
+              instructorId={MOCK_INSTRUCTOR.id}
             />
+            <LocationCard location={MOCK_INSTRUCTOR.location} />
           </div>
         </div>
       </div>

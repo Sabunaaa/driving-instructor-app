@@ -51,7 +51,7 @@ export default function HelpChatPage() {
     } catch {
       // Ignore localStorage errors (e.g., private browsing)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [storageKey]);
 
   useEffect(() => {

@@ -1,13 +1,15 @@
 import { Check, ChevronRight, Shield } from "lucide-react";
+import Link from "next/link";
 
 interface BookingSidebarProps {
   price: number;
   lessonDuration: number; // in minutes
+  instructorId: number | string;
 }
 
-const BookingSidebar = ({ price, lessonDuration }: BookingSidebarProps) => {
+const BookingSidebar = ({ price, lessonDuration, instructorId }: BookingSidebarProps) => {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/50 p-6 sticky top-24">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/50 p-6">
       <div className="flex items-end justify-between mb-6">
         <div>
           <span className="text-sm text-gray-500 font-medium">Price per lesson</span>
@@ -21,13 +23,11 @@ const BookingSidebar = ({ price, lessonDuration }: BookingSidebarProps) => {
         </div>
       </div>
 
-      <button className="w-full py-4 bg-[#F03D3D] text-white rounded-xl font-bold text-lg hover:bg-[#d62f2f] transition-all shadow-lg shadow-red-500/20 active:scale-95 flex items-center justify-center gap-2 mb-4">
-        Book First Lesson <ChevronRight className="w-5 h-5" />
-      </button>
-
-      <button className="w-full py-3 bg-white border-2 border-gray-100 text-gray-700 rounded-xl font-bold hover:border-gray-200 hover:bg-gray-50 transition-all mb-6">
-        Message Instructor
-      </button>
+      <Link href={`/instructors/${instructorId}/book`}>
+        <button className="w-full py-4 bg-[#F03D3D] text-white rounded-xl font-bold text-lg hover:bg-[#d62f2f] transition-all shadow-lg shadow-red-500/20 active:scale-95 flex items-center justify-center gap-2 mb-6">
+          Book First Lesson <ChevronRight className="w-5 h-5" />
+        </button>
+      </Link>
 
       <div className="space-y-4 pt-6 border-t border-gray-100">
         <div className="flex items-start gap-3">

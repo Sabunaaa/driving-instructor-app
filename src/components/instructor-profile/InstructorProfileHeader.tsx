@@ -1,4 +1,4 @@
-import { Star, ShieldCheck, MapPin, Award, Users, Clock, Car } from "lucide-react";
+import { Star, ShieldCheck, MapPin, Award, Users, Clock, Car, BadgeCheck } from "lucide-react";
 
 interface InstructorProfileHeaderProps {
   name: string;
@@ -58,9 +58,7 @@ const InstructorProfileHeader = ({
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
                   {name}
-                  <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider border border-blue-100">
-                    Verified Instructor
-                  </span>
+                  <BadgeCheck className="w-6 h-6 text-blue-500 fill-blue-50" />
                 </h1>
                 <p className="text-gray-500 text-lg">{specialty}</p>
               </div>

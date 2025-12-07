@@ -2,10 +2,8 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AccountSidebar from "@/components/dashboard/AccountSidebar";
-import Button from "@/components/ui/Button";
 
 export type PaymentMethod = {
   id: string;

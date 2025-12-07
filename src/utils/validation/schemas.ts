@@ -2,9 +2,7 @@ import { ValidationRules } from '@/hooks/useForm';
 import {
   validateEmail,
   validatePassword,
-  validatePasswordMatch,
   validateName,
-  validateDate,
   validateAge,
   validatePhone,
 } from './validators';

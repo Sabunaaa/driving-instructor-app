@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { Search, ArrowRight } from 'lucide-react';
 import { logger } from '@/utils/secureLogger';
 
-type Category = 'All' | 'Inside Webflow' | 'Engineering' | 'Design' | 'Strategy' | 'Inspiration' | 'Development';
-
 interface Article {
   id: string;
   title: string;
@@ -13,8 +11,6 @@ interface Article {
   categoryColor: string;
   author?: string;
 }
-
-const categories: Category[] = ['All', 'Inside Webflow', 'Engineering', 'Design', 'Strategy', 'Inspiration', 'Development'];
 
 const latestArticles: Article[] = [
   {
@@ -159,7 +155,6 @@ const browseAllArticles: Article[] = [
 ];
 
 export default function BlogPage() {
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [email, setEmail] = useState('');
   const [visibleArticles, setVisibleArticles] = useState(8);

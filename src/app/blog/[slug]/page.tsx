@@ -72,10 +72,10 @@ const relatedArticles: RelatedArticle[] = [
   { id: '6', title: 'Pushing the boundaries of enterprise website design and development', category: 'Design', author: 'Lindsey Crompton', url: '#' }
 ];
 
-export default function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default function BlogArticlePage({ params: _params }: { params: Promise<{ slug: string }> }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [email, setEmail] = useState('');
-  const [country, setCountry] = useState('United States');
+  const [country] = useState('United States');
 
   const handleShare = (platform: string) => {
     const url = typeof window !== 'undefined' ? window.location.href : '';

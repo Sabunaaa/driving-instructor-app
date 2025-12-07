@@ -6,10 +6,15 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "luc
 
 const Footer = () => {
   const pathname = usePathname();
+  
+  if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   const currentYear = new Date().getFullYear();
 
   // Hide footer on specific pages
-  if (pathname === "/main1" || pathname?.startsWith("/for-instructors/signup")) {
+  if (pathname === "/main1" || pathname?.startsWith("/for-instructors/signup") || pathname?.startsWith("/dashboard")) {
     return null;
   }
 
