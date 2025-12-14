@@ -25,7 +25,7 @@ export default function HeroSplit({
   eyebrow = "DriveConnect",
   title,
   subtitle,
-  ctaHref = "/help",
+  ctaHref = "/contact",
   ctaLabel = "Get in touch",
   rating = 5,
   rightImageSrc = "/images/instructor-hero.jpg",

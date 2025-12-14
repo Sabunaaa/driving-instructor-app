@@ -13,6 +13,7 @@ import {
   Clock,
 } from "lucide-react";
 import { Notification } from "@/hooks/useNotifications";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NotificationsDropdownProps {
   isOpen: boolean;
@@ -67,6 +68,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   onMarkAllAsRead,
   onRemove,
 }) => {
+  const { user } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
@@ -222,7 +224,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
           {notifications.length > 0 && (
             <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
               <Link
-                href="/dashboard"
+                href={user?.userType === 'instructor' ? "/dashboard/instructor/notifications" : "/dashboard/student/notifications"}
                 onClick={onClose}
                 className="block text-center text-sm text-[#F03D3D] hover:text-red-700 font-medium"
               >

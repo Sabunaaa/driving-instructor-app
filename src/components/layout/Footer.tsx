@@ -7,7 +7,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "luc
 const Footer = () => {
   const pathname = usePathname();
   
-  if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/admin')) {
+  if (pathname?.startsWith('/dashboard')) {
     return null;
   }
 

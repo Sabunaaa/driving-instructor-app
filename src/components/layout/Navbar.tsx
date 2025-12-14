@@ -17,10 +17,6 @@ const Navbar = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
 
-  if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/admin')) {
-    return null;
-  }
-
   const {
     notifications,
     unreadCount,
@@ -45,18 +41,25 @@ const Navbar = () => {
     setIsNotificationsOpen(false);
   }, [pathname]);
 
+  const isDashboard = pathname?.startsWith('/dashboard/student') || pathname?.startsWith('/dashboard/instructor');
+
+  // Hide navbar on student dashboard pages and signup pages
+  if ((pathname?.startsWith('/dashboard') && !isDashboard) || pathname === '/for-instructors/signup') {
+    return null;
+  }
+
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/find-instructors", label: "Find Instructors" },
     { href: "/for-instructors", label: "For Instructors" },
-    { href: "/blog-test", label: "Blog" },
+    { href: "/blog", label: "Blog" },
   ];
 
   return (
     <>
       <nav 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled || isMobileMenuOpen
+        className={`${isDashboard ? "absolute" : "fixed"} top-0 left-0 right-0 z-50 ${!isDashboard ? "transition-all duration-300" : ""} ${
+          (!isDashboard && isScrolled) || isMobileMenuOpen
             ? "bg-white/90 backdrop-blur-md py-3 shadow-sm" 
             : "bg-transparent py-5"
         }`}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronDown, User, Settings, HelpCircle, LogOut } from "lucide-react";
+import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export interface UserMenuProps {
@@ -75,17 +75,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
           >
             <Settings size={16} className="text-gray-400" />
             Settings
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              onDropdownToggle(false);
-              router.push("/help");
-            }}
-            className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            <HelpCircle size={16} className="text-gray-400" />
-            Help
           </button>
           <hr className="my-2 border-gray-200" />
           <button

@@ -73,14 +73,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => handleNavClick("/help")}
-              className="w-full text-left px-2 py-2 rounded-md hover:bg-gray-50 text-gray-800 flex items-center gap-2"
-            >
-              <HelpCircle size={16} className="text-gray-500" />
-              Help
-            </button>
-            <button
-              type="button"
               onClick={() => {
                 onClose();
                 onLogout();
