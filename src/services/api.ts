@@ -5,7 +5,6 @@ import { CacheManager } from '@/lib/cache';
 import { LIMITS } from '@/config/constants';
 import { csrfProtection } from '@/utils/csrf';
 import { logger } from '@/utils/secureLogger';
-import { sanitizeObject } from '@/utils/sanitize';
 
 // Error response interface
 interface ErrorResponse {
@@ -175,7 +174,7 @@ class APIService {
     for (const interceptor of this.errorInterceptors) {
       try {
         await interceptor(error);
-      } catch (err) {
+      } catch (_err) {
         // Continue to next interceptor
       }
     }

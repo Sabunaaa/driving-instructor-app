@@ -3,14 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Calendar, Users, Settings, Briefcase, Bell } from "lucide-react";
+import { LayoutDashboard, Calendar, Settings, Briefcase, Bell } from "lucide-react";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Overview", href: "/dashboard/instructor" },
-  { icon: Calendar, label: "Schedule", href: "/dashboard/instructor/schedule" },
-  { icon: Briefcase, label: "Business", href: "/dashboard/instructor/business-settings" },
-  { icon: Bell, label: "Notifications", href: "/dashboard/instructor/notifications" },
-  { icon: Settings, label: "Settings", href: "/dashboard/instructor/settings" },
+  { icon: LayoutDashboard, label: "Overview", href: "/dashboard", exact: true },
+  { icon: Calendar, label: "Schedule", href: "/dashboard/schedule" },
+  { icon: Briefcase, label: "Business", href: "/dashboard/business-settings" },
+  { icon: Bell, label: "Notifications", href: "/dashboard/notifications" },
+  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 
 export const InstructorDashboardNav = () => {
@@ -22,7 +22,7 @@ export const InstructorDashboardNav = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 px-8">
           <div className="flex justify-center space-x-8 overflow-x-auto no-scrollbar">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(item.href + "/");
               return (
                 <Link
                   key={item.href}

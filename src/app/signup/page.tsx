@@ -105,7 +105,7 @@ const SignUpPage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 I am a
               </label>
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setUserType("student")}
@@ -310,16 +310,7 @@ const SignUpPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: "#D85151" }}
-              onMouseEnter={(e) => {
-                if (!isLoading) {
-                  e.currentTarget.style.backgroundColor = "#C44545";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#D85151";
-              }}
+              className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#D85151] hover:bg-[#C44545] hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </button>
@@ -340,7 +331,7 @@ const SignUpPage = () => {
           </div>
 
           {/* Social Sign Up */}
-          <div className="mt-4 grid grid-cols-1 xs:grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <button
               type="button"
               className="w-full inline-flex justify-center py-2 px-3 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 hover:shadow-sm cursor-pointer transition-all duration-200"

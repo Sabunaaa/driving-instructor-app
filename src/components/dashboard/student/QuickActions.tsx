@@ -14,21 +14,21 @@ const actions = [
     icon: CalendarPlus, 
     label: "Book Lesson", 
     desc: "Schedule now",
-    href: "/dashboard/student/book",
+    href: "/dashboard/lessons",
     color: "bg-purple-50 text-purple-600"
   },
   { 
     icon: MessageSquare, 
     label: "Messages", 
     desc: "Chat with instructor",
-    href: "/dashboard/student/messages",
+    href: "/dashboard/messages",
     color: "bg-orange-50 text-orange-600"
   },
   { 
     icon: FileText, 
     label: "My License", 
     desc: "View documents",
-    href: "/dashboard/student/documents",
+    href: "/dashboard/documents",
     color: "bg-green-50 text-green-600"
   },
 ];

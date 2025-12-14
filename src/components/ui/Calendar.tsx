@@ -35,7 +35,7 @@ const Calendar: React.FC<CalendarProps> = ({
   events = [],
   onDateClick,
   onEventClick,
-  editable = true,
+  editable: _editable = true,
   availability = {},
   rates = {},
   onRateChange,
@@ -144,7 +144,7 @@ const Calendar: React.FC<CalendarProps> = ({
                 {hour}
               </div>
 
-              {weekDays.map((date, dayIndex) => {
+              {weekDays.map((date, _dayIndex) => {
                 const hourEvents = getEventsForDateAndHour(date, hour);
                 const hourNum = parseInt(hour.split(":")[0]);
 

@@ -3,13 +3,13 @@
 import React from "react";
 import { Calendar, ChevronDown } from "lucide-react";
 
-type BadgeColor = "red" | "green" | "gray";
+type FieldType = "input" | "select" | "textarea";
 
 export type SettingsFieldProps = {
   label: string;
   required?: boolean;
   labelRight?: React.ReactNode; // e.g., Verify email badge
-  as?: "input" | "select" | "textarea";
+  as?: FieldType;
   type?: string; // for input
   name?: string;
   id?: string;
@@ -64,24 +64,18 @@ export default function SettingsField({
     borderRadius: "8px",
   };
 
-  const inputProps = {
-    id: fieldId,
-    name,
-    placeholder,
-    value,
-    disabled,
-    onChange: (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >
-    ) => onChange?.(e.target.value),
-    className: `${baseInputClasses} ${
-      as === "select" ? "text-gray-500 appearance-none" : ""
-    } ${rightIcon === "calendar" && as === "input" ? "dc-date-custom" : ""} ${
-      inputClassName || ""
-    }`.trim(),
-    style: baseStyle,
-  } as const;
+  // Build className string
+  const fieldClassName = [
+    baseInputClasses,
+    as === "select" ? "text-gray-500 appearance-none" : "",
+    rightIcon === "calendar" && as === "input" ? "dc-date-custom" : "",
+    inputClassName || "",
+  ].filter(Boolean).join(" ");
+
+  // Shared handler
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => onChange?.(e.target.value);
 
   const renderRightIcon = () => {
     if (!rightIcon) return null;
@@ -143,20 +137,41 @@ export default function SettingsField({
       <div className="relative group">
         {as === "textarea" && (
           <textarea
+            id={fieldId}
+            name={name}
+            placeholder={placeholder}
+            value={value}
+            disabled={disabled}
             rows={rows}
-            {...(inputProps as any)}
-            className={`${inputProps.className} resize-none`}
+            onChange={handleChange}
+            className={`${fieldClassName} resize-none`}
+            style={baseStyle}
           />
         )}
         {as === "input" && (
           <input
             ref={rightIcon === "calendar" ? inputRef : undefined}
             type={type}
-            {...(inputProps as any)}
+            id={fieldId}
+            name={name}
+            placeholder={placeholder}
+            value={value}
+            disabled={disabled}
+            onChange={handleChange}
+            className={fieldClassName}
+            style={baseStyle}
           />
         )}
         {as === "select" && (
-          <select {...(inputProps as any)}>
+          <select
+            id={fieldId}
+            name={name}
+            value={value}
+            disabled={disabled}
+            onChange={handleChange}
+            className={fieldClassName}
+            style={baseStyle}
+          >
             {(options || []).map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}

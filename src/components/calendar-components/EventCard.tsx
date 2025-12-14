@@ -16,7 +16,7 @@ export interface CalendarEventProps {
 }
 
 const EventCardComponent: React.FC<CalendarEventProps> = ({
-  id,
+  id: _id,
   type,
   title,
   startTime,

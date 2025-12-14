@@ -7,28 +7,28 @@ const actions = [
     icon: UserPlus, 
     label: "Add Student", 
     desc: "Register new student",
-    href: "/dashboard/instructor/students/add",
+    href: "/dashboard/students/add",
     color: "bg-blue-50 text-blue-600"
   },
   { 
     icon: CalendarPlus, 
     label: "Schedule Lesson", 
     desc: "Book a time slot",
-    href: "/dashboard/instructor/schedule/add",
+    href: "/dashboard/schedule",
     color: "bg-purple-50 text-purple-600"
   },
   { 
     icon: MessageSquare, 
     label: "Messages", 
     desc: "Chat with students",
-    href: "/dashboard/instructor/messages",
+    href: "/dashboard/messages",
     color: "bg-orange-50 text-orange-600"
   },
   { 
     icon: DollarSign, 
     label: "Earnings", 
     desc: "View financial report",
-    href: "/dashboard/instructor/earnings",
+    href: "/dashboard/earnings",
     color: "bg-green-50 text-green-600"
   },
 ];

@@ -109,7 +109,7 @@ describe('OWASP A04:2021 - Insecure Design (PII Protection)', () => {
         password: 'secret123',
         email: 'john@example.com',
       };
-      const redacted = redactObject(obj);
+      const redacted = redactObject(obj) as Record<string, unknown>;
       expect(redacted.password).toBe('[REDACTED]');
       expect(redacted.email).toContain('[EMAIL_REDACTED]');
     });
@@ -124,7 +124,7 @@ describe('OWASP A04:2021 - Insecure Design (PII Protection)', () => {
           },
         },
       };
-      const redacted = redactObject(obj);
+      const redacted = redactObject(obj) as { user: { credentials: Record<string, unknown> } };
       expect(redacted.user.credentials.password).toBe('[REDACTED]');
       expect(redacted.user.credentials.apiKey).toBe('[REDACTED]');
     });
@@ -136,7 +136,7 @@ describe('OWASP A04:2021 - Insecure Design (PII Protection)', () => {
           { name: 'Jane', password: 'secret2' },
         ],
       };
-      const redacted = redactObject(obj);
+      const redacted = redactObject(obj) as { users: Array<Record<string, unknown>> };
       expect(redacted.users[0].password).toBe('[REDACTED]');
       expect(redacted.users[1].password).toBe('[REDACTED]');
     });
@@ -223,7 +223,7 @@ describe('Edge Cases', () => {
     expect(() => {
       // Note: Our implementation doesn't handle circular refs yet
       // This is a reminder to add that protection
-      const str = JSON.stringify(obj);
+      JSON.stringify(obj);
     }).toThrow();
   });
 });

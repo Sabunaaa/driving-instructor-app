@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, MapPin } from "lucide-react";
+import { Search } from "lucide-react";
 
 const SearchHeader = () => {
   return (

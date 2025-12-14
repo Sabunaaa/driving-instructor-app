@@ -16,7 +16,9 @@ export interface User {
   address?: string;
   bio?: string;
   avatarUrl?: string;
+  photoURL?: string; // Alias for avatarUrl (used in some components)
   city?: string;
+  zipCode?: string;
   transmission?: "automatic" | "manual" | "";
 }
 

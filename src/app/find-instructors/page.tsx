@@ -4,7 +4,7 @@ import SearchHeader from "@/components/find-instructors/SearchHeader";
 import HorizontalFilterBar from "@/components/find-instructors/HorizontalFilterBar";
 import InstructorList from "@/components/find-instructors/InstructorList";
 import { useInstructorFilters } from "@/hooks/useInstructorFilters";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { ChevronDown, SlidersHorizontal, ChevronLeft, ChevronRight } from "lucide-react";
 
 // Mock data
@@ -246,16 +246,34 @@ export default function FindInstructorsPage() {
   }, [filters, sortBy]);
 
   const totalPages = Math.ceil(filteredInstructors.length / ITEMS_PER_PAGE);
-  const currentInstructors = filteredInstructors.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  
+  // Memoize pagination data to avoid recreating arrays on each render
+  const { currentInstructors, pageNumbers } = useMemo(() => ({
+    currentInstructors: filteredInstructors.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+    ),
+    pageNumbers: Array.from({ length: totalPages }, (_, i) => i + 1)
+  }), [filteredInstructors, currentPage, totalPages, ITEMS_PER_PAGE]);
+
+  // Memoize pagination handlers
+  const goToPrevPage = useCallback(() => {
+    setCurrentPage(p => Math.max(1, p - 1));
+  }, []);
+
+  const goToNextPage = useCallback(() => {
+    setCurrentPage(p => Math.min(totalPages, p + 1));
+  }, [totalPages]);
+
+  const goToPage = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
       <SearchHeader />
       
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         
         <HorizontalFilterBar 
             filters={filters}
@@ -294,20 +312,20 @@ export default function FindInstructorsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="mt-12 flex justify-center items-center gap-2">
+          <div className="mt-12 flex justify-center items-center gap-1 sm:gap-2 flex-wrap">
             <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              onClick={goToPrevPage}
               disabled={currentPage === 1}
               className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-5 h-5 text-gray-600" />
             </button>
             
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {pageNumbers.map((page) => (
               <button
                 key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-10 h-10 rounded-lg font-bold text-sm transition-all ${
+                onClick={() => goToPage(page)}
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-bold text-sm transition-all ${
                   currentPage === page
                     ? "bg-[#F03D3D] text-white shadow-lg shadow-red-500/20"
                     : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
@@ -318,7 +336,7 @@ export default function FindInstructorsPage() {
             ))}
 
             <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              onClick={goToNextPage}
               disabled={currentPage === totalPages}
               className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >

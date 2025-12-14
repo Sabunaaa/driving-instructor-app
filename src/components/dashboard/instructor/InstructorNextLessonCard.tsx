@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, Clock, MapPin, User } from "lucide-react";
+import { Calendar, MapPin, User } from "lucide-react";
 
 export const InstructorNextLessonCard = () => {
   return (

@@ -69,7 +69,7 @@ export function redactPII(text: string): string {
 /**
  * Redact sensitive fields from objects
  */
-export function redactObject(obj: any, depth: number = 0): any {
+export function redactObject(obj: unknown, depth: number = 0): unknown {
   if (depth > 10) return '[MAX_DEPTH_EXCEEDED]';
   
   if (obj === null || obj === undefined) return obj;
@@ -85,7 +85,7 @@ export function redactObject(obj: any, depth: number = 0): any {
     return obj.map((item) => redactObject(item, depth + 1));
   }
   
-  const redacted: any = {};
+  const redacted: Record<string, unknown> = {};
   
   for (const [key, value] of Object.entries(obj)) {
     // Check if field name is sensitive
@@ -118,7 +118,7 @@ export class SecureLogger {
   /**
    * Log information
    */
-  info(message: string, data?: any): void {
+  info(message: string, data?: unknown): void {
     if (this.isDevelopment) {
       console.info(`[INFO] ${message}`, data ? redactObject(data) : '');
     } else if (this.isProduction) {
@@ -130,7 +130,7 @@ export class SecureLogger {
   /**
    * Log warnings
    */
-  warn(message: string, data?: any): void {
+  warn(message: string, data?: unknown): void {
     if (this.isDevelopment) {
       console.warn(`[WARN] ${message}`, data ? redactObject(data) : '');
     } else if (this.isProduction) {
@@ -141,7 +141,7 @@ export class SecureLogger {
   /**
    * Log errors
    */
-  error(message: string, error?: any, data?: any): void {
+  error(message: string, error?: unknown, data?: unknown): void {
     const redactedError = error instanceof Error 
       ? { name: error.name, message: redactPII(error.message), stack: error.stack }
       : redactObject(error);
@@ -158,7 +158,7 @@ export class SecureLogger {
   /**
    * Debug logging (only in development)
    */
-  debug(message: string, data?: any): void {
+  debug(message: string, data?: unknown): void {
     if (this.isDevelopment) {
       console.debug(`[DEBUG] ${message}`, data ? redactObject(data) : '');
     }
@@ -167,7 +167,7 @@ export class SecureLogger {
   /**
    * Security event logging
    */
-  security(event: string, data?: any): void {
+  security(event: string, data?: unknown): void {
     const securityLog = {
       timestamp: new Date().toISOString(),
       event,
@@ -186,7 +186,7 @@ export class SecureLogger {
    * Send logs to external logging service
    * In production, replace with actual service (Sentry, DataDog, etc.)
    */
-  private sendToLoggingService(level: string, message: string, data?: any): void {
+  private sendToLoggingService(level: string, message: string, data?: unknown): void {
     // Placeholder for external logging service integration
     // Example: Sentry.captureMessage(message, { level, extra: redactObject(data) });
     

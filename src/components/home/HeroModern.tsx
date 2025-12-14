@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, MapPin, Star } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 const HeroModern = () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DollarSign, Clock } from "lucide-react";
+import { DollarSign } from "lucide-react";
 
 const EarningsCalculator = () => {
   const [hourlyRate, setHourlyRate] = useState(40);

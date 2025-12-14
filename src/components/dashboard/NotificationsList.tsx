@@ -1,19 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   Bell,
-  Calendar,
-  X as XIcon,
-  MessageSquare,
-  AlertCircle,
-  CreditCard,
-  Clock,
   Check,
   Trash2,
-  Filter
 } from "lucide-react";
 import { Notification } from "@/hooks/useNotifications";
+import { getNotificationIcon, getNotificationColor, getTimeAgo } from "@/utils/notifications";
 import Button from "@/components/ui/Button";
 
 interface NotificationsListProps {
@@ -23,49 +17,6 @@ interface NotificationsListProps {
   onRemove: (id: string) => void;
 }
 
-const getNotificationIcon = (type: Notification["type"]) => {
-  switch (type) {
-    case "booking":
-      return <Calendar className="w-5 h-5 text-blue-500" />;
-    case "cancellation":
-      return <XIcon className="w-5 h-5 text-red-500" />;
-    case "reminder":
-      return <Clock className="w-5 h-5 text-orange-500" />;
-    case "message":
-      return <MessageSquare className="w-5 h-5 text-green-500" />;
-    case "payment":
-      return <CreditCard className="w-5 h-5 text-purple-500" />;
-    case "system":
-    default:
-      return <AlertCircle className="w-5 h-5 text-gray-500" />;
-  }
-};
-
-const getNotificationColor = (type: Notification["type"]) => {
-  switch (type) {
-    case "booking": return "bg-blue-50 border-blue-100";
-    case "cancellation": return "bg-red-50 border-red-100";
-    case "reminder": return "bg-orange-50 border-orange-100";
-    case "message": return "bg-green-50 border-green-100";
-    case "payment": return "bg-purple-50 border-purple-100";
-    default: return "bg-gray-50 border-gray-100";
-  }
-};
-
-const getTimeAgo = (date: Date): string => {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
-};
-
 export const NotificationsList: React.FC<NotificationsListProps> = ({
   notifications,
   onMarkAsRead,
@@ -74,12 +25,18 @@ export const NotificationsList: React.FC<NotificationsListProps> = ({
 }) => {
   const [filter, setFilter] = useState<"all" | "unread">("all");
 
-  const filteredNotifications = notifications.filter((n) => {
-    if (filter === "unread") return !n.isRead;
-    return true;
-  });
+  // Memoize filtering to avoid recalculation on every render
+  const { filteredNotifications, unreadCount } = useMemo(() => {
+    const unread = notifications.filter(n => !n.isRead);
+    return {
+      unreadCount: unread.length,
+      filteredNotifications: filter === "unread" ? unread : notifications
+    };
+  }, [notifications, filter]);
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  // Memoize filter handlers to prevent unnecessary re-renders
+  const handleFilterAll = useCallback(() => setFilter("all"), []);
+  const handleFilterUnread = useCallback(() => setFilter("unread"), []);
 
   return (
     <div className="space-y-6">
@@ -87,7 +44,7 @@ export const NotificationsList: React.FC<NotificationsListProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
         <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-xl w-fit">
           <button
-            onClick={() => setFilter("all")}
+            onClick={handleFilterAll}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               filter === "all"
                 ? "bg-white text-gray-900 shadow-sm"
@@ -97,7 +54,7 @@ export const NotificationsList: React.FC<NotificationsListProps> = ({
             All
           </button>
           <button
-            onClick={() => setFilter("unread")}
+            onClick={handleFilterUnread}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
               filter === "unread"
                 ? "bg-white text-gray-900 shadow-sm"

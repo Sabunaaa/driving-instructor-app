@@ -22,10 +22,10 @@ const MOCK_INSTRUCTOR = {
   imageUrl: undefined
 };
 
-export default function InstructorProfilePage({ params }: { params: { id: string } }) {
+export default function InstructorProfilePage({ params: _params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen bg-gray-50/50 pt-28 pb-12">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Breadcrumb / Back */}
         <div className="mb-4">
           <Link 

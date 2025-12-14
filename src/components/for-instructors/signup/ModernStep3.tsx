@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadCloud, FileText, Shield, Car } from "lucide-react";
+import { FileText, Shield } from "lucide-react";
 import { useRef } from "react";
 
 interface Step3Props {

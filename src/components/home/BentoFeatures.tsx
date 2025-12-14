@@ -1,4 +1,4 @@
-import { Zap, ShieldCheck, Calendar, Wallet, Map, Smartphone } from "lucide-react";
+import { Zap, ShieldCheck, Wallet, Map } from "lucide-react";
 
 const BentoFeatures = () => {
   return (

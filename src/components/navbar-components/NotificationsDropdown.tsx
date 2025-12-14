@@ -4,16 +4,11 @@ import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Bell,
-  Calendar,
-  X as XIcon,
-  MessageSquare,
-  AlertCircle,
-  CreditCard,
   Check,
-  Clock,
+  X,
 } from "lucide-react";
 import { Notification } from "@/hooks/useNotifications";
-import { useAuth } from "@/contexts/AuthContext";
+import { getNotificationIcon, getTimeAgo } from "@/utils/notifications";
 
 interface NotificationsDropdownProps {
   isOpen: boolean;
@@ -26,38 +21,6 @@ interface NotificationsDropdownProps {
   onRemove: (id: string) => void;
 }
 
-const getNotificationIcon = (type: Notification["type"]) => {
-  switch (type) {
-    case "booking":
-      return <Calendar className="w-4 h-4 text-blue-500" />;
-    case "cancellation":
-      return <XIcon className="w-4 h-4 text-red-500" />;
-    case "reminder":
-      return <Clock className="w-4 h-4 text-orange-500" />;
-    case "message":
-      return <MessageSquare className="w-4 h-4 text-green-500" />;
-    case "payment":
-      return <CreditCard className="w-4 h-4 text-purple-500" />;
-    case "system":
-    default:
-      return <AlertCircle className="w-4 h-4 text-gray-500" />;
-  }
-};
-
-const getTimeAgo = (date: Date): string => {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
-};
-
 export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   isOpen,
   onClose,
@@ -68,7 +31,6 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   onMarkAllAsRead,
   onRemove,
 }) => {
-  const { user } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
@@ -184,7 +146,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                             className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded transition-all"
                             aria-label="Remove notification"
                           >
-                            <XIcon className="w-3 h-3 text-gray-400" />
+                            <X className="w-3 h-3 text-gray-400" />
                           </button>
                         </div>
                         <p className="text-sm text-gray-500 line-clamp-2 mt-0.5">
@@ -224,7 +186,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
           {notifications.length > 0 && (
             <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
               <Link
-                href={user?.userType === 'instructor' ? "/dashboard/instructor/notifications" : "/dashboard/student/notifications"}
+                href="/dashboard/notifications"
                 onClick={onClose}
                 className="block text-center text-sm text-[#F03D3D] hover:text-red-700 font-medium"
               >

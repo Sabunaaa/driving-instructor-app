@@ -41,7 +41,7 @@ export const WeekView: React.FC<WeekViewProps> = ({
         <div className="p-2 bg-gray-50 border-r border-gray-200 text-xs font-medium text-gray-500 text-center">
           Time
         </div>
-        {dayNames.map((day, index) => (
+        {dayNames.map((day, _index) => (
           <div
             key={day}
             className="p-2 text-center text-xs font-medium text-gray-500 bg-gray-50 border-r border-gray-200 last:border-r-0"

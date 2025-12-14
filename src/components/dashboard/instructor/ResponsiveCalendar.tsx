@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ResponsiveCalendarProps {
@@ -11,62 +11,79 @@ interface ResponsiveCalendarProps {
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 8); // 8 AM to 7 PM
 const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+// Helper function to get Monday of a given week (moved outside component)
+const getWeekStart = (date: Date): Date => {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  return new Date(d.setDate(diff));
+};
+
 export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
   availability = {},
   onDateClick,
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<"week" | "month">("week");
+  // Note: viewMode toggle planned for future feature
+  const [_viewMode, _setViewMode] = useState<"week" | "month">("week");
 
-  // Get Monday of the current week
-  const getWeekStart = (date: Date) => {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(d.setDate(diff));
-  };
+  // Memoize week calculations - only recalculate when currentDate changes
+  const { weekStart, weekDays } = useMemo(() => {
+    const start = getWeekStart(currentDate);
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+    return { weekStart: start, weekDays: days };
+  }, [currentDate]);
 
-  const weekStart = getWeekStart(currentDate);
-  const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() + i);
-    return d;
-  });
+  // Memoize formatted date strings for header
+  const weekRangeLabel = useMemo(() => {
+    const startStr = weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const endStr = weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    return `${startStr} - ${endStr}`;
+  }, [weekStart, weekDays]);
 
-  const getSlotKey = (date: Date, hour: number) => {
+  const getSlotKey = useCallback((date: Date, hour: number) => {
     const dateStr = date.toISOString().split("T")[0];
     return `${dateStr}_${hour.toString().padStart(2, "0")}:00`;
-  };
+  }, []);
 
-  const isSlotAvailable = (date: Date, hour: number) => {
+  const isSlotAvailable = useCallback((date: Date, hour: number) => {
     const key = getSlotKey(date, hour);
     return availability[key] || false;
-  };
+  }, [availability, getSlotKey]);
 
-  const handleSlotClick = (date: Date, hour: number) => {
+  const handleSlotClick = useCallback((date: Date, hour: number) => {
     onDateClick?.(date, hour);
-  };
+  }, [onDateClick]);
 
-  const goToPreviousWeek = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() - 7);
-    setCurrentDate(newDate);
-  };
+  // Memoize navigation handlers
+  const goToPreviousWeek = useCallback(() => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setDate(newDate.getDate() - 7);
+      return newDate;
+    });
+  }, []);
 
-  const goToNextWeek = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + 7);
-    setCurrentDate(newDate);
-  };
+  const goToNextWeek = useCallback(() => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setDate(newDate.getDate() + 7);
+      return newDate;
+    });
+  }, []);
 
-  const goToToday = () => {
+  const goToToday = useCallback(() => {
     setCurrentDate(new Date());
-  };
+  }, []);
 
-  const isToday = (date: Date) => {
+  const isToday = useCallback((date: Date) => {
     const today = new Date();
     return date.toDateString() === today.toDateString();
-  };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -80,11 +97,7 @@ export const ResponsiveCalendar: React.FC<ResponsiveCalendarProps> = ({
             <ChevronLeft className="w-5 h-5" />
           </button>
           <span className="text-base font-bold text-gray-900 min-w-[200px] text-center">
-            {weekStart.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            })}{" "}
-            - {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            {weekRangeLabel}
           </span>
           <button
             onClick={goToNextWeek}

@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation";
 import { LayoutDashboard, Calendar, BookOpen, Settings, Bell } from "lucide-react";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Overview", href: "/dashboard/student" },
-  { icon: Calendar, label: "My Lessons", href: "/dashboard/student/lessons" },
-  { icon: BookOpen, label: "Theory", href: "/dashboard/student/theory" },
-  { icon: Bell, label: "Notifications", href: "/dashboard/student/notifications" },
-  { icon: Settings, label: "Settings", href: "/dashboard/student/settings" },
+  { icon: LayoutDashboard, label: "Overview", href: "/dashboard", exact: true },
+  { icon: Calendar, label: "My Lessons", href: "/dashboard/lessons" },
+  { icon: BookOpen, label: "Theory", href: "/dashboard/theory" },
+  { icon: Bell, label: "Notifications", href: "/dashboard/notifications" },
+  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 
 export const DashboardNav = () => {
@@ -22,7 +22,7 @@ export const DashboardNav = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 px-8">
           <div className="flex justify-center space-x-8 overflow-x-auto no-scrollbar">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(item.href + "/");
               return (
                 <Link
                   key={item.href}

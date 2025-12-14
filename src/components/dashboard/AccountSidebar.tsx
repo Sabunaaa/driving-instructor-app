@@ -4,11 +4,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import {
   User,
-  Layers,
-  Car,
-  CreditCard,
-  Settings,
-  HelpCircle,
   LogOut,
   LayoutDashboard,
 } from "lucide-react";
@@ -24,8 +19,6 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ activeItem }) => {
 
   const allMenuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", showFor: ["student", "instructor"] },
-    { icon: Car, label: "Business settings", href: "/business-settings", showFor: ["instructor"] },
-    { icon: Settings, label: "Account settings", href: "/account-settings", showFor: ["student", "instructor"] },
   ];
 
   // Filter menu items based on user type

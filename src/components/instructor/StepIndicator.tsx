@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CheckCircle, Circle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 interface Step {
   number: number;

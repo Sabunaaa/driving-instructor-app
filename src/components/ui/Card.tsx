@@ -1,7 +1,11 @@
 import React from "react";
 import Link from "next/link";
+import { cn } from "@/utils/tailwind";
 
 type CardPadding = "sm" | "md" | "lg";
+
+// Supported HTML elements for the Card wrapper
+type CardElement = "div" | "section" | "article";
 
 export type CardProps = React.PropsWithChildren<{
   href?: string;
@@ -9,15 +13,11 @@ export type CardProps = React.PropsWithChildren<{
   className?: string;
   padding?: CardPadding;
   interactive?: boolean; // adds hover shadow and cursor-pointer
-  as?: "div" | "section" | "article";
+  as?: CardElement;
   role?: string;
   // Accessibility: custom aria-label when the whole card is clickable
   ariaLabel?: string;
 }>;
-
-function cn(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const paddingMap: Record<CardPadding, string> = {
   sm: "p-4",
@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({
   className,
   padding = "md",
   interactive,
-  as = "div",
+  as: Element = "div",
   role,
   ariaLabel,
   children,
@@ -54,18 +54,20 @@ const Card: React.FC<CardProps> = ({
     className
   );
 
+  const focusClasses = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500";
+
   if (href) {
+    // Cast onClick to the proper anchor type for href cases
+    const handleAnchorClick = onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined;
+    
     if (isExternalHref(href)) {
       return (
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={onClick as any}
-          className={cn(
-            base,
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
-          )}
+          onClick={handleAnchorClick}
+          className={cn(base, focusClasses)}
           aria-label={ariaLabel}
         >
           {children}
@@ -75,31 +77,27 @@ const Card: React.FC<CardProps> = ({
     return (
       <Link
         href={href}
-        onClick={onClick as any}
+        onClick={handleAnchorClick}
         aria-label={ariaLabel}
-        className={cn(
-          base,
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 block"
-        )}
+        className={cn(base, focusClasses, "block")}
       >
         {children}
       </Link>
     );
   }
 
-  const Component: any = as;
+  // For non-link cards, onClick is for div elements
+  const handleDivClick = onClick as React.MouseEventHandler<HTMLDivElement> | undefined;
+  
   return (
-    <Component
-      className={cn(
-        base,
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
-      )}
-      onClick={onClick}
+    <Element
+      className={cn(base, focusClasses)}
+      onClick={handleDivClick}
       role={role}
       aria-label={ariaLabel}
     >
       {children}
-    </Component>
+    </Element>
   );
 };
 

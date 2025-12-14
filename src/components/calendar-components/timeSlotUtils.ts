@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 export const TIME_SLOTS = {
   generateHours: () => {
     const hours = [];

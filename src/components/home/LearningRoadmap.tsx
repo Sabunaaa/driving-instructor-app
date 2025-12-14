@@ -1,5 +1,3 @@
-import { Check } from "lucide-react";
-
 const steps = [
   {
     id: "01",

@@ -65,7 +65,7 @@ export default function Button({
     const mergedClass = [classes, child.props?.className]
       .filter(Boolean)
       .join(" ");
-    const { onClick, ...restProps } = props;
+    const { onClick } = props;
     return React.cloneElement(child, {
       className: mergedClass,
       onClick,

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, User, LogOut, Settings, LayoutDashboard, Languages, Bell } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut, LayoutDashboard, Languages, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotifications } from "@/hooks";
 import Button from "@/components/ui/Button";
@@ -41,10 +41,10 @@ const Navbar = () => {
     setIsNotificationsOpen(false);
   }, [pathname]);
 
-  const isDashboard = pathname?.startsWith('/dashboard/student') || pathname?.startsWith('/dashboard/instructor');
+  const isDashboard = pathname?.startsWith('/dashboard');
 
-  // Hide navbar on student dashboard pages and signup pages
-  if ((pathname?.startsWith('/dashboard') && !isDashboard) || pathname === '/for-instructors/signup') {
+  // Hide navbar on signup pages
+  if (pathname === '/for-instructors/signup') {
     return null;
   }
 
@@ -142,10 +142,6 @@ const Navbar = () => {
                       <LayoutDashboard className="w-4 h-4" />
                       Dashboard
                     </Link>
-                    <Link href="/account-settings" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#F03D3D]">
-                      <Settings className="w-4 h-4" />
-                      Settings
-                    </Link>
                     
                     <div className="border-t border-gray-50 mt-2 pt-2">
                       <button 
@@ -228,7 +224,6 @@ const Navbar = () => {
                   )}
                 </Link>
                 <Link href="/dashboard" className="text-lg font-medium text-gray-600">Dashboard</Link>
-                <Link href="/account-settings" className="text-lg font-medium text-gray-600">Settings</Link>
                 <button onClick={logout} className="text-lg font-bold text-red-600">Log Out</button>
               </>
             ) : (

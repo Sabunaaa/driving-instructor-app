@@ -164,26 +164,26 @@ export function sanitizePhone(phone: string): string {
 /**
  * Sanitize object recursively
  */
-export function sanitizeObject<T extends Record<string, any>>(
+export function sanitizeObject<T extends Record<string, unknown>>(
   obj: T,
   options: {
     allowHTML?: boolean;
     maxLength?: number;
   } = {}
 ): T {
-  const sanitized: any = {};
+  const sanitized: Record<string, unknown> = {};
   
   for (const [key, value] of Object.entries(obj)) {
     if (typeof value === 'string') {
       sanitized[key] = sanitizeInput(value, options);
     } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      sanitized[key] = sanitizeObject(value, options);
+      sanitized[key] = sanitizeObject(value as Record<string, unknown>, options);
     } else if (Array.isArray(value)) {
       sanitized[key] = value.map((item) =>
         typeof item === 'string'
           ? sanitizeInput(item, options)
           : typeof item === 'object' && item !== null
-          ? sanitizeObject(item, options)
+          ? sanitizeObject(item as Record<string, unknown>, options)
           : item
       );
     } else {
@@ -197,13 +197,13 @@ export function sanitizeObject<T extends Record<string, any>>(
 /**
  * Validate and sanitize JSON input
  */
-export function sanitizeJSON(jsonString: string): any | null {
+export function sanitizeJSON(jsonString: string): unknown | null {
   try {
-    const parsed = JSON.parse(jsonString);
+    const parsed: unknown = JSON.parse(jsonString);
     
     // Sanitize the parsed object
     if (typeof parsed === 'object' && parsed !== null) {
-      return sanitizeObject(parsed);
+      return sanitizeObject(parsed as Record<string, unknown>);
     }
     
     return parsed;

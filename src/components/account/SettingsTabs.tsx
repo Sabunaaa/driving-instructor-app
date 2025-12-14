@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-// @ts-ignore
-import { FileText, File } from "lucide-react";
 
 interface SettingsTabsProps {
   activeTab: string;

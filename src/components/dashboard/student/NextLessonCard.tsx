@@ -53,7 +53,7 @@ export const NextLessonCard = () => {
             </div>
           </div>
           <Link 
-            href="/dashboard/student/lessons/1"
+            href="/dashboard/lessons"
             className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-white text-[#F03D3D] rounded-xl font-bold hover:bg-gray-50 transition-colors text-sm sm:text-base"
           >
             Details

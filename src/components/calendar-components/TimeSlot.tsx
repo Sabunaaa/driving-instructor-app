@@ -25,8 +25,8 @@ export interface TimeSlotProps {
 }
 
 export const TimeSlot: React.FC<TimeSlotProps> = ({
-  hour,
-  date,
+  hour: _hour,
+  date: _date,
   isPastSlot,
   isSelected,
   bgColor,

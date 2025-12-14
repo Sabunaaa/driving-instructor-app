@@ -69,7 +69,7 @@ const BlogGrid = () => {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[400px]">
-					{articles.map((article, index) => (
+					{articles.map((article, _index) => (
 						<div
 							key={article.id}
 							className={`group relative rounded-3xl overflow-hidden bg-gray-900 border border-gray-800 shadow-lg hover:border-[#F03D3D]/50 transition-all duration-300 ${
